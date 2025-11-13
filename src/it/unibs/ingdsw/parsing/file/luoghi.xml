@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<luoghi>
+  <luogo id="L001">
+    <nome>Palazzo Ducale</nome>
+    <descrizione>Il Palazzo Ducale di Mantova è uno dei principali complessi architettonici rinascimentali italiani, situato nel cuore della città. Originariamente residenza dei Gonzaga, la famiglia che governò Mantova per secoli, il palazzo è un simbolo del potere politico e culturale della dinastia. Il complesso si estende su una vasta area e comprende numerosi edifici, cortili, giardini e sale affrescate, che testimoniano l'elevato livello artistico e architettonico dell'epoca. Tra le principali meraviglie interne spiccano gli affreschi di artisti come Mantegna, che decorano le sale principali, e la Camera degli Sposi, celebre per la sua rappresentazione della corte gonzaghesca. Il Palazzo Ducale è un esempio straordinario di come l'arte, l'architettura e la politica si siano intrecciate nel corso dei secoli, rappresentando un punto di riferimento nella storia dell'arte rinascimentale italiana.</descrizione>
+    <posizione>
+      <paese>Mantova</paese>
+      <via>Piazza Sordello 40</via>
+      <cap>46100</cap>
+      <lat>45.09</lat>
+      <lon>10.47</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>Alla Corte dei Gonzaga: Un Viaggio nel Cuore del Rinascimento</titolo>
+        <descrizione>Questa visita guidata ti porta alla scoperta del Palazzo Ducale, una delle residenze più iconiche dei Gonzaga. Camminerai tra le stanze affrescate, tra cui la famosa Camera degli Sposi, e vedrai come l'arte rinascimentale si intrecci con il potere politico della famiglia. Ogni sala racconta una storia diversa, dai fasti della corte alla vita quotidiana del tempo. Un'esperienza che ti immerge completamente nella Mantova del Rinascimento.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Piazza Sordello 40</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>LUNEDI</giorno>
+          <giorno>MARTEDI</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>2</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>2</mese>
+            <anno>2027</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>10</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>120</durataMinuti>
+        <presenzaBiglietto>true</presenzaBiglietto>
+        <volontari>
+          <volontario password="danielel96" username="danielel96"/>
+          <volontario password="elisab08" username="elisab08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
+        <descrizione>Un percorso che ti svela i capolavori nascosti dentro Palazzo Ducale, dal punto di vista storico e artistico. Con gli affreschi di Mantegna e gli spazi spettacolari del palazzo, potrai esplorare la magnificenza della corte gonzaghesca e il suo ruolo nel panorama europeo. Scopri come la città, attraverso la sua architettura e le opere d'arte, ha raccontato se stessa nei secoli.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Piazza Sordello 40</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>LUNEDI</giorno>
+          <giorno>MARTEDI</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2023</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2026</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>8</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>150</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="andreab12" username="andreab12"/>
+          <volontario password="elisab08" username="elisab08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+  <luogo id="L002">
+    <nome>Teatro Bibenia</nome>
+    <descrizione>Il Teatro Bibiena di Mantova è un gioiello dell'architettura barocca, famoso per la sua eleganza e per l’acustica perfetta. Costruito nel 1769 su progetto di Antonio Galli Bibiena, il teatro è un esempio straordinario di come l'arte teatrale e quella architettonica si uniscano. La sua sala, a pianta ovale, è decorata con stucchi dorati e affreschi che richiamano il senso di grandezza dell’epoca. Oltre alla bellezza del suo interno, il Bibiena è storico perché vi si è esibito anche compositori come Mozart, rendendolo un simbolo della vita culturale di Mantova nel XVIII secolo.</descrizione>
+    <posizione>
+      <paese>Mantova</paese>
+      <via>Via Accademia 47</via>
+      <cap>46100</cap>
+      <lat>45.09</lat>
+      <lon>10.47</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>Eleganza e Musica: Un Viaggio nel Teatro Bibiena</titolo>
+        <descrizione>Durante questa visita, esplorerai il Teatro Bibiena, famoso per la sua raffinata architettura barocca e la sua straordinaria acustica. Passeggiando tra le sue sale, potrai immergerti nella storia culturale di Mantova, scoprendo come il teatro fosse il cuore pulsante della musica e dell'arte nel XVIII secolo. Un'esperienza che ti farà apprezzare la bellezza e l'importanza di questo storico teatro.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Via Accademia 47</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>GIOVEDI</giorno>
+          <giorno>VENERDI</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>11</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="andreab12" username="andreab12"/>
+          <volontario password="gianb08" username="gianb08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>Tra Storia e Acustica: Scopri il Teatro Bibiena di Mantova</titolo>
+        <descrizione>Questa visita ti porta alla scoperta del Teatro Bibiena, un capolavoro barocco che ha ospitato esibizioni storiche, tra cui quelle di Mozart. Potrai ammirare la sua struttura elegante e la perfetta acustica, che lo rende uno dei teatri più prestigiosi d'Italia. Scopri come la musica e l'architettura si fondono per creare un'atmosfera unica, perfetta per chi ama la storia e la cultura.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Via Accademia 47</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>MERCOLEDI</giorno>
+          <giorno>GIOVEDI</giorno>
+          <giorno>SABATO</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>6</mese>
+            <anno>2027</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2030</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>15</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>150</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="elisab08" username="elisab08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+  <luogo id="L003">
+    <nome>Piazza delle Erbe</nome>
+    <descrizione>Piazza delle Erbe a Mantova è una delle piazze più affascinanti e vivaci della città, situata nel cuore del centro storico. Circondata da edifici medievali e rinascimentali, tra cui il Palazzo della Ragione e la Torre dell'Orologio, questa piazza è stata per secoli il centro del commercio cittadino, dove si svolgevano mercati di erbe e prodotti freschi. Oggi è un luogo animato da caffè, ristoranti e negozi, ideale per passeggiare e immergersi nell’atmosfera storica di Mantova.</descrizione>
+    <posizione>
+      <paese>Mantova</paese>
+      <via>Piazza delle Erbe</via>
+      <cap>46100</cap>
+      <lat>45.09</lat>
+      <lon>10.47</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+        <descrizione>Questa visita ti porterà alla scoperta di Piazza delle Erbe, uno dei luoghi più emblematici di Mantova. Passeggiando tra i suoi antichi palazzi e la Torre dell'Orologio, esplorerai la storia della città e del suo commercio medievale, che ancora oggi vivono nella piazza animata da caffè e mercati. Un'occasione per immergersi nel passato e nell'atmosfera vivace di questo centro pulsante della vita cittadina.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Piazza delle Erbe</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>GIOVEDI</giorno>
+          <giorno>VENERDI</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>11</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="andreab12" username="andreab12"/>
+          <volontario password="gianb08" username="gianb08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>Piazza delle Erbe: Tradizione, Storia e Vita Quotidiana a Mantova</titolo>
+        <descrizione>Durante questa visita guidata, scoprirai la bellezza e l'importanza di Piazza delle Erbe, da sempre cuore pulsante di Mantova. Ammirerai i suoi edifici storici, come il Palazzo della Ragione, e scoprirai come questa piazza fosse il centro del commercio cittadino, dove si scambiavano erbe e altri beni. Una passeggiata affascinante tra storia, architettura e tradizioni che ancora oggi caratterizzano la piazza.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Piazza delle Erbe</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>MERCOLEDI</giorno>
+          <giorno>GIOVEDI</giorno>
+          <giorno>SABATO</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>6</mese>
+            <anno>2027</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2030</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>15</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>150</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="elisab08" username="elisab08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+  <luogo id="L004">
+    <nome>Basilica di Sant'Andrea</nome>
+    <descrizione>La Basilica di Sant'Andrea di Mantova è uno degli esempi più significativi dell'architettura rinascimentale italiana. Progettata da Leon Battista Alberti nel 1472, la basilica è una delle opere principali della città e un simbolo della sua storia religiosa e culturale. La chiesa è dedicata a Sant'Andrea, apostolo e martire, e ospita una delle reliquie più importanti della cristianità: il sacro sangue di Cristo, custodito in una cappella speciale. Il progetto di Alberti mira a combinare la grandiosità e l’eleganza, utilizzando forme architettoniche classiche come l'architrave e la volta a botte. L’interno della basilica è imponente, con un'ampia navata centrale e cappelle laterali che contribuiscono a creare una sensazione di spazio e luce. L'elemento più distintivo della basilica è sicuramente la sua facciata, che si ispira agli antichi templi romani, con una grande architrave che richiama le proporzioni classiche. La Basilica di Sant'Andrea rappresenta non solo un capolavoro architettonico, ma anche un'importante testimonianza della trasformazione religiosa e culturale del Rinascimento, in cui l'arte e la religione si intrecciano per riflettere la spiritualità e il potere della Chiesa.</descrizione>
+    <posizione>
+      <paese>Mantova</paese>
+      <via>Piazza Andrea Mantegna</via>
+      <cap>46100</cap>
+      <lat>45.09</lat>
+      <lon>10.47</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>La Basilica di Sant'Andrea: Un Capolavoro del Rinascimento Mantovano</titolo>
+        <descrizione>Questa visita ti guiderà alla scoperta della Basilica di Sant'Andrea, uno dei principali luoghi di culto di Mantova e un esempio straordinario di architettura rinascimentale. Ammirerai il magnifico progetto di Leon Battista Alberti e la sua imponente facciata, per poi entrare e rimanere sorpreso dalla grandezza dell'interno, con il famoso mausoleo di Andrea Mantegna e la sua suggestiva navata. Un'esperienza che ti farà comprendere l'importanza storica e culturale di questa basilica.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Piazza Andrea Mantegna</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>GIOVEDI</giorno>
+          <giorno>VENERDI</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>11</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="andreab12" username="andreab12"/>
+          <volontario password="gianb08" username="gianb08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>Spiritualità e Arte nella Basilica di Sant'Andrea</titolo>
+        <descrizione>Questa visita ti porterà a esplorare la Basilica di Sant'Andrea, un capolavoro che unisce arte, storia e spiritualità. Con una guida esperta, scoprirai come la basilica rappresenti il cuore religioso di Mantova, con la sua architettura unica progettata da Alberti e i tesori artistici che custodisce, tra cui il celebre affresco della "Cappella del Santissimo Sacramento". Un viaggio tra fede, arte e cultura che ti lascerà senza parole.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Piazza Andrea Mantegna</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>MERCOLEDI</giorno>
+          <giorno>GIOVEDI</giorno>
+          <giorno>SABATO</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>6</mese>
+            <anno>2027</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2030</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>15</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>150</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="elisab08" username="elisab08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+  <luogo id="L005">
+    <nome>Palazzo Te</nome>
+    <descrizione>Questa visita ti porterà alla scoperta di Palazzo Te, un luogo che racconta la grandiosità dei Gonzaga attraverso l'arte e l'architettura. Ammirerai la famosa Sala dei Giganti, con i suoi affreschi spettacolari che ti faranno sentire come se stessi vivendo un mito antico. La visita ti guiderà anche attraverso il magnifico giardino e le altre stanze del palazzo, ognuna ricca di significato e bellezza, in un viaggio tra storia, cultura e potere.</descrizione>
+    <posizione>
+      <paese>Mantova</paese>
+      <via>Via Te 13</via>
+      <cap>46100</cap>
+      <lat>45.09</lat>
+      <lon>10.47</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>Palazzo Te: Arte, Potere e Miti nella Villa Gonzaga</titolo>
+        <descrizione>Questa visita ti porterà alla scoperta di Palazzo Te, un luogo che racconta la grandiosità dei Gonzaga attraverso l'arte e l'architettura. Ammirerai la famosa Sala dei Giganti, con i suoi affreschi spettacolari che ti faranno sentire come se stessi vivendo un mito antico. La visita ti guiderà anche attraverso il magnifico giardino e le altre stanze del palazzo, ognuna ricca di significato e bellezza, in un viaggio tra storia, cultura e potere.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Via Te 13</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>GIOVEDI</giorno>
+          <giorno>VENERDI</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>11</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="andreab12" username="andreab12"/>
+          <volontario password="gianb08" username="gianb08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>Palazzo Te: Alla Scoperta del Rinascimento Gonzaga</titolo>
+        <descrizione>Durante questa visita, esplorerai uno dei luoghi più affascinanti di Mantova, Palazzo Te. Con una guida esperta, entrerai nelle sale affrescate, come la Sala dei Giganti, e scoprirai come Federico II Gonzaga abbia trasformato questo palazzo in un luogo di svago e di grande potere. La visita ti farà immergere nell’atmosfera rinascimentale, tra miti, simboli e un’architettura che lascia senza fiato. Un'esperienza che ti farà apprezzare la magnificenza dei Gonzaga sotto ogni aspetto.</descrizione>
+        <posizione>
+          <paese>Mantova</paese>
+          <via>Via Te 13</via>
+          <cap>46100</cap>
+          <lat>45.09</lat>
+          <lon>10.47</lon>
+        </posizione>
+        <giornate>
+          <giorno>MERCOLEDI</giorno>
+          <giorno>GIOVEDI</giorno>
+          <giorno>SABATO</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>6</mese>
+            <anno>2027</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2030</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>15</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>150</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="lorenzol00" username="lorenzol00"/>
+          <volontario password="elisab08" username="elisab08"/>
+        </volontari>
+        <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+  <luogo id="L006">
+    <nome>Santuario basilica di San Luigi Gonzaga</nome>
+    <descrizione>Il santuario basilica di San Luigi Gonzaga è un edificio religioso di Castiglione delle Stiviere, in provincia di Mantova e si affaccia nella piazza dedicata al santo, patrono mondiale della gioventù. Nell'aprile del 1964 papa Paolo VI lo elevò alla dignità di basilica minore.</descrizione>
+    <posizione>
+      <paese>Castiglione delle Stiviere</paese>
+      <via>Piazza San Luigi Gonzaga</via>
+      <cap>46043</cap>
+      <lat>45.39</lat>
+      <lon>10.39</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>San Luigi e i Gonzaga: fede, arte e memoria a Castiglione</titolo>
+        <descrizione>Visita guidata alla basilica-santuario barocca di San Luigi Gonzaga, voluta dal marchese Francesco Gonzaga nel 1608 e poi completata nel Settecento. Partiremo dalla facciata e dalla pianta a navata unica (in linea con il Concilio di Trento) per entrare tra opere e memorie del santo: la pala del Guercino (1650), l’affresco con la gloria di San Luigi di Giorgio Anselmi (1740), l’organo Bonato (1794) e l’urna con il teschio del santo sull’altare maggiore. Racconteremo anche la basilica minore dal 1964 (Paolo VI), la preghiera di Giovanni Paolo II nel 1991 e la cappella con Cinzia, Olimpia e Gridonia Gonzaga. Un percorso che intreccia storia di famiglia, spiritualità e arte.</descrizione>
+        <posizione>
+          <paese>Castiglione delle Stiviere</paese>
+          <via>Piazza San Luigi Gonzaga</via>
+          <cap>46043</cap>
+          <lat>45.39</lat>
+          <lon>10.39</lon>
+        </posizione>
+        <giornate>
+          <giorno>SABATO</giorno>
+          <giorno>DOMENICA</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>11</ora>
+          <minuti>0</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="andreab12" username="andreab12"/>
+          <volontario password="lorenzol00" username="lorenzol00"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+</luoghi>

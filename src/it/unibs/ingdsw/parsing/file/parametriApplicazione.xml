@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<applicazione>
+  <ambienteDaConfigurare>false</ambienteDaConfigurare>
+  <ambitoTerritorialeCompetenza>AA</ambitoTerritorialeCompetenza>
+  <numeroMaxPerIniziativa>1</numeroMaxPerIniziativa>
+</applicazione>

@@ -1,0 +1,4 @@
+TODO
+- modificare gestione latitudine e longitudine con punto e non virgola
+- accesso con utente che non ha configurato ancora nessuna data disponibilità, per cui la hashmap è vuota,
+  va in errore e non mi chiede le date
