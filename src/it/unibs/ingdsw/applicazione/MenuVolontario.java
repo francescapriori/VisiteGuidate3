@@ -12,12 +12,9 @@ import it.unibs.ingdsw.visite.ListaVisite;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.Locale;
 
 public class MenuVolontario extends MenuManager {
-
-    public static final int INIZIO_PERIODO_ESCLUSIONE_DATE = 13;
 
     public MenuVolontario(Applicazione applicazione, Utente u) {
         super(applicazione, u);
@@ -55,36 +52,34 @@ public class MenuVolontario extends MenuManager {
         });
 
         m.aggiungi(2, "Indica le tue disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            InsiemeDate dateEscluse = serviceDate.getDateEscluse(meseDisponibilita, annoDisponibilita);
-            OutputManager.visualizzaDatePerMeseAnno(dateEscluse, meseDisponibilita, annoDisponibilita, OutputManager.TipoRichiestaData.DISPONIBILITA);
-            String nomeMese = Month.of(meseDisponibilita).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
-            InsiemeDate insiemePerVolontario = serviceDate.getDatePerVolontario(meseDisponibilita, annoDisponibilita, (Volontario) this.utente);
-            System.out.println("Procedi inserendo le tue disponibilità per " + nomeMese + " " + annoDisponibilita);
-            do {
-                Data data;
+            if(this.applicazione.getStato()==Stato.DISP_APERTE) {
+                InsiemeDate dateEscluse = serviceDate.getDateEscluse(meseDisponibilita, annoDisponibilita);
+                OutputManager.visualizzaDatePerMeseAnno(dateEscluse, meseDisponibilita, annoDisponibilita, OutputManager.TipoRichiestaData.ESCLUSIONE);
+                String nomeMese = Month.of(meseDisponibilita).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
+                InsiemeDate insiemePerVolontario = serviceDate.getDatePerVolontario(meseDisponibilita, annoDisponibilita, (Volontario) this.utente);
+                insiemePerVolontario = insiemePerVolontario.filtraDateDopo(new Data(Target.SOGLIA_CAMBIO_MESE, meseDisponibilita, annoDisponibilita)); // le date restituite sono solo quelle del mese di interesse
+                OutputManager.visualizzaDatePerMeseAnno(insiemePerVolontario, meseDisponibilita, annoDisponibilita, OutputManager.TipoRichiestaData.DISPONIBILITA);
+                System.out.println("Procedi inserendo le tue disponibilità per " + nomeMese + " " + annoDisponibilita);
                 do {
-                    int giorno = InputManager.chiediGiorno(meseDisponibilita, annoDisponibilita);
-                    data = new Data(giorno, meseDisponibilita, annoDisponibilita);
-                    if (!dateEscluse.isEmpty() && dateEscluse.dataPresente(data)) {
-                        System.out.println("Non puoi dare disponibilità per " + data + " perché è una data esclusa.");
-                    } else if (insiemePerVolontario.dataPresente(data)) {
-                        System.out.println("Hai già dato disponibilità per " + data + ".");
+                    Data data;
+                    do {
+                        int giorno = InputManager.chiediGiorno(meseDisponibilita, annoDisponibilita);
+                        data = new Data(giorno, meseDisponibilita, annoDisponibilita);
+                        if (!dateEscluse.isEmpty() && dateEscluse.dataPresente(data)) {
+                            System.out.println("Non puoi dare disponibilità per " + data + " perché è una data esclusa.");
+                        } else if (insiemePerVolontario.dataPresente(data)) {
+                            System.out.println("Hai già dato disponibilità per " + data + ".");
+                        }
+                    } while ((dateEscluse.dataPresente(data)) || insiemePerVolontario.dataPresente(data));
+
+                    if (!insiemePerVolontario.aggiungiData(data)) {
+                        System.out.println("La data è già presente nell'elenco.");
                     }
-                } while ((dateEscluse.dataPresente(data)) || insiemePerVolontario.dataPresente(data));
-
-                if (!insiemePerVolontario.aggiungiData(data)) {
-                    System.out.println("La data è già presente nell'elenco.");
-                }
-            } while ("sì".equals(InputManager.chiediSiNo("Vuoi aggiungere un'altra data in cui sei disponibile?")));
-
-
-//            if (this.applicazione.isDisponibilitaNext()) {
-//                this.applicazione.chiediDateDisponibili(meseDisponibilita, annoDisponibilita, (Volontario) this.utente);
-//            }
-//            else {
-//                System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono chiuse.");
-//            } todo
-
+                } while ("sì".equals(InputManager.chiediSiNo("Vuoi aggiungere un'altra data in cui sei disponibile?")));
+            }
+            else {
+                System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono chiuse.");
+            }
         });
 
         return m;

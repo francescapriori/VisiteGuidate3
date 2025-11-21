@@ -69,12 +69,16 @@ public class Data {
         return false;
     }
 
-    public boolean precede(Data data) {
+    public boolean precede (Data data) {
         if (this.anno < data.getAnno() ||
                 (this.anno == data.getAnno() && this.mese < data.getMese()) ||
                 (this.anno == data.getAnno() && this.mese == data.getMese() && this.giorno < data.getGiorno()))
             return true;
         return false;
+    }
+
+    public boolean segue (Data data) {
+        return !precede(data);
     }
 
     public GiornoSettimana getGiornoSettimana() {

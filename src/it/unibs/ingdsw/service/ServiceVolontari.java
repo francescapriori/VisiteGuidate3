@@ -1,11 +1,15 @@
 package it.unibs.ingdsw.service;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
+import it.unibs.ingdsw.applicazione.InputManager;
 import it.unibs.ingdsw.output.OutputManager;
 import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.ListaVisite;
+import it.unibs.ingdsw.visite.Visita;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class ServiceVolontari {
     public Applicazione applicazione;
@@ -24,5 +28,18 @@ public class ServiceVolontari {
         }
 
         return volontarioPerVisita;
+    }
+
+    public void eliminaVolontari(Applicazione applicazione, int posizione) {
+        applicazione.rimuoviVolontarioIesimo(posizione);
+
+    }
+
+    public void aggiungiVolontariAllaVisita(Visita visita, ArrayList<Volontario> volontari) {
+        this.applicazione.aggiungiVolontariAllaVisita(visita, volontari);
+    }
+
+    public int getNumeroVolontari() {
+        return this.applicazione.getNumeroVolontari();
     }
 }

@@ -1,4 +1,3 @@
 TODO
-- modificare gestione latitudine e longitudine con punto e non virgola
-- accesso con utente che non ha configurato ancora nessuna data disponibilità, per cui la hashmap è vuota,
-  va in errore e non mi chiede le date
+- Parsing dei luoghi manca la parte di lettura e scrittura dello stato delle visite
+- Quando viene stampato il calendario definitivo delle visite è necessario modificare lo stato delle visite che vengono prodotte in Confermate

@@ -1,7 +1,6 @@
 package it.unibs.ingdsw.applicazione;
 
 import it.unibs.ingdsw.luoghi.ListaLuoghi;
-import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.tempo.*;
 import it.unibs.ingdsw.utenti.ListaUtenti;
 import it.unibs.ingdsw.tempo.InsiemeDate;
@@ -10,10 +9,9 @@ import it.unibs.ingdsw.visite.Visita;
 import it.unibs.ingdsw.parsing.*;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Map;
 
 public class Applicazione {
 
@@ -119,6 +117,7 @@ public class Applicazione {
         app.setDateEscluse(d.getInsiemeDate());
         app.setDisponibilitaPerVol(dV.getDisponibilitaPerVol());
         app.setCalendarioVisite(cv.getCalendarioVisite());
+        app.setStato(pa.getStato());
         return app;
     }
 
@@ -129,66 +128,15 @@ public class Applicazione {
         ParsLuoghiXMLFile.salvaLuoghi(this.listaLuoghi);
         ParsDisponibilitaVolontariXMLFile.salvaDisponibilitaVolontari(this.disponibilitaPerVol);
         ParsCalendarioVisiteXMLFile.salvaCalendarioVisite(this.calendarioVisite);
-
-    }
-
-    public void aggiungiLuoghi(ListaLuoghi nuovi) {
-        for (Luogo l : nuovi.getListaLuoghi()) {
-            if (this.listaLuoghi.aggiungiLuogoSeNonPresente(l)) {
-                System.out.println("Aggiunto: " + l.getNome());
-            } else {
-                System.out.println("Il luogo " + l.getNome() + " è già presente nell'elenco.");
-            }
-        }
-    }
-
-    @Deprecated
-    public void mostraDateEsclusePerMeseAnno (int mese, int anno) {
-        String nomeMese = Month.of(mese).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
-        boolean meseConDate = false;
-        for(Data d : this.dateEscluse.getInsiemeDate()) {
-            if(d.getAnno() == anno && d.getMese() == mese) {
-                if(meseConDate == false) {
-                    System.out.println("Le date escluse per le visite del mese di " + nomeMese + " " + anno + " sono:");
-                }
-                System.out.println(d.toString());
-                meseConDate = true;
-            }
-        }
-        if(!meseConDate) {
-            System.out.println("Non sono presenti date escluse per le visite del mese di " + nomeMese + " " + anno);
-        }
     }
 
     public InsiemeDate getDateEsclusePerMeseAnno (int mese, int anno) {
         return this.getInsiemeDate().getDateEsclusePerMeseAnno(mese, anno);
     }
 
-    public void mostraDateDisponibilitaPerMeseAnno (int mese, int anno, Volontario v) {
-        String nomeMese = Month.of(mese).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
-        boolean meseConDate = false;
-        for(Data d : this.disponibilitaPerVol.get(v).getInsiemeDate()) {
-            if(this.disponibilitaPerVol.get(v).getInsiemeDate().isEmpty()) {
-                System.out.println("Non ti sei reso disponibile per nessuna data per il mese di " + nomeMese + " " + anno + ".");
-            }
-            if(d.getAnno() == anno && d.getMese() == mese) {
-                if(meseConDate == false) {
-                    System.out.println("Le date in cui ti sei già reso disponibile per le visite del mese di " + nomeMese + " " + anno + " sono:");
-                }
-                System.out.println(d.toString());
-                meseConDate = true;
-            }
-        }
-        if(!meseConDate) {
-            System.out.println("Non ti sei reso disponibile per nessuna data nel mese di " + nomeMese + " " + anno);
-        }
-    }
-
     public boolean aggiungiData(Data data) {
         return this.dateEscluse.aggiungiData(data);
     }
-
-
 
     @Override
     public String toString() {
@@ -197,34 +145,48 @@ public class Applicazione {
                 "\nLuoghi Visitabili: " + this.listaLuoghi.estraiNomeLuoghi().toString();
     }
 
+    public void aggiungiVolontariAllaVisita(Visita visita, ArrayList<Volontario> volontari) {
+        for(Volontario v: volontari) {
+            visita.getVolontariVisita().add(v); //non è necessario fare controllo se già presente poichè fatto già prima
+        }
+    }
 
-//    public HashMap<Visita, InsiemeDate> produciVisitePerIlMese(int meseTargetV, int annoTargetV) {
-//
-//        HashMap<Visita, InsiemeDate> calendarioProvvisorio = this.listaLuoghi.getTotaleVisite().calendarioProvvisiorioVisiteDelMese(meseTargetV, annoTargetV);
-//        HashMap<Visita, InsiemeDate> calendarioDefinitivo = new HashMap();
-//
-//        // se c'è corrispondenza allora la data viene aggiunta al calendario definitivo
-//        for (Map.Entry<Visita, InsiemeDate> entry : calendarioProvvisorio.entrySet()) {
-//            Visita visita = entry.getKey();
-//            InsiemeDate dateCalendarioProvvisorio = entry.getValue();
-//            InsiemeDate disponibilitaVolontariAssociatiThisVisita = InsiemeDate.dateDeiVolontari(this.disponibilitaPerVol, visita.getVolontariVisita());
-//            InsiemeDate dateDefinitiveVisita = new InsiemeDate();
-//
-//            for (Data d : dateCalendarioProvvisorio.getInsiemeDate()) {
-//                // la data è presente nelle disponibilità delle date associate ai volontari della visita?
-//                for(Data d2 : disponibilitaVolontariAssociatiThisVisita.getInsiemeDate()) {
-//                    if(d.dateUguali(d2)) {
-//                        // c'è almeno un volontario che ha dato disponibilità per quel giorno
-//                        dateDefinitiveVisita.aggiungiData(d);
-//                        //uscire dal for d2 e tornare al for d
-//                    }
-//                }
-//            }
-//            if(!dateDefinitiveVisita.getInsiemeDate().isEmpty()) {
-//                calendarioDefinitivo.put(visita, dateDefinitiveVisita);
-//            }
-//        }
-//        return calendarioDefinitivo;
-//    }
+    public int getNumeroVolontari() {
+        return this.listaUtenti.getVolontari().size();
+    }
+
+    public void rimuoviVolontarioIesimo(int posizione) {
+        this.listaUtenti.getVolontari().remove(posizione);
+    }
+
+
+    public HashMap<Visita, InsiemeDate> produciVisitePerIlMese(int meseTargetV, int annoTargetV) {
+
+        HashMap<Visita, InsiemeDate> calendarioProvvisorio = this.listaLuoghi.getTotaleVisite().calendarioProvvisiorioVisiteDelMese(meseTargetV, annoTargetV);
+        HashMap<Visita, InsiemeDate> calendarioDefinitivo = new HashMap();
+
+        // se c'è corrispondenza allora la data viene aggiunta al calendario definitivo
+        for (Map.Entry<Visita, InsiemeDate> entry : calendarioProvvisorio.entrySet()) {
+            Visita visita = entry.getKey();
+            InsiemeDate dateCalendarioProvvisorio = entry.getValue();
+            InsiemeDate disponibilitaVolontariAssociatiThisVisita = InsiemeDate.dateDeiVolontari(this.disponibilitaPerVol, visita.getVolontariVisita());
+            InsiemeDate dateDefinitiveVisita = new InsiemeDate();
+
+            for (Data d : dateCalendarioProvvisorio.getInsiemeDate()) {
+                // la data è presente nelle disponibilità delle date associate ai volontari della visita?
+                for(Data d2 : disponibilitaVolontariAssociatiThisVisita.getInsiemeDate()) {
+                    if(d.dateUguali(d2)) {
+                        // c'è almeno un volontario che ha dato disponibilità per quel giorno
+                        dateDefinitiveVisita.aggiungiData(d);
+                        //uscire dal for d2 e tornare al for d
+                    }
+                }
+            }
+            if(!dateDefinitiveVisita.getInsiemeDate().isEmpty()) {
+                calendarioDefinitivo.put(visita, dateDefinitiveVisita);
+            }
+        }
+        return calendarioDefinitivo;
+    }
 
 }

@@ -1,5 +1,6 @@
 package it.unibs.ingdsw.output;
 
+import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.tempo.InsiemeDate;
@@ -9,13 +10,12 @@ import it.unibs.ingdsw.visite.Visita;
 
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class OutputManager {
 
-    //escluse, disponibilità
     public static void visualizzaDatePerMeseAnno(InsiemeDate date, int mese, int anno, TipoRichiestaData tipo) {
         String nomeMese;
         nomeMese = Month.of(mese).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
@@ -40,6 +40,14 @@ public class OutputManager {
 
     }
 
+    public static void visualizzaSoloVolontari(Applicazione applicazione) {
+        int i = 1;
+        for (Volontario v : applicazione.getListaUtenti().getVolontari()) {
+            System.out.println(i + ") " + v.toString());
+            i++;
+        }
+    }
+
     public enum TipoRichiestaData {
         ESCLUSIONE, DISPONIBILITA
     }
@@ -48,6 +56,17 @@ public class OutputManager {
         int i = 1;
         for(Luogo l : luoghi.getListaLuoghi()) {
             System.out.println(i + ") " + l.stampaSoloLuogo());
+            i++;
+        }
+    }
+
+    public static void visualizzaLuoghiEvisite(ListaLuoghi luoghi) {
+        int i = 1;
+        for(Luogo l : luoghi.getListaLuoghi()) {
+            System.out.println(i + ") " + l.stampaLuogoBase());
+            for(Visita v : l.getInsiemeVisite().getListaVisite()) {
+                System.out.println("\t" + v.stampaVisitaBase());
+            }
             i++;
         }
     }
@@ -76,6 +95,16 @@ public class OutputManager {
         for(Visita v : listaVisite.getListaVisite()) {
             System.out.println(i + ") " + v.toString());
             i++;
+        }
+    }
+
+    public static void visualizzaCalendario(HashMap<Visita, InsiemeDate> calendarioMensile, String nomeMeseV, int annoTargetV) {
+
+        System.out.println("\n-----Lista delle visite per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
+        for(Map.Entry<Visita, InsiemeDate> entry : calendarioMensile.entrySet()) {
+            Visita visita = entry.getKey();
+            InsiemeDate dateCalendarioMensile = entry.getValue();
+            System.out.println("- " + visita.getTitolo() + "\n  Date disponibilità visita: " + dateCalendarioMensile.toString());
         }
     }
 }

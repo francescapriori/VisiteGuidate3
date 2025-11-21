@@ -247,6 +247,19 @@ public class InputManager {
         boolean biglietto = "sì".equals(InputManager.chiediSiNo("È presente un biglietto di ingresso da pagare?"));
 
         // volontari: usa la lista utenti dell'istanza
+        ArrayList<Volontario> volontariThisVisita = associaVolontariAvisita(applicazione);
+
+        // capienze
+        int numMinP = InputManager.leggiInteroConMin("Numero minimo partecipanti: ", 1);
+        int numMaxP = InputManager.leggiInteroConMin("Numero massimo partecipanti: ", numMinP);
+
+        return new Visita(
+                titolo, descrizione, luogoId, luogoIncontro, giornate,
+                inizio, fine, oraInizio, durataMin, biglietto, volontariThisVisita, numMinP, numMaxP
+        );
+    }
+
+    public static ArrayList<Volontario> associaVolontariAvisita(Applicazione applicazione) {
         String scelta = InputManager.chiediSiNo("Vuoi associare volontari già registrati nell'applicativo?");
         ArrayList<Volontario> volontariThisVisita = new ArrayList<>();
         if (scelta.equals("sì")){
@@ -258,15 +271,7 @@ public class InputManager {
                 volontariThisVisita.add(nuovo);
             } while ("sì".equals(InputManager.chiediSiNo("Vuoi aggiungere un altro volontario?")));
         }
-
-        // capienze
-        int numMinP = InputManager.leggiInteroConMin("Numero minimo partecipanti: ", 1);
-        int numMaxP = InputManager.leggiInteroConMin("Numero massimo partecipanti: ", numMinP);
-
-        return new Visita(
-                titolo, descrizione, luogoId, luogoIncontro, giornate,
-                inizio, fine, oraInizio, durataMin, biglietto, volontariThisVisita, numMinP, numMaxP
-        );
+        return volontariThisVisita;
     }
 
     public static ArrayList<Volontario> scegliVolontari(Applicazione applicazione) {

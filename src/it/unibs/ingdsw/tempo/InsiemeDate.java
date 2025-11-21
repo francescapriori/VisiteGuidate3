@@ -1,13 +1,9 @@
 package it.unibs.ingdsw.tempo;
 
 import it.unibs.ingdsw.utenti.Volontario;
-import it.unibs.ingdsw.visite.Visita;
 
-import java.time.Month;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class InsiemeDate {
@@ -20,7 +16,6 @@ public class InsiemeDate {
     public ArrayList<Data> getInsiemeDate() {
         return insiemeDate;
     }
-
 
     public boolean aggiungiData(Data data) {
         if(!dataPresente(data)) {
@@ -72,7 +67,6 @@ public class InsiemeDate {
 
     public InsiemeDate getDateEsclusePerMeseAnno (int mese, int anno) {
         InsiemeDate dateEscluse = new InsiemeDate();
-        boolean meseConDate = false;
         for(Data d : this.getInsiemeDate()) {
             if(d.getAnno() == anno && d.getMese() == mese) {
                 dateEscluse.aggiungiData(d);
@@ -98,19 +92,6 @@ public class InsiemeDate {
         return false;
     }
 
-    public InsiemeDate dateComune(InsiemeDate date2){
-        InsiemeDate dateComuni = new InsiemeDate();
-
-        for(Data d : this.insiemeDate){
-            for(Data d2 : date2.getInsiemeDate()){
-                if(d.dateUguali(d2)){
-                    dateComuni.aggiungiData(d);
-                }
-            }
-        }
-        return dateComuni;
-    }
-
     public boolean isEmpty() {
         return insiemeDate == null || insiemeDate.isEmpty();
     }
@@ -119,6 +100,17 @@ public class InsiemeDate {
         InsiemeDate res = new InsiemeDate();
         for (Data d : this.getInsiemeDate()) {
             if (d.getMese() == mese && d.getAnno() == anno) {
+                res.aggiungiData(d);
+            }
+        }
+        return res;
+    }
+
+    public InsiemeDate filtraDateDopo(Data d1) {
+        this.ordinaDateCronologicamente();
+        InsiemeDate res = new InsiemeDate();
+        for(Data d : this.getInsiemeDate()) {
+            if(d.segue(d1)) {
                 res.aggiungiData(d);
             }
         }

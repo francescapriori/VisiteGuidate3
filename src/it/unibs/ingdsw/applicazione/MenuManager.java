@@ -8,7 +8,7 @@ import java.time.YearMonth;
 
 public abstract class MenuManager {
 
-    public static final int INIZIO_PERIODO_ESCLUSIONE_DATE = 13;
+    public static final int INIZIO_PERIODO_ESCLUSIONE_DATE = 18;
 
     private final Applicazione applicazione;
     private final Utente utente;

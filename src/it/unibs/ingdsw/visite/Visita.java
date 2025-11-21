@@ -122,6 +122,10 @@ public class Visita {
         return sb.toString();
     }
 
+    public String stampaVisitaBase(){
+        return String.format("%s - %s", this.titolo, this.descrizione);
+    }
+
     public InsiemeDate getDatePerVisita(int meseRiferimento, int annoRiferimento) {
         InsiemeDate risultato = new InsiemeDate();
 
@@ -134,7 +138,7 @@ public class Visita {
                 fineValiditaVisita.getGiorno());
 
         // Giorno VAR (es. MenuManager.INIZIO_PERIODO_ESCLUSIONE_DATE)
-        int var = Target.THRESHOLD;
+        int var = Target.SOGLIA_CAMBIO_MESE;
 
         // Se VAR > giorni del mese, clamp al last day (es. 31 su Febbraio => 28/29)
         java.time.YearMonth ym = java.time.YearMonth.of(annoRiferimento, meseRiferimento);
@@ -172,7 +176,12 @@ public class Visita {
         return risultato;
     }
 
-
+    public boolean visitaSenzaVolontari() {
+        if (this.volontariVisita.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
 
 

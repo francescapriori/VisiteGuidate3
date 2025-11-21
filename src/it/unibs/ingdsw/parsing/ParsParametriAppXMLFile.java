@@ -1,5 +1,6 @@
 package it.unibs.ingdsw.parsing;
 
+import it.unibs.ingdsw.applicazione.Stato;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -18,8 +19,7 @@ public class ParsParametriAppXMLFile {
     private String ambitoTerritoriale;
     private int numeroMassimoIscrivibili;
     private boolean ambienteDaConfigurare;
-    private boolean disponibilitaNext;
-    private boolean nextVisiteProdotte;
+    private Stato stato; // <-- enum DISP_APERTE, DISP_CHIUSE, PRODUZIONE
 
     public ParsParametriAppXMLFile() {
         try {
@@ -27,6 +27,12 @@ public class ParsParametriAppXMLFile {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             System.err.println("Errore nel parsing XML: " + e.getMessage());
             e.printStackTrace();
+            // fallback di sicurezza
+            this.stato = Stato.DISP_CHIUSE;
+        }
+        // default se non trovato a XML valido
+        if (this.stato == null) {
+            this.stato = Stato.DISP_CHIUSE;
         }
     }
 
@@ -60,6 +66,23 @@ public class ParsParametriAppXMLFile {
 
         String maxText = root.getElementsByTagName("numeroMaxPerIniziativa").item(0).getTextContent().trim();
         numeroMassimoIscrivibili = maxText.isEmpty() ? 0 : Integer.parseInt(maxText);
+
+
+        if (root.getElementsByTagName("stato").getLength() > 0 &&
+                root.getElementsByTagName("stato").item(0) != null) {
+
+            String statoText = root.getElementsByTagName("stato").item(0).getTextContent().trim();
+
+            if (!statoText.isEmpty()) {
+                try {
+                    stato = Stato.valueOf(statoText);   // es. "DISP_APERTE"
+                } catch (IllegalArgumentException ex) {
+                    System.err.println("Valore di <stato> non valido: " + statoText
+                            + ". Imposto default DISP_CHIUSE.");
+                    stato = Stato.DISP_CHIUSE;
+                }
+            }
+        }
     }
 
     public String getAmbitoTerritoriale() {
@@ -74,13 +97,26 @@ public class ParsParametriAppXMLFile {
         return ambienteDaConfigurare;
     }
 
-    public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili) {
-        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, false);
+    public Stato getStato() {
+        return stato;
     }
 
-    /** Overload con il flag ambienteDaConfigurare, utile se vuoi pilotarlo esplicitamente. */
+    // ----------------- SALVATAGGIO -----------------
+
+    // Overload storico: mantiene compatibilità, usa default per stato e ambienteDaConfigurare
+    public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili) {
+        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, false, Stato.DISP_CHIUSE);
+    }
+
+    // Overload con il flag ambienteDaConfigurare
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
                                       boolean ambienteDaConfigurare) {
+        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, ambienteDaConfigurare, Stato.DISP_CHIUSE);
+    }
+
+    // Overload per pilotare anche lo Stato
+    public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
+                                      boolean ambienteDaConfigurare, Stato stato) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -101,6 +137,12 @@ public class ParsParametriAppXMLFile {
             eMax.setTextContent(Integer.toString(Math.max(0, numeroMaxIscrivibili)));
             root.appendChild(eMax);
 
+            // ---- SCRITTURA STATO ----
+            Element eStato = doc.createElement("stato");
+            // salvo il name() dell'enum, es. "DISP_APERTE"
+            eStato.setTextContent((stato != null ? stato : Stato.DISP_CHIUSE).name());
+            root.appendChild(eStato);
+
             File outFile = new File(DATA);
             File parent = outFile.getParentFile();
             if (parent != null) parent.mkdirs();
@@ -117,6 +159,4 @@ public class ParsParametriAppXMLFile {
             e.printStackTrace();
         }
     }
-
-
 }

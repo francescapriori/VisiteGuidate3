@@ -1,6 +1,7 @@
 package it.unibs.ingdsw.luoghi;
 
 import it.unibs.ingdsw.visite.ListaVisite;
+import it.unibs.ingdsw.visite.Visita;
 
 import java.util.regex.Pattern;
 
@@ -44,11 +45,21 @@ public class Luogo {
                 "\n" + this.posizione.toString();
     }
 
+    public String stampaLuogoBase(){
+        return String.format("%s - %s", this.luogoID, this.nome);
+    }
+
     public boolean luogoUguale(Luogo l) {
         if (this.luogoID.equals(l.getLuogoID()) && this.nome.equalsIgnoreCase(l.getNome())) {
             return true;
         }
         return false;
+    }
+
+    public void aggiungiVisite(ListaVisite listaVisite) {
+        for(Visita v : listaVisite.getListaVisite()) {
+            this.insiemeVisite.getListaVisite().add(v);
+        }
     }
 
     @Override
@@ -58,4 +69,14 @@ public class Luogo {
                 "\nVisite associate: \n" + this.insiemeVisite.toString();
     }
 
+    public Visita getVisitaIesima(int i) {
+        return this.getInsiemeVisite().getListaVisite().get(i);
+    }
+
+    public boolean luogoSenzaVisite() {
+        if (this.insiemeVisite.getListaVisite().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 }

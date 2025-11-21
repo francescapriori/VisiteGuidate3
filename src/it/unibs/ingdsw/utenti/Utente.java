@@ -1,7 +1,6 @@
 package it.unibs.ingdsw.utenti;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
-import it.unibs.ingdsw.applicazione.InputManager;
 import it.unibs.ingdsw.applicazione.MenuManager;
 
 public abstract class Utente {
@@ -21,12 +20,15 @@ public abstract class Utente {
     public String getUsername() {
         return username;
     }
+
     public String getPassword() {
         return password;
     }
+
     public Ruolo getRuolo() {
         return ruolo;
     }
+
     public boolean isPwProvvisoria() {
         return pwProvvisoria;
     }
@@ -74,24 +76,6 @@ public abstract class Utente {
         }
         return false;
     }
-
-    public boolean forzaCambioPasswordSeNecessario() {
-        if (!isPwProvvisoria()) return true;
-
-        String nuova;
-        do {
-            nuova = InputManager.leggiStringaNonVuota(
-                    "Dopo il primo accesso è necessario modificare la password: ");
-            if (pwUguale(nuova)) {
-                return false;
-            }
-        } while (pwUguale(nuova));
-
-        setPassword(nuova);
-        setPwProvvisoria(false);
-        return true;
-    }
-
 
     @Override
     public String toString() {

@@ -3,4 +3,5 @@
   <ambienteDaConfigurare>false</ambienteDaConfigurare>
   <ambitoTerritorialeCompetenza>AA</ambitoTerritorialeCompetenza>
   <numeroMaxPerIniziativa>1</numeroMaxPerIniziativa>
+  <stato>DISP_APERTE</stato>
 </applicazione>

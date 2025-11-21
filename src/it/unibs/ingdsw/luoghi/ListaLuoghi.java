@@ -23,6 +23,7 @@ public class ListaLuoghi {
         this.listaLuoghi.add(luogo);
     }
 
+
     public boolean luogoPresente(Luogo luogo) {
         for (Luogo l : this.listaLuoghi) {
             if (l.getNome().equals(luogo.getNome()) && l.getLuogoID().equals(luogo.getLuogoID())) {

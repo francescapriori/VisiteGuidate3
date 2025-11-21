@@ -40,4 +40,8 @@ public class ListaVisite {
         }
         return calendarioDelMese;
     }
+
+    public int getNumeroVisita() {
+        return this.listaVisite.size();
+    }
 }

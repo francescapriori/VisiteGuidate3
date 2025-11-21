@@ -9,6 +9,8 @@ import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.ListaVisite;
 import it.unibs.ingdsw.visite.StatoVisita;
+import it.unibs.ingdsw.visite.Visita;
+import it.unibs.ingdsw.applicazione.Target;
 
 import java.time.YearMonth;
 import java.util.HashMap;
@@ -23,18 +25,12 @@ public class MenuConfiguratore extends MenuManager {
     public Menu creaMenu() {
         Menu m = new Menu("Menu Configuratore");
 
-        YearMonth targetPerEsclusione, targetDisponibilita, targetProduzione;
+        Target targetApplicazione = new Target();
+        YearMonth targetDisponibilita, targetProduzione, targetPerEsclusione;
+        targetDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
+        targetPerEsclusione = targetApplicazione.calcolaDataTargetEsclusione();
+        targetProduzione = targetApplicazione.calcolaDataTargetProduzione();
 
-        // esattamente il 16 o dopo
-        if(isDayAfterThreshold()==0 || isDayAfterThreshold()==1) {
-            targetPerEsclusione = calcolaDataTarget(4);
-            targetDisponibilita = calcolaDataTarget(3);
-            targetProduzione = calcolaDataTarget(2);
-        } else { // prima del 16
-            targetPerEsclusione = calcolaDataTarget(3);
-            targetDisponibilita = calcolaDataTarget(2);
-            targetProduzione = calcolaDataTarget(1);
-        }
         String nomeMesePerEsclusione = Data.returnNomeMese(targetPerEsclusione);
         int annoPerEsclusione = Data.returnAnno(targetPerEsclusione);
         int mesePerEsclusione = Data.returnMese(targetPerEsclusione);
@@ -50,7 +46,6 @@ public class MenuConfiguratore extends MenuManager {
         ServiceLuoghi serviceLuoghi = new ServiceLuoghi(applicazione);
         ServiceVolontari serviceVolontari = new ServiceVolontari(applicazione);
         ServiceVisite serviceVisite = new ServiceVisite(applicazione);
-
 
         m.aggiungi(1, "Indica le date da escludere per il mese di " + nomeMesePerEsclusione + " " + annoPerEsclusione, () -> {
             InsiemeDate dateEscluse = serviceDate.getDateEscluse(mesePerEsclusione, annoPerEsclusione);
@@ -107,60 +102,163 @@ public class MenuConfiguratore extends MenuManager {
             } while("sì".equals(InputManager.chiediSiNo("Vuoi visualizzare le visite per un altro stato?")));
         });
 
-
-        /**
-         * è possibile riaprire/chiudere la racolta disponibilità visite per il mese i+2 ogni volta che si vuole fino al
-         * raggiungimento del giorno soglia a partire dal quale, se non è stata chiusa la raccolta disponibilità per il
-         * mese precedente, viene chiusa in automatico
-         */
-
-        if(this.applicazione.getStato() == Stato.PRODUZIONE) {
-            meseDisponibilita++;
-
-        }
-
         m.aggiungi(7, "Apri raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-
-//            if(this.applicazione.getStato() == Stato.DISP_CHIUSE || this.applicazione.getStato() == Stato.PRODUZIONE) {
-//
-//                System.out.println("Da ora è possibile raccogliere le disponibilità dei Volontari per il mese di "+ nomeMeseDisponibilita + " " + annoDisponibilita);
-//                this.applicazione.setStato(Stato.DISP_APERTE);
-//            }
-//
-//            else {
-//                System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono già in corso.");
-//            }
-
+            if(this.applicazione.getStato() == Stato.DISP_CHIUSE || this.applicazione.getStato() == Stato.PRODUZIONE) {
+                System.out.println("Da ora è possibile raccogliere le disponibilità dei Volontari per il mese di "+ nomeMeseDisponibilita + " " + annoDisponibilita);
+                this.applicazione.setStato(Stato.DISP_APERTE);
+            }
+            else {
+                System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono già in corso.");
+            }
         });
 
-
         m.aggiungi(8, "Chiudi raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-
-
+            if(this.applicazione.getStato() == Stato.DISP_APERTE) {
+                System.out.println("Hai chiuso la raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita);
+                this.applicazione.setStato(Stato.DISP_CHIUSE);
+            }
         });
 
         m.aggiungi(9, "Produci il piano delle visite per il mese di " + nomeMeseProduzione + " " + annoProduzione, () -> {
+            if(this.applicazione.getStato() == Stato.DISP_CHIUSE) {
+                HashMap<Visita, InsiemeDate> calendarioMensile = applicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
 
+
+                OutputManager.visualizzaCalendario(calendarioMensile, nomeMeseProduzione, annoProduzione);
+                if(!calendarioMensile.isEmpty()) {
+                    this.applicazione.setCalendarioVisite(calendarioMensile); //viene sovrascritto tutte le volte
+                }
+
+                // forse nel metodo è necessario cambiare lo stato della visita in PIANIFICATA se rientra nel calendario definitivo, nel caso ha senso mostrare la data se è pianificata nello stato delle visite opzione 6
+                this.applicazione.setStato(Stato.PRODUZIONE);
+            }
+            else {
+                System.out.println("Non è possibile produrre il piano delle visite per il mese di " + nomeMeseProduzione + " " +
+                        annoProduzione + " perchè è ancora aperta la raccolta disponibilità dei volontari per il mese di " +
+                            nomeMeseProduzione + " " + annoProduzione);
+            }
         });
 
         m.aggiungi(10, "Aggiungi un nuovo luogo all'elenco", () -> {
-
+            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+                serviceLuoghi.aggiungiLuoghiSeNonPresenti(InputManager.chiediLuoghi(this.applicazione), this.applicazione.getListaLuoghi());
+            }
+            else {
+                System.out.println("Non è possibile aggiungere un nuovo luogo all'elenco: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
+            }
         });
 
         m.aggiungi(11, "Elimina un luogo", () -> {
-
+            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+                OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
+                int scelta = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona il luogo che si vuole rimuovere: ",
+                        1, serviceLuoghi.getNumeroLuogo());
+                Luogo luogo = serviceLuoghi.scegliLuogo(scelta);
+                serviceLuoghi.rimuoviLuogo(luogo, this.applicazione);
+                System.out.println("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID());
+            }
+            else {
+                System.out.println("Non è possibile rimuovere nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
+            }
         });
 
         m.aggiungi(12, "Aggiungi una o più visite ad un luogo già esistente", () -> {
+            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+                OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
+                int scelta = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona il luogo di cui si vuole aggiungere la/e visita/e: ",
+                        1, serviceLuoghi.getNumeroLuogo());
+                Luogo luogo = serviceLuoghi.scegliLuogo(scelta);
 
+                serviceVisite.aggiungiVisite(luogo, InputManager.chiediVisite(luogo.getPosizione(), luogo.getLuogoID(), this.applicazione));
+
+            }
+            else {
+                System.out.println("Non è possibile nessuna visita a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
+            }
         });
 
-        m.aggiungi(13, "Aggiungi uno o più volontari ad una visita", () -> {});
+        m.aggiungi(13, "Aggiungi uno o più volontari ad una visita", () -> {
+            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+                OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
+                int scelta = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
+                        1, serviceLuoghi.getNumeroLuogo());
+                Luogo luogo = serviceLuoghi.scegliLuogo(scelta);
+                OutputManager.visualizzaListaVisite(luogo.getInsiemeVisite());
+                int scelta2 = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona la visita a cui si vuole aggiungere un volontario: ",
+                        1, serviceVisite.getNumeroVisita(luogo));
+                Visita visita = serviceVisite.scegliVisita(luogo, scelta);
 
-        m.aggiungi(14, "Elimina una visita associata ad un luogo", () -> {});
+                //aggiungi Volontari alla Visita
+                serviceVolontari.aggiungiVolontariAllaVisita(visita, InputManager.associaVolontariAvisita(this.applicazione));
+
+            }
+            else {
+                System.out.println("Non è possibile aggiungere volontari a nessuna visita: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
+            }
+        });
+
+        m.aggiungi(14, "Elimina una visita associata ad un luogo", () -> {
+            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+                OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
+                int scelta = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
+                        1, serviceLuoghi.getNumeroLuogo());
+                Luogo luogo = serviceLuoghi.scegliLuogo(scelta);
+                OutputManager.visualizzaListaVisite(luogo.getInsiemeVisite());
+                int scelta2 = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona la visita che si vuole rimuovere: ",
+                        1, serviceVisite.getNumeroVisita(luogo));
+                Visita visita = serviceVisite.scegliVisita(luogo, scelta2);
+
+                serviceVisite.rimuoviVisita(visita, luogo, this.applicazione);
+
+                // Se un luogo rimane senza visite, allora il luogo viene rimosso
+                if (luogo.luogoSenzaVisite()) {
+                    serviceLuoghi.rimuoviLuogo(luogo, this.applicazione);
+                    System.out.println("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID() + " perchè non sono presenti visite associate.");
+                }
+            }
+            else {
+                System.out.println("Non è possibile rimuovere nessuna visita associata a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
+            }
+        });
 
         m.aggiungi(15, "Elimina un volontario", () -> {
 
+            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+                OutputManager.visualizzaSoloVolontari(this.applicazione);
+                int scelta = InputManager.leggiInteroConMinMax(
+                        "\nSeleziona il volontario che si vuole eliminare: ",
+                        1, serviceVolontari.getNumeroVolontari()); //+1????? da verificare
+                serviceVolontari.eliminaVolontari(this.applicazione, scelta);
+
+                // se una visita risulta essere senza volontari viene rimossa
+                // se un luogo rimane senza visite viene rimosso
+                for(Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
+                    for(Visita v : l.getInsiemeVisite().getListaVisite()) {
+                        if(v.visitaSenzaVolontari()) {
+                            serviceVisite.rimuoviVisita(v, l, this.applicazione);
+                        }
+                        if(l.luogoSenzaVisite()) {
+                            serviceLuoghi.rimuoviLuogo(l, this.applicazione);
+                            System.out.println("Hai eliminato il luogo  " + l.getNome() + " - " + l.getLuogoID() + " perchè non sono presenti visite associate.");
+                        }
+                    }
+                }
+            }
+            else {
+                System.out.println("Non è possibile rimuovere un volontario: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
+            }
         });
 
         return m;
@@ -168,9 +266,11 @@ public class MenuConfiguratore extends MenuManager {
 
     @Override
     public void primaInizializzazione() {
-        applicazione.setAmbitoTerritoriale(InputManager.richiediAmbitoTerritorialeApplicazione());
-        applicazione.setNumeroMassimoIscrivibili(InputManager.richiediNumeroMassimoIscrivibili());
-        applicazione.aggiungiLuoghi(InputManager.chiediLuoghi(this.applicazione));
-        applicazione.setDaConfigurare(false);
+        ServiceLuoghi serviceLuoghi = new ServiceLuoghi(applicazione);
+        ServiceApplicazione serviceApplicazione = new ServiceApplicazione(applicazione);
+        serviceApplicazione.setAmbitoTerritoriale(InputManager.richiediAmbitoTerritorialeApplicazione());
+        serviceApplicazione.setNumeroMassimoIscrivibili(InputManager.richiediNumeroMassimoIscrivibili());
+        serviceLuoghi.aggiungiLuoghiSeNonPresenti(InputManager.chiediLuoghi(this.applicazione), this.applicazione.getListaLuoghi());
+        serviceApplicazione.setDaConfigurare(false);
     }
 }

@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <disponibilitaVolontari>
-  <volontario username="gianb08">
-    <disponibilita>
-      <data>
-        <giorno>18</giorno>
-        <mese>12</mese>
-        <anno>2025</anno>
-      </data>
-    </disponibilita>
-  </volontario>
   <volontario username="elisab08">
     <disponibilita>
       <data>
@@ -28,15 +19,24 @@
       </data>
     </disponibilita>
   </volontario>
-  <volontario username="danielel96">
+  <volontario username="andreab12">
     <disponibilita>
       <data>
-        <giorno>16</giorno>
+        <giorno>11</giorno>
         <mese>12</mese>
         <anno>2025</anno>
       </data>
       <data>
-        <giorno>22</giorno>
+        <giorno>13</giorno>
+        <mese>12</mese>
+        <anno>2025</anno>
+      </data>
+    </disponibilita>
+  </volontario>
+  <volontario username="gianb08">
+    <disponibilita>
+      <data>
+        <giorno>18</giorno>
         <mese>12</mese>
         <anno>2025</anno>
       </data>
@@ -116,15 +116,15 @@
       </data>
     </disponibilita>
   </volontario>
-  <volontario username="andreab12">
+  <volontario username="danielel96">
     <disponibilita>
       <data>
-        <giorno>11</giorno>
+        <giorno>16</giorno>
         <mese>12</mese>
         <anno>2025</anno>
       </data>
       <data>
-        <giorno>13</giorno>
+        <giorno>22</giorno>
         <mese>12</mese>
         <anno>2025</anno>
       </data>
