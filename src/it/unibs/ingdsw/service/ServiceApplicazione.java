@@ -30,7 +30,7 @@ public class ServiceApplicazione {
     }
 
     public HashMap<Visita, InsiemeDate> produciVisitePerIlMese (int mese, int anno) {
-
+        return applicazione.produciVisitePerIlMese(mese, anno);
 
     }
 }

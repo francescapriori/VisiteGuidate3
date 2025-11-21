@@ -121,8 +121,8 @@ public class MenuConfiguratore extends MenuManager {
 
         m.aggiungi(9, "Produci il piano delle visite per il mese di " + nomeMeseProduzione + " " + annoProduzione, () -> {
             if(this.applicazione.getStato() == Stato.DISP_CHIUSE) {
-                HashMap<Visita, InsiemeDate> calendarioMensile = applicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
 
+                HashMap<Visita, InsiemeDate> calendarioMensile = serviceApplicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
 
                 OutputManager.visualizzaCalendario(calendarioMensile, nomeMeseProduzione, annoProduzione);
                 if(!calendarioMensile.isEmpty()) {
