@@ -10,7 +10,6 @@ import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.ListaVisite;
 import it.unibs.ingdsw.visite.StatoVisita;
 import it.unibs.ingdsw.visite.Visita;
-import it.unibs.ingdsw.applicazione.Target;
 
 import java.time.YearMonth;
 import java.util.HashMap;
