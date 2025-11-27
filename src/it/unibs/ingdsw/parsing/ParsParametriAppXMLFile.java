@@ -1,6 +1,6 @@
 package it.unibs.ingdsw.parsing;
 
-import it.unibs.ingdsw.applicazione.Stato;
+import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -19,7 +19,7 @@ public class ParsParametriAppXMLFile {
     private String ambitoTerritoriale;
     private int numeroMassimoIscrivibili;
     private boolean ambienteDaConfigurare;
-    private Stato stato; // <-- enum DISP_APERTE, DISP_CHIUSE, PRODUZIONE
+    private StatoRichiestaDisponibilita stato; // <-- enum DISP_APERTE, DISP_CHIUSE, PRODUZIONE
 
     public ParsParametriAppXMLFile() {
         try {
@@ -28,11 +28,11 @@ public class ParsParametriAppXMLFile {
             System.err.println("Errore nel parsing XML: " + e.getMessage());
             e.printStackTrace();
             // fallback di sicurezza
-            this.stato = Stato.DISP_CHIUSE;
+            this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
         }
         // default se non trovato a XML valido
         if (this.stato == null) {
-            this.stato = Stato.DISP_CHIUSE;
+            this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
         }
     }
 
@@ -75,11 +75,11 @@ public class ParsParametriAppXMLFile {
 
             if (!statoText.isEmpty()) {
                 try {
-                    stato = Stato.valueOf(statoText);   // es. "DISP_APERTE"
+                    stato = StatoRichiestaDisponibilita.valueOf(statoText);   // es. "DISP_APERTE"
                 } catch (IllegalArgumentException ex) {
                     System.err.println("Valore di <stato> non valido: " + statoText
                             + ". Imposto default DISP_CHIUSE.");
-                    stato = Stato.DISP_CHIUSE;
+                    stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
                 }
             }
         }
@@ -97,7 +97,7 @@ public class ParsParametriAppXMLFile {
         return ambienteDaConfigurare;
     }
 
-    public Stato getStato() {
+    public StatoRichiestaDisponibilita getStato() {
         return stato;
     }
 
@@ -105,18 +105,18 @@ public class ParsParametriAppXMLFile {
 
     // Overload storico: mantiene compatibilità, usa default per stato e ambienteDaConfigurare
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili) {
-        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, false, Stato.DISP_CHIUSE);
+        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, false, StatoRichiestaDisponibilita.DISP_CHIUSE);
     }
 
     // Overload con il flag ambienteDaConfigurare
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
                                       boolean ambienteDaConfigurare) {
-        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, ambienteDaConfigurare, Stato.DISP_CHIUSE);
+        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, ambienteDaConfigurare, StatoRichiestaDisponibilita.DISP_CHIUSE);
     }
 
     // Overload per pilotare anche lo Stato
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
-                                      boolean ambienteDaConfigurare, Stato stato) {
+                                      boolean ambienteDaConfigurare, StatoRichiestaDisponibilita stato) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -140,7 +140,7 @@ public class ParsParametriAppXMLFile {
             // ---- SCRITTURA STATO ----
             Element eStato = doc.createElement("stato");
             // salvo il name() dell'enum, es. "DISP_APERTE"
-            eStato.setTextContent((stato != null ? stato : Stato.DISP_CHIUSE).name());
+            eStato.setTextContent((stato != null ? stato : StatoRichiestaDisponibilita.DISP_CHIUSE).name());
             root.appendChild(eStato);
 
             File outFile = new File(DATA);

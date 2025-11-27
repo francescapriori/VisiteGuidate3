@@ -7,8 +7,8 @@ import it.unibs.ingdsw.tempo.Data;
 import it.unibs.ingdsw.tempo.InsiemeDate;
 import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.utenti.Volontario;
+import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.ListaVisite;
-import it.unibs.ingdsw.visite.StatoVisita;
 import it.unibs.ingdsw.visite.Visita;
 
 import java.time.YearMonth;
@@ -91,20 +91,14 @@ public class MenuConfiguratore extends MenuManager {
 
         m.aggiungi(6, "Visualizza visite per stato", () -> {
             do {
-                StatoVisita statoScelto = InputManager.chiediStatoVisita();
-                ListaVisite listaPerStato = serviceVisite.listaPerStato(statoScelto);
-                System.out.println("Lista delle visite con stato: " + statoScelto.toString());
-                OutputManager.visualizzaListaVisite(listaPerStato);
-                if (listaPerStato.getListaVisite().isEmpty()) {
-                    System.out.println("Nessuna visita disponibile.");
-                }
+                //fa riferimento al calendario degli appuntamenti e non alle visite todo da modificare anche nelle altre versioni
             } while("sì".equals(InputManager.chiediSiNo("Vuoi visualizzare le visite per un altro stato?")));
         });
 
         m.aggiungi(7, "Apri raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(this.applicazione.getStato() == Stato.DISP_CHIUSE || this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStato() == StatoRichiestaDisponibilita.DISP_CHIUSE) {
                 System.out.println("Da ora è possibile raccogliere le disponibilità dei Volontari per il mese di "+ nomeMeseDisponibilita + " " + annoDisponibilita);
-                this.applicazione.setStato(Stato.DISP_APERTE);
+                this.applicazione.setStato(StatoRichiestaDisponibilita.DISP_APERTE); //serviceApplicazione
             }
             else {
                 System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono già in corso.");
@@ -112,34 +106,34 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(8, "Chiudi raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(this.applicazione.getStato() == Stato.DISP_APERTE) {
+            if(this.applicazione.getStato() == StatoRichiestaDisponibilita.DISP_APERTE) {
                 System.out.println("Hai chiuso la raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita);
-                this.applicazione.setStato(Stato.DISP_CHIUSE);
+                this.applicazione.setStato(StatoRichiestaDisponibilita.DISP_CHIUSE);
             }
         });
 
         m.aggiungi(9, "Produci il piano delle visite per il mese di " + nomeMeseProduzione + " " + annoProduzione, () -> {
-            if(this.applicazione.getStato() == Stato.DISP_CHIUSE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.NON_PRODOTTE) {
 
-                HashMap<Visita, InsiemeDate> calendarioMensile = serviceApplicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
+                //HashMap<Visita, InsiemeDate> calendarioMensile = serviceApplicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
 
-                OutputManager.visualizzaCalendario(calendarioMensile, nomeMeseProduzione, annoProduzione);
-                if(!calendarioMensile.isEmpty()) {
-                    this.applicazione.setCalendarioVisite(calendarioMensile); //viene sovrascritto tutte le volte
-                }
+                CalendarioAppuntamenti calendario = serviceApplicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
+
+                OutputManager.visualizzaCalendario(calendario, nomeMeseProduzione, annoProduzione);
+//                if(!calendarioMensile.isEmpty()) {
+//                    this.applicazione.setCalendarioVisite(calendarioMensile); //viene sovrascritto tutte le volte
+//                } todo salvataggio su XML: modificare HashMap<Visita, InsiemeDate> calendarioVisite in CalendarioApuntamenti
 
                 // forse nel metodo è necessario cambiare lo stato della visita in PIANIFICATA se rientra nel calendario definitivo, nel caso ha senso mostrare la data se è pianificata nello stato delle visite opzione 6
-                this.applicazione.setStato(Stato.PRODUZIONE);
+                this.applicazione.setStatoProduzione(StatoProduzioneVisite.PRODOTTE);
             }
             else {
-                System.out.println("Non è possibile produrre il piano delle visite per il mese di " + nomeMeseProduzione + " " +
-                        annoProduzione + " perchè è ancora aperta la raccolta disponibilità dei volontari per il mese di " +
-                            nomeMeseProduzione + " " + annoProduzione);
+                System.out.println("È stato già prodotto il piano delle visite per il mese di " + nomeMeseProduzione + " " + annoProduzione);
             }
         });
 
         m.aggiungi(10, "Aggiungi un nuovo luogo all'elenco", () -> {
-            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 serviceLuoghi.aggiungiLuoghiSeNonPresenti(InputManager.chiediLuoghi(this.applicazione), this.applicazione.getListaLuoghi());
             }
             else {
@@ -149,7 +143,7 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(11, "Elimina un luogo", () -> {
-            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo che si vuole rimuovere: ",
@@ -165,7 +159,7 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(12, "Aggiungi una o più visite ad un luogo già esistente", () -> {
-            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole aggiungere la/e visita/e: ",
@@ -182,7 +176,7 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(13, "Aggiungi uno o più volontari ad una visita", () -> {
-            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
@@ -205,7 +199,7 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(14, "Elimina una visita associata ad un luogo", () -> {
-            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
@@ -233,7 +227,7 @@ public class MenuConfiguratore extends MenuManager {
 
         m.aggiungi(15, "Elimina un volontario", () -> {
 
-            if(this.applicazione.getStato() == Stato.PRODUZIONE) {
+            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaSoloVolontari(this.applicazione);
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il volontario che si vuole eliminare: ",

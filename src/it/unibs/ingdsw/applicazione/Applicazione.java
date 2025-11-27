@@ -5,6 +5,8 @@ import it.unibs.ingdsw.tempo.*;
 import it.unibs.ingdsw.utenti.ListaUtenti;
 import it.unibs.ingdsw.tempo.InsiemeDate;
 import it.unibs.ingdsw.utenti.Volontario;
+import it.unibs.ingdsw.visite.Appuntamento;
+import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.Visita;
 import it.unibs.ingdsw.parsing.*;
 
@@ -23,7 +25,8 @@ public class Applicazione {
     private InsiemeDate dateEscluse;
     private HashMap<Volontario, InsiemeDate> disponibilitaPerVol;
     private HashMap<Visita, InsiemeDate> calendarioVisite;
-    private Stato stato;
+    private StatoRichiestaDisponibilita stato;
+    private StatoProduzioneVisite statoProduzione;
     private LocalDate oggi;
 
     public Applicazione() {}
@@ -74,6 +77,12 @@ public class Applicazione {
         return dateEscluse;
     }
 
+    public void setStatoProduzione(StatoProduzioneVisite statoProd) {
+        this.statoProduzione = statoProd;
+    }
+    public StatoProduzioneVisite getStatoProd() {
+        return this.statoProduzione;
+    }
 
 
     public void setInsiemeDate(InsiemeDate dateEscluse) {
@@ -94,10 +103,10 @@ public class Applicazione {
         this.disponibilitaPerVol = disponibilitaPerVol;
     }
 
-    public void setStato(Stato stato) {
+    public void setStato(StatoRichiestaDisponibilita stato) {
         this.stato = stato;
     }
-    public Stato getStato() {
+    public StatoRichiestaDisponibilita getStato() {
         return stato;
     }
 
@@ -160,33 +169,32 @@ public class Applicazione {
     }
 
 
-    public HashMap<Visita, InsiemeDate> produciVisitePerIlMese(int meseTargetV, int annoTargetV) {
+    public CalendarioAppuntamenti produciVisitePerIlMese(int meseTargetV, int annoTargetV) {
 
         HashMap<Visita, InsiemeDate> calendarioProvvisorio = this.listaLuoghi.getTotaleVisite().calendarioProvvisiorioVisiteDelMese(meseTargetV, annoTargetV);
         HashMap<Visita, InsiemeDate> calendarioDefinitivo = new HashMap();
 
-        // se c'è corrispondenza allora la data viene aggiunta al calendario definitivo
         for (Map.Entry<Visita, InsiemeDate> entry : calendarioProvvisorio.entrySet()) {
             Visita visita = entry.getKey();
             InsiemeDate dateCalendarioProvvisorio = entry.getValue();
-            InsiemeDate disponibilitaVolontariAssociatiThisVisita = InsiemeDate.dateDeiVolontari(this.disponibilitaPerVol, visita.getVolontariVisita());
-            InsiemeDate dateDefinitiveVisita = new InsiemeDate();
 
-            for (Data d : dateCalendarioProvvisorio.getInsiemeDate()) {
-                // la data è presente nelle disponibilità delle date associate ai volontari della visita?
-                for(Data d2 : disponibilitaVolontariAssociatiThisVisita.getInsiemeDate()) {
-                    if(d.dateUguali(d2)) {
-                        // c'è almeno un volontario che ha dato disponibilità per quel giorno
-                        dateDefinitiveVisita.aggiungiData(d);
-                        //uscire dal for d2 e tornare al for d
+            for (Map.Entry<Volontario, InsiemeDate> entry2 : volontariConDate.entrySet()) {
+                Volontario volontario = entry2.getKey();
+                InsiemeDate dateDisponibilitaVolontario = entry2.getValue();
+
+                for (Data d1 : dateCalendarioProvvisorio.getInsiemeDate()) {
+
+                    for(Data d2 : dateDisponibilitaVolontario.getInsiemeDate()) {
+
+                        if(d1.dateUguali(d2) && !calendarioAppuntamenti.volontarioGiaPresenteInData(d2, volontario)) {
+                            calendarioAppuntamenti.getCalendarioVisite().add(new Appuntamento(visita, d1, volontario));
+                            break;
+                        }
                     }
                 }
             }
-            if(!dateDefinitiveVisita.getInsiemeDate().isEmpty()) {
-                calendarioDefinitivo.put(visita, dateDefinitiveVisita);
-            }
         }
-        return calendarioDefinitivo;
+        return calendarioAppuntamenti;
     }
 
 }

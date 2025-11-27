@@ -1,7 +1,9 @@
 package it.unibs.ingdsw.service;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
+import it.unibs.ingdsw.tempo.Data;
 import it.unibs.ingdsw.tempo.InsiemeDate;
+import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.Visita;
 
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class ServiceApplicazione {
         this.applicazione.setDaConfigurare(val);
     }
 
-    public HashMap<Visita, InsiemeDate> produciVisitePerIlMese (int mese, int anno) {
+    public CalendarioAppuntamenti produciVisitePerIlMese (int mese, int anno) {
         return applicazione.produciVisitePerIlMese(mese, anno);
 
     }

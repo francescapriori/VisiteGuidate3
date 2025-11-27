@@ -32,7 +32,7 @@ public class MenuVolontario extends MenuManager {
         ServiceDate serviceDate = new ServiceDate(applicazione);
 
 
-        // esattamente il 16 o dopo
+        // esattamente il 16 o dopo todo da cambiare con classe target
         if (isDayAfterThreshold()==0 || isDayAfterThreshold()==1) {
             targetDisponibilita = calcolaDataTarget(3);
         } else { // prima del 16
@@ -52,7 +52,7 @@ public class MenuVolontario extends MenuManager {
         });
 
         m.aggiungi(2, "Indica le tue disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(this.applicazione.getStato()==Stato.DISP_APERTE) {
+            if(this.applicazione.getStato()== StatoRichiestaDisponibilita.DISP_APERTE) {
                 InsiemeDate dateEscluse = serviceDate.getDateEscluse(meseDisponibilita, annoDisponibilita);
                 OutputManager.visualizzaDatePerMeseAnno(dateEscluse, meseDisponibilita, annoDisponibilita, OutputManager.TipoRichiestaData.ESCLUSIONE);
                 String nomeMese = Month.of(meseDisponibilita).getDisplayName(TextStyle.FULL, Locale.ITALIAN);

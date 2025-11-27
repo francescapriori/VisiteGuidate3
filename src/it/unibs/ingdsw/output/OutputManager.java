@@ -5,6 +5,8 @@ import it.unibs.ingdsw.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.tempo.InsiemeDate;
 import it.unibs.ingdsw.utenti.Volontario;
+import it.unibs.ingdsw.visite.Appuntamento;
+import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.ListaVisite;
 import it.unibs.ingdsw.visite.Visita;
 
@@ -98,13 +100,11 @@ public class OutputManager {
         }
     }
 
-    public static void visualizzaCalendario(HashMap<Visita, InsiemeDate> calendarioMensile, String nomeMeseV, int annoTargetV) {
+    public static void visualizzaCalendario(CalendarioAppuntamenti calendarioAppuntamenti, String nomeMeseV, int annoTargetV) {
 
-        System.out.println("\n-----Lista delle visite per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
-        for(Map.Entry<Visita, InsiemeDate> entry : calendarioMensile.entrySet()) {
-            Visita visita = entry.getKey();
-            InsiemeDate dateCalendarioMensile = entry.getValue();
-            System.out.println("- " + visita.getTitolo() + "\n  Date disponibilità visita: " + dateCalendarioMensile.toString());
+        System.out.println("\n-----Lista degli appuntamenti per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
+        for(Appuntamento a : calendarioAppuntamenti.getCalendarioVisite()) {
+            System.out.println(a.toString());
         }
     }
 }
