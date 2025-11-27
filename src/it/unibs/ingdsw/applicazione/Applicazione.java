@@ -172,7 +172,8 @@ public class Applicazione {
     public CalendarioAppuntamenti produciVisitePerIlMese(int meseTargetV, int annoTargetV) {
 
         HashMap<Visita, InsiemeDate> calendarioProvvisorio = this.listaLuoghi.getTotaleVisite().calendarioProvvisiorioVisiteDelMese(meseTargetV, annoTargetV);
-        HashMap<Visita, InsiemeDate> calendarioDefinitivo = new HashMap();
+        CalendarioAppuntamenti calendarioAppuntamenti = new CalendarioAppuntamenti();
+        HashMap<Volontario, InsiemeDate> volontariConDate = this.disponibilitaPerVol;
 
         for (Map.Entry<Visita, InsiemeDate> entry : calendarioProvvisorio.entrySet()) {
             Visita visita = entry.getKey();

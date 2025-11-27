@@ -10,8 +10,8 @@ public abstract class MenuManager {
 
     public static final int INIZIO_PERIODO_ESCLUSIONE_DATE = 18;
 
-    private final Applicazione applicazione;
-    private final Utente utente;
+    public final Applicazione applicazione;
+    public final Utente utente;
 
     public MenuManager(Applicazione applicazione, Utente utente) {
         this.applicazione = applicazione;
