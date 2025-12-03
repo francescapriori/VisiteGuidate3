@@ -1,5 +1,6 @@
 package it.unibs.ingdsw.parsing;
 
+import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
 import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +20,8 @@ public class ParsParametriAppXMLFile {
     private String ambitoTerritoriale;
     private int numeroMassimoIscrivibili;
     private boolean ambienteDaConfigurare;
-    private StatoRichiestaDisponibilita stato; // <-- enum DISP_APERTE, DISP_CHIUSE, PRODUZIONE
+    private StatoRichiestaDisponibilita stato;          // DISP_APERTE, DISP_CHIUSE
+    private StatoProduzioneVisite statoProduzione;      // PRODOTTE, NON_PRODOTTE
 
     public ParsParametriAppXMLFile() {
         try {
@@ -29,10 +31,14 @@ public class ParsParametriAppXMLFile {
             e.printStackTrace();
             // fallback di sicurezza
             this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
+            this.statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
         }
         // default se non trovato a XML valido
         if (this.stato == null) {
             this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
+        }
+        if (this.statoProduzione == null) {
+            this.statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
         }
     }
 
@@ -83,6 +89,23 @@ public class ParsParametriAppXMLFile {
                 }
             }
         }
+
+        if (root.getElementsByTagName("statoProduzione").getLength() > 0 &&
+                root.getElementsByTagName("statoProduzione").item(0) != null) {
+
+            String statoProdText = root.getElementsByTagName("statoProduzione").item(0).getTextContent().trim();
+
+            if (!statoProdText.isEmpty()) {
+                try {
+                    statoProduzione = StatoProduzioneVisite.valueOf(statoProdText); // es. "PRODOTTE"
+                } catch (IllegalArgumentException ex) {
+                    System.err.println("Valore di <statoProduzione> non valido: " + statoProdText
+                            + ". Imposto default NON_PRODOTTE.");
+                    statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
+                }
+            }
+        }
+
     }
 
     public String getAmbitoTerritoriale() {
@@ -101,22 +124,23 @@ public class ParsParametriAppXMLFile {
         return stato;
     }
 
-    // ----------------- SALVATAGGIO -----------------
-
-    // Overload storico: mantiene compatibilità, usa default per stato e ambienteDaConfigurare
-    public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili) {
-        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, false, StatoRichiestaDisponibilita.DISP_CHIUSE);
+    public StatoProduzioneVisite getStatoProduzione() {
+        return statoProduzione;
     }
 
-    // Overload con il flag ambienteDaConfigurare
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
-                                      boolean ambienteDaConfigurare) {
-        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili, ambienteDaConfigurare, StatoRichiestaDisponibilita.DISP_CHIUSE);
+                                      StatoRichiestaDisponibilita statoDisp,
+                                      StatoProduzioneVisite statoProduzione) {
+        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili,
+                false,                       // ambienteDaConfigurare
+                statoDisp != null ? statoDisp : StatoRichiestaDisponibilita.DISP_CHIUSE,
+                statoProduzione != null ? statoProduzione : StatoProduzioneVisite.NON_PRODOTTE);
     }
 
-    // Overload per pilotare anche lo Stato
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
-                                      boolean ambienteDaConfigurare, StatoRichiestaDisponibilita stato) {
+                                      boolean ambienteDaConfigurare,
+                                      StatoRichiestaDisponibilita stato,
+                                      StatoProduzioneVisite statoProduzione) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -137,11 +161,17 @@ public class ParsParametriAppXMLFile {
             eMax.setTextContent(Integer.toString(Math.max(0, numeroMaxIscrivibili)));
             root.appendChild(eMax);
 
-            // ---- SCRITTURA STATO ----
             Element eStato = doc.createElement("stato");
-            // salvo il name() dell'enum, es. "DISP_APERTE"
-            eStato.setTextContent((stato != null ? stato : StatoRichiestaDisponibilita.DISP_CHIUSE).name());
+            eStato.setTextContent((stato != null
+                    ? stato
+                    : StatoRichiestaDisponibilita.DISP_CHIUSE).name());
             root.appendChild(eStato);
+
+            Element eStatoProd = doc.createElement("statoProduzione");
+            eStatoProd.setTextContent((statoProduzione != null
+                    ? statoProduzione
+                    : StatoProduzioneVisite.NON_PRODOTTE).name());
+            root.appendChild(eStatoProd);
 
             File outFile = new File(DATA);
             File parent = outFile.getParentFile();
@@ -159,4 +189,6 @@ public class ParsParametriAppXMLFile {
             e.printStackTrace();
         }
     }
+
+
 }

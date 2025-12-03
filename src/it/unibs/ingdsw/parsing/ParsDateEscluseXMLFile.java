@@ -81,7 +81,6 @@ public class ParsDateEscluseXMLFile {
         dateEscluse.ordinaDateCronologicamente();
     }
 
-
     private static Data parseDataElement(Element eData) {
         // prova con sotto-tag
         String gTxt = getText(eData, "giorno", null);

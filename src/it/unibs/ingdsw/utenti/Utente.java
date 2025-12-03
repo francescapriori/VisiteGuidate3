@@ -3,6 +3,8 @@ package it.unibs.ingdsw.utenti;
 import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.applicazione.MenuManager;
 
+import java.util.Objects;
+
 public abstract class Utente {
 
     private String username;
@@ -56,22 +58,8 @@ public abstract class Utente {
         menu.creaMenu().mostra();
     }
 
-    public boolean ugualeA(Utente u) {
-        if (userUguale(u.getUsername()) && pwUguale(u.getPassword())) {
-            return true;
-        }
-        return false;
-    }
-
     public boolean pwUguale(String pwd) {
         if (this.password.equals(pwd)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean userUguale(String user) {
-        if (this.username.equalsIgnoreCase(user)) {
             return true;
         }
         return false;
@@ -80,6 +68,21 @@ public abstract class Utente {
     @Override
     public String toString() {
         return this.username;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;                 // stesso oggetto
+        if (!(o instanceof Utente)) return false;   // deve essere Utente o sottoclasse
+        Utente utente = (Utente) o;
+        // confronto basato SOLO sullo username
+        return Objects.equals(username, utente.username);
+    }
+
+    @Override
+    public int hashCode() {
+        // coerente con equals: usa solo username
+        return Objects.hash(username);
     }
 
 }

@@ -27,7 +27,7 @@ public class Main {
 
             String risposta = InputManager.chiediSiNo("\nVuoi fare un altro accesso?");
             if (!"sì".equals(risposta)) {
-                break; // esce dal programma
+                break;
             }
         }
     }

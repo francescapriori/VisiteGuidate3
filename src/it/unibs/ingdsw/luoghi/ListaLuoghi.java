@@ -23,16 +23,6 @@ public class ListaLuoghi {
         this.listaLuoghi.add(luogo);
     }
 
-
-    public boolean luogoPresente(Luogo luogo) {
-        for (Luogo l : this.listaLuoghi) {
-            if (l.getNome().equals(luogo.getNome()) && l.getLuogoID().equals(luogo.getLuogoID())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public int getNumeroLuogo() {
         return this.listaLuoghi.size();
     }
@@ -117,4 +107,14 @@ public class ListaLuoghi {
         return true; // aggiunto ora
     }
 
+    public boolean volConAlmenoUnaVisita(Volontario volontario) {
+        for (Luogo luogo : this.listaLuoghi) {
+            for (Visita v : luogo.getInsiemeVisite().getListaVisite()) {
+                if (v.getVolontariVisita().contains(volontario)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

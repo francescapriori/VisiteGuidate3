@@ -21,18 +21,6 @@ public class ServiceVisite {
         return this.applicazione.getListaLuoghi().getTotaleVisite();
     }
 
-    public ListaVisite listaPerStato(StatoVisita stato) {
-        ListaVisite lista = new ListaVisite();
-        for (Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
-            for (Visita v : l.getInsiemeVisite().getListaVisite()) {
-                if (v.getStatoVisita().equals(stato)) {
-                    lista.aggiungiVisita(v);
-                }
-            }
-        }
-        return lista;
-    }
-
     public ListaVisite visiteDelVolontario(Volontario volontario) {
         return this.applicazione.getListaLuoghi().visiteDelVolontario(volontario);
     }
@@ -49,26 +37,12 @@ public class ServiceVisite {
        return l.getVisitaIesima(scelta-1);
     }
 
-    // forse da spostare la logica nell'Applicazione e richiamarla da qui
-    public boolean rimuoviVisita(Visita v, Luogo luogo, Applicazione applicazione) {
-        Iterator<Visita> it = luogo.getInsiemeVisite().getListaVisite().iterator();
-        boolean rimosso = false;
-
-        while (it.hasNext()) {
-            Visita v1 = it.next();
-
-            // Controllo su titolo e luogoID
-            if (v1.getTitolo().equals(v.getTitolo())
-                    && v1.getLuogoID().equalsIgnoreCase(v.getLuogoID())) {
-
-                it.remove();
-                rimosso = true;
-                break; // esci dopo aver rimosso la prima visita trovata
-            }
-        }
-
-        return rimosso;
+    public boolean rimuoviVisita(Visita v, Luogo luogo) {
+        return this.applicazione.rimuoviVisita(v, luogo);
     }
 
 
+    public void eliminaSeSenzaVolontari() {
+        this.applicazione.eliminaSeSenzaVolontari();
+    }
 }

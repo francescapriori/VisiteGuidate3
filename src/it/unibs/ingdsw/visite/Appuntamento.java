@@ -31,9 +31,6 @@ public class Appuntamento {
     public Volontario getGuida() {
         return guida;
     }
-    public void setGuida(Volontario guida) {
-        this.guida = guida;
-    }
     public StatoVisita getStatoVisita() {
         return statoVisita;
     }
@@ -41,7 +38,8 @@ public class Appuntamento {
         this.statoVisita = statoVisita;
     }
 
+    @Override
     public String toString() {
-        return String.format(this.visita.getTitolo() + " - " + data.toString() + " - guida: " + guida.toString() + " - stato: " + statoVisita.toString());
+        return String.format(this.visita.getTitolo() + "\t-\t" + data.toString() + " alle ore " + this.visita.getOraInizioVisita().toString() + "\t-\tguida: " + guida.toString() + "\t-\tstato: " + statoVisita.toString());
     }
 }

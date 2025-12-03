@@ -1,6 +1,7 @@
 package it.unibs.ingdsw.applicazione;
 
 import it.unibs.ingdsw.output.OutputManager;
+import it.unibs.ingdsw.service.ServiceApplicazione;
 import it.unibs.ingdsw.service.ServiceDate;
 import it.unibs.ingdsw.service.ServiceVisite;
 import it.unibs.ingdsw.tempo.Data;
@@ -27,17 +28,12 @@ public class MenuVolontario extends MenuManager {
     public Menu creaMenu() {
         Menu m = new Menu("Menu Volontario");
 
-        YearMonth targetDisponibilita;
+        Target targetApplicazione = new Target();
         ServiceVisite serviceVisite = new ServiceVisite(applicazione);
         ServiceDate serviceDate = new ServiceDate(applicazione);
+        ServiceApplicazione serviceApplicazione = new ServiceApplicazione(applicazione);
+        YearMonth targetDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
 
-
-        // esattamente il 16 o dopo todo da cambiare con classe target
-        if (isDayAfterThreshold()==0 || isDayAfterThreshold()==1) {
-            targetDisponibilita = calcolaDataTarget(3);
-        } else { // prima del 16
-            targetDisponibilita = calcolaDataTarget(2);
-        }
         String nomeMeseDisponibilita = Data.returnNomeMese(targetDisponibilita);
         int annoDisponibilita = Data.returnAnno(targetDisponibilita);
         int meseDisponibilita = Data.returnMese(targetDisponibilita);
@@ -52,7 +48,7 @@ public class MenuVolontario extends MenuManager {
         });
 
         m.aggiungi(2, "Indica le tue disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(this.applicazione.getStato()== StatoRichiestaDisponibilita.DISP_APERTE) {
+            if(serviceApplicazione.getStatoDisp()== StatoRichiestaDisponibilita.DISP_APERTE) {
                 InsiemeDate dateEscluse = serviceDate.getDateEscluse(meseDisponibilita, annoDisponibilita);
                 OutputManager.visualizzaDatePerMeseAnno(dateEscluse, meseDisponibilita, annoDisponibilita, OutputManager.TipoRichiestaData.ESCLUSIONE);
                 String nomeMese = Month.of(meseDisponibilita).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
@@ -65,7 +61,7 @@ public class MenuVolontario extends MenuManager {
                     do {
                         int giorno = InputManager.chiediGiorno(meseDisponibilita, annoDisponibilita);
                         data = new Data(giorno, meseDisponibilita, annoDisponibilita);
-                        if (!dateEscluse.isEmpty() && dateEscluse.dataPresente(data)) {
+                        if (!dateEscluse.getInsiemeDate().isEmpty() && dateEscluse.dataPresente(data)) {
                             System.out.println("Non puoi dare disponibilità per " + data + " perché è una data esclusa.");
                         } else if (insiemePerVolontario.dataPresente(data)) {
                             System.out.println("Hai già dato disponibilità per " + data + ".");

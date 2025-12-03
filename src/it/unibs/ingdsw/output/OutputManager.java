@@ -5,16 +5,12 @@ import it.unibs.ingdsw.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.tempo.InsiemeDate;
 import it.unibs.ingdsw.utenti.Volontario;
-import it.unibs.ingdsw.visite.Appuntamento;
-import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
-import it.unibs.ingdsw.visite.ListaVisite;
-import it.unibs.ingdsw.visite.Visita;
+import it.unibs.ingdsw.visite.*;
 
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class OutputManager {
 
@@ -50,6 +46,15 @@ public class OutputManager {
         }
     }
 
+    public static void visualizzaAppuntamentiPerStato(CalendarioAppuntamenti appuntamenti) {
+        System.out.println("Gli appuntamenti disponibili suddivisi nei vari stati sono:\n");
+        StatoVisita[] tutti = StatoVisita.values();
+        for(StatoVisita s : tutti) {
+            System.out.println("Stato: " + s.toString());
+            System.out.println(appuntamenti.getAppuntamentiConStato(s).toString() + "\n");
+        }
+    }
+
     public enum TipoRichiestaData {
         ESCLUSIONE, DISPONIBILITA
     }
@@ -67,7 +72,7 @@ public class OutputManager {
         for(Luogo l : luoghi.getListaLuoghi()) {
             System.out.println(i + ") " + l.stampaLuogoBase());
             for(Visita v : l.getInsiemeVisite().getListaVisite()) {
-                System.out.println("\t" + v.stampaVisitaBase());
+                System.out.println("\t-" + v.stampaVisitaBase());
             }
             i++;
         }
@@ -85,11 +90,6 @@ public class OutputManager {
                     System.out.println("  - " + v.getTitolo() + " - " + v.getLuogoID()));
             System.out.println();
         }
-    }
-
-    public static void visualizzaListaLuoghi(ListaLuoghi listaLuoghi) {
-        System.out.println("-----\nLista de Luoghi registrati: ");
-        System.out.println(listaLuoghi.visualizzaListaLuoghi());
     }
 
     public static void visualizzaListaVisite(ListaVisite listaVisite) {

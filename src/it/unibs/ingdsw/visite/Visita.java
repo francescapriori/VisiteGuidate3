@@ -89,6 +89,7 @@ public class Visita {
     public boolean isPresenzaBiglietto() {
         return presenzaBiglietto;
     }
+
     public ArrayList<Volontario> getVolontariVisita() {
         return volontariVisita;
     }
@@ -129,7 +130,6 @@ public class Visita {
     public InsiemeDate getDatePerVisita(int meseRiferimento, int annoRiferimento) {
         InsiemeDate risultato = new InsiemeDate();
 
-        // Estremi di validità complessivi (inclusivi)
         LocalDate start = LocalDate.of(inizioValiditaVisita.getAnno(),
                 inizioValiditaVisita.getMese(),
                 inizioValiditaVisita.getGiorno());
@@ -137,18 +137,14 @@ public class Visita {
                 fineValiditaVisita.getMese(),
                 fineValiditaVisita.getGiorno());
 
-        // Giorno VAR (es. MenuManager.INIZIO_PERIODO_ESCLUSIONE_DATE)
         int var = Target.SOGLIA_CAMBIO_MESE;
 
-        // Se VAR > giorni del mese, clamp al last day (es. 31 su Febbraio => 28/29)
         java.time.YearMonth ym = java.time.YearMonth.of(annoRiferimento, meseRiferimento);
         int safeDay = Math.min(var, ym.lengthOfMonth());
 
-        // Finestra richiesta: [VAR del (mese, anno), VAR-1 del mese successivo]
         LocalDate from = LocalDate.of(annoRiferimento, meseRiferimento, safeDay);
         LocalDate to   = from.plusMonths(1).minusDays(1);
 
-        // Intersezione con [start, end]
         if (from.isBefore(start)) from = start;
         if (to.isAfter(end)) to = end;
 

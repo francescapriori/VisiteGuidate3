@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <disponibilitaVolontari>
-  <volontario username="elisab08">
+  <volontario username="gianb08">
     <disponibilita>
       <data>
         <giorno>15</giorno>
-        <mese>12</mese>
-        <anno>2025</anno>
-      </data>
-      <data>
-        <giorno>12</giorno>
         <mese>1</mese>
         <anno>2026</anno>
       </data>
       <data>
-        <giorno>13</giorno>
+        <giorno>19</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>22</giorno>
         <mese>1</mese>
         <anno>2026</anno>
       </data>
@@ -31,14 +31,73 @@
         <mese>12</mese>
         <anno>2025</anno>
       </data>
+      <data>
+        <giorno>15</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>22</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>6</giorno>
+        <mese>2</mese>
+        <anno>2026</anno>
+      </data>
     </disponibilita>
   </volontario>
-  <volontario username="gianb08">
+  <volontario username="annachiarap02">
     <disponibilita>
       <data>
-        <giorno>18</giorno>
-        <mese>12</mese>
-        <anno>2025</anno>
+        <giorno>19</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>22</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>29</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>9</giorno>
+        <mese>2</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>12</giorno>
+        <mese>2</mese>
+        <anno>2026</anno>
+      </data>
+    </disponibilita>
+  </volontario>
+  <volontario username="danielel96">
+    <disponibilita>
+      <data>
+        <giorno>20</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>26</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>2</giorno>
+        <mese>2</mese>
+        <anno>2026</anno>
+      </data>
+      <data>
+        <giorno>9</giorno>
+        <mese>2</mese>
+        <anno>2026</anno>
       </data>
     </disponibilita>
   </volontario>
@@ -116,17 +175,17 @@
       </data>
     </disponibilita>
   </volontario>
-  <volontario username="danielel96">
+  <volontario username="elisab08">
     <disponibilita>
       <data>
         <giorno>16</giorno>
-        <mese>12</mese>
+        <mese>1</mese>
         <anno>2025</anno>
       </data>
       <data>
-        <giorno>22</giorno>
-        <mese>12</mese>
-        <anno>2025</anno>
+        <giorno>20</giorno>
+        <mese>1</mese>
+        <anno>2026</anno>
       </data>
     </disponibilita>
   </volontario>

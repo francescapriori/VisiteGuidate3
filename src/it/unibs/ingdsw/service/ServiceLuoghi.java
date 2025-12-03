@@ -4,10 +4,6 @@ import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.luoghi.Luogo;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-
 public class ServiceLuoghi {
     public Applicazione applicazione;
 
@@ -33,30 +29,14 @@ public class ServiceLuoghi {
         return this.applicazione.getListaLuoghi().getNumeroLuogo();
     }
 
-    // forse da spostare la logica nell'Applicazione e richiamarla da qui
+
     public Luogo scegliLuogo(int scelta) {
-        Luogo luogoSelezionato;
-        ListaLuoghi luoghi = this.applicazione.getListaLuoghi();
-        luogoSelezionato = luoghi.scegliLuogo(scelta - 1);
-        return luogoSelezionato;
+        return this.applicazione.scegliLuogo(scelta);
     }
 
-    // forse da spostare la logica nell'Applicazione e richiamarla da qui
-    public boolean rimuoviLuogo(Luogo luogo, Applicazione applicazione) {
-        ArrayList<Luogo> listaLuoghi = applicazione.getListaLuoghi().getListaLuoghi();
-        Iterator<Luogo> it = listaLuoghi.iterator();
-        boolean rimosso = false;
+    public void rimuoviLuogo (Luogo luogo) {
+        this.applicazione.rimuoviLuogo(luogo);
 
-        while (it.hasNext()) {
-            Luogo l1 = it.next();
-            if (l1.getNome().equals(luogo.getNome())) {
-                it.remove();
-                rimosso = true;
-                break;
-            }
-        }
-
-        return rimosso;
     }
 
 }

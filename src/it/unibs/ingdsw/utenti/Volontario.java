@@ -1,5 +1,7 @@
 package it.unibs.ingdsw.utenti;
 
+import java.util.Objects;
+
 public class Volontario extends Utente{
 
     public Volontario(String username, String password) {
@@ -9,4 +11,18 @@ public class Volontario extends Utente{
     public String getUsername() {
         return super.getUsername();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Utente)) return false; // ✅ accetta anche Volontario
+        Utente utente = (Utente) o;
+        return Objects.equals(getUsername(), utente.getUsername());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername());
+    }
+
 }

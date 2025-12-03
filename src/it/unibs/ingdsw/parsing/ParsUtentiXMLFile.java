@@ -106,7 +106,7 @@ public class ParsUtentiXMLFile {
             Utente u = switch (ruolo) {
                 case CONFIGURATORE -> new Configuratore(username, password);
                 case VOLONTARIO -> new Volontario(username, password);
-                // case FRUITORE -> new Fruitore(username, password); todo Versione 3
+                // case FRUITORE -> new Fruitore(username, password); todo Versione 4
                 default -> null;
             };
             if (u != null) setPwProvvisoriaSafe(u, pwProv);
@@ -131,7 +131,7 @@ public class ParsUtentiXMLFile {
                 switch (utente.getRuolo()) {
                     case CONFIGURATORE -> tag = "configuratore";
                     case VOLONTARIO -> tag = "volontario";
-                    //case FRUITORE -> tag = "fruitore" todo Versione 3
+                    //case FRUITORE -> tag = "fruitore" todo Versione 4
                     default -> {
                         System.err.println("Ruolo non supportato in scrittura: " + utente.getRuolo());
                         continue;

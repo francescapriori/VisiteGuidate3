@@ -81,11 +81,10 @@ public class ParsDisponibilitaVolontariXMLFile {
                 if (u instanceof Volontario v &&
                         v.getUsername() != null &&
                         v.getUsername().equalsIgnoreCase(username)) {
-                    return v; // usa l'istanza reale già presente
+                    return v;
                 }
             }
         }
-        // fallback: crea placeholder (password sconosciuta)
         return new Volontario(username, null);
     }
 
@@ -112,7 +111,6 @@ public class ParsDisponibilitaVolontariXMLFile {
         if (!d.dataValida()) System.err.println("Data non valida: " + d);
         return d;
     }
-
 
     public static void salvaDisponibilitaVolontari(HashMap<Volontario, InsiemeDate> mappa) {
         try {

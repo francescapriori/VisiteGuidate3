@@ -1,12 +1,10 @@
 package it.unibs.ingdsw.service;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
-import it.unibs.ingdsw.tempo.Data;
-import it.unibs.ingdsw.tempo.InsiemeDate;
+import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
+import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
 import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
-import it.unibs.ingdsw.visite.Visita;
 
-import java.util.HashMap;
 
 public class ServiceApplicazione {
     public Applicazione applicazione;
@@ -34,5 +32,25 @@ public class ServiceApplicazione {
     public CalendarioAppuntamenti produciVisitePerIlMese (int mese, int anno) {
         return applicazione.produciVisitePerIlMese(mese, anno);
 
+    }
+
+    public CalendarioAppuntamenti getAppuntamenti() {
+        return this.applicazione.getCalendarioAppuntamenti();
+    }
+
+    public void salvaCalendario(CalendarioAppuntamenti calendario) {
+        this.applicazione.setCalendarioAppuntamenti(calendario);
+    }
+
+    public void setStatoDisp(StatoRichiestaDisponibilita statoRichiestaDisponibilita) {
+        this.applicazione.setStatoDisp(statoRichiestaDisponibilita);
+    }
+
+    public StatoRichiestaDisponibilita getStatoDisp() {
+        return this.applicazione.getStatoDisp();
+    }
+
+    public StatoProduzioneVisite getStatoProd() {
+        return this.applicazione.getStatoProd();
     }
 }

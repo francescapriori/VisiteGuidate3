@@ -22,8 +22,8 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
-          <giorno>LUNEDI</giorno>
           <giorno>MARTEDI</giorno>
+          <giorno>SABATO</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -38,14 +38,14 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>10</ora>
-          <minuti>0</minuti>
+          <ora>9</ora>
+          <minuti>30</minuti>
         </oraInizio>
         <durataMinuti>120</durataMinuti>
         <presenzaBiglietto>true</presenzaBiglietto>
         <volontari>
           <volontario password="danielel96" username="danielel96"/>
-          <volontario password="elisab08" username="elisab08"/>
+          <volontario password="andreab12" username="andreab12"/>
         </volontari>
         <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
@@ -62,7 +62,7 @@
         </posizione>
         <giornate>
           <giorno>LUNEDI</giorno>
-          <giorno>MARTEDI</giorno>
+          <giorno>GIOVEDI</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -77,14 +77,14 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>8</ora>
+          <ora>14</ora>
           <minuti>0</minuti>
         </oraInizio>
         <durataMinuti>150</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
-          <volontario password="andreab12" username="andreab12"/>
-          <volontario password="elisab08" username="elisab08"/>
+          <volontario password="danielel96" username="danielel96"/>
+          <volontario password="gianb08" username="gianb08"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
@@ -113,7 +113,7 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
-          <giorno>GIOVEDI</giorno>
+          <giorno>MERCOLEDI</giorno>
           <giorno>VENERDI</giorno>
         </giornate>
         <validita>
@@ -136,7 +136,7 @@
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
           <volontario password="andreab12" username="andreab12"/>
-          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="elisab08" username="elisab08"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
@@ -152,9 +152,8 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
-          <giorno>MERCOLEDI</giorno>
-          <giorno>GIOVEDI</giorno>
-          <giorno>SABATO</giorno>
+          <giorno>MARTEDI</giorno>
+          <giorno>DOMENICA</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -169,14 +168,14 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>15</ora>
-          <minuti>0</minuti>
+          <ora>16</ora>
+          <minuti>30</minuti>
         </oraInizio>
         <durataMinuti>150</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
           <volontario password="gianb08" username="gianb08"/>
-          <volontario password="elisab08" username="elisab08"/>
+          <volontario password="lorenzol00" username="lorenzol00"/>
         </volontari>
         <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
@@ -205,8 +204,8 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
+          <giorno>LUNEDI</giorno>
           <giorno>GIOVEDI</giorno>
-          <giorno>VENERDI</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -221,14 +220,14 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>11</ora>
+          <ora>10</ora>
           <minuti>0</minuti>
         </oraInizio>
         <durataMinuti>90</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
           <volontario password="andreab12" username="andreab12"/>
-          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="annachiarap02" username="annachiarap02"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
@@ -245,7 +244,6 @@
         </posizione>
         <giornate>
           <giorno>MERCOLEDI</giorno>
-          <giorno>GIOVEDI</giorno>
           <giorno>SABATO</giorno>
         </giornate>
         <validita>
@@ -261,7 +259,7 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>15</ora>
+          <ora>17</ora>
           <minuti>0</minuti>
         </oraInizio>
         <durataMinuti>150</durataMinuti>
@@ -297,7 +295,7 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
-          <giorno>GIOVEDI</giorno>
+          <giorno>MARTEDI</giorno>
           <giorno>VENERDI</giorno>
         </giornate>
         <validita>
@@ -313,14 +311,14 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>11</ora>
+          <ora>9</ora>
           <minuti>0</minuti>
         </oraInizio>
         <durataMinuti>90</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
-          <volontario password="andreab12" username="andreab12"/>
-          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="danielel96" username="danielel96"/>
+          <volontario password="elisab08" username="elisab08"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
@@ -336,9 +334,7 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
-          <giorno>MERCOLEDI</giorno>
-          <giorno>GIOVEDI</giorno>
-          <giorno>SABATO</giorno>
+          <giorno>DOMENICA</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -359,8 +355,8 @@
         <durataMinuti>150</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
+          <volontario password="andreab12" username="andreab12"/>
           <volontario password="gianb08" username="gianb08"/>
-          <volontario password="elisab08" username="elisab08"/>
         </volontari>
         <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
@@ -390,7 +386,7 @@
         </posizione>
         <giornate>
           <giorno>GIOVEDI</giorno>
-          <giorno>VENERDI</giorno>
+          <giorno>SABATO</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -406,13 +402,13 @@
         </validita>
         <oraInizio>
           <ora>11</ora>
-          <minuti>0</minuti>
+          <minuti>30</minuti>
         </oraInizio>
         <durataMinuti>90</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
-          <volontario password="andreab12" username="andreab12"/>
-          <volontario password="gianb08" username="gianb08"/>
+          <volontario password="danielel96" username="danielel96"/>
+          <volontario password="lorenzol00" username="lorenzol00"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
@@ -428,9 +424,8 @@
           <lon>10.47</lon>
         </posizione>
         <giornate>
-          <giorno>MERCOLEDI</giorno>
-          <giorno>GIOVEDI</giorno>
-          <giorno>SABATO</giorno>
+          <giorno>VENERDI</giorno>
+          <giorno>DOMENICA</giorno>
         </giornate>
         <validita>
           <inizio>
@@ -445,14 +440,14 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>15</ora>
+          <ora>18</ora>
           <minuti>0</minuti>
         </oraInizio>
         <durataMinuti>150</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
-          <volontario password="lorenzol00" username="lorenzol00"/>
           <volontario password="elisab08" username="elisab08"/>
+          <volontario password="lorenzol00" username="lorenzol00"/>
         </volontari>
         <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>23</numeroMassimoPartecipanti>
@@ -497,14 +492,141 @@
           </fine>
         </validita>
         <oraInizio>
-          <ora>11</ora>
-          <minuti>0</minuti>
+          <ora>10</ora>
+          <minuti>30</minuti>
         </oraInizio>
         <durataMinuti>90</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
           <volontario password="andreab12" username="andreab12"/>
-          <volontario password="lorenzol00" username="lorenzol00"/>
+          <volontario password="danielel96" username="danielel96"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>PROVA</titolo>
+        <descrizione>PROVA</descrizione>
+        <posizione>
+          <paese>Castiglione delle Stiviere</paese>
+          <via>Piazza San Luigi Gonzaga</via>
+          <cap>46043</cap>
+          <lat>45.39</lat>
+          <lon>10.39</lon>
+        </posizione>
+        <giornate>
+          <giorno>SABATO</giorno>
+          <giorno>DOMENICA</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>10</ora>
+          <minuti>30</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="io" username="io"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+    </visite>
+  </luogo>
+  <luogo id="L007">
+    <nome>Santuarfgbhrtdhrthbsrth Luigi Gonzaga</nome>
+    <descrizione>Il santuario basilica di San Luigi Gonzaga è un edificio religioso di Castiglione delle Stiviere, in provincia di Mantova e si affaccia nella piazza dedicata al santo, patrono mondiale della gioventù. Nell'aprile del 1964 papa Paolo VI lo elevò alla dignità di basilica minore.</descrizione>
+    <posizione>
+      <paese>Castiglione delle Stiviere</paese>
+      <via>Piazza San Luigi Gonzaga</via>
+      <cap>46043</cap>
+      <lat>45.39</lat>
+      <lon>10.39</lon>
+    </posizione>
+    <visite>
+      <visita>
+        <titolo>San Lrthyurtyhe45e</titolo>
+        <descrizione>Visita guidata alla basilica-santuario barocca di San Luigi Gonzaga, voluta dal marchese Francesco Gonzaga nel 1608 e poi completata nel Settecento. Partiremo dalla facciata e dalla pianta a navata unica (in linea con il Concilio di Trento) per entrare tra opere e memorie del santo: la pala del Guercino (1650), l’affresco con la gloria di San Luigi di Giorgio Anselmi (1740), l’organo Bonato (1794) e l’urna con il teschio del santo sull’altare maggiore. Racconteremo anche la basilica minore dal 1964 (Paolo VI), la preghiera di Giovanni Paolo II nel 1991 e la cappella con Cinzia, Olimpia e Gridonia Gonzaga. Un percorso che intreccia storia di famiglia, spiritualità e arte.</descrizione>
+        <posizione>
+          <paese>Castiglione delle Stiviere</paese>
+          <via>Piazza San Luigi Gonzaga</via>
+          <cap>46043</cap>
+          <lat>45.39</lat>
+          <lon>10.39</lon>
+        </posizione>
+        <giornate>
+          <giorno>SABATO</giorno>
+          <giorno>DOMENICA</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>10</ora>
+          <minuti>30</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="io" username="io"/>
+        </volontari>
+        <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
+        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+      </visita>
+      <visita>
+        <titolo>PROVA</titolo>
+        <descrizione>PROVA</descrizione>
+        <posizione>
+          <paese>Castiglione delle Stiviere</paese>
+          <via>Piazza San Luigi Gonzaga</via>
+          <cap>46043</cap>
+          <lat>45.39</lat>
+          <lon>10.39</lon>
+        </posizione>
+        <giornate>
+          <giorno>SABATO</giorno>
+          <giorno>DOMENICA</giorno>
+        </giornate>
+        <validita>
+          <inizio>
+            <giorno>1</giorno>
+            <mese>3</mese>
+            <anno>2025</anno>
+          </inizio>
+          <fine>
+            <giorno>1</giorno>
+            <mese>5</mese>
+            <anno>2028</anno>
+          </fine>
+        </validita>
+        <oraInizio>
+          <ora>10</ora>
+          <minuti>30</minuti>
+        </oraInizio>
+        <durataMinuti>90</durataMinuti>
+        <presenzaBiglietto>false</presenzaBiglietto>
+        <volontari>
+          <volontario password="aaa" username="aaa"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>

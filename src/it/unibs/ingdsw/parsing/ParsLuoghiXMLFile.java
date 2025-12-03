@@ -39,8 +39,6 @@ public class ParsLuoghiXMLFile {
         return listaLuoghi;
     }
 
-    /* ===================== PARSE ===================== */
-
     private void parseXML() throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -277,7 +275,6 @@ public class ParsLuoghiXMLFile {
                 }
             }
 
-            // write file
             File out = new File(DATA);
             if (out.getParentFile() != null) out.getParentFile().mkdirs();
 

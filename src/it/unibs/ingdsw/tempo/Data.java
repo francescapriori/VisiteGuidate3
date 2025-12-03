@@ -81,38 +81,7 @@ public class Data {
         return !precede(data);
     }
 
-    public GiornoSettimana getGiornoSettimana() {
-        DayOfWeek dow = LocalDate.of(anno, mese, giorno).getDayOfWeek();
-        return switch (dow) {
-            case MONDAY    -> GiornoSettimana.LUNEDI;
-            case TUESDAY   -> GiornoSettimana.MARTEDI;
-            case WEDNESDAY -> GiornoSettimana.MERCOLEDI;
-            case THURSDAY  -> GiornoSettimana.GIOVEDI;
-            case FRIDAY    -> GiornoSettimana.VENERDI;
-            case SATURDAY  -> GiornoSettimana.SABATO;
-            case SUNDAY    -> GiornoSettimana.DOMENICA;
-        };
-    }
-
-    public static String getMeseStringa(int mese) {
-        switch (mese) {
-            case 1: return "gennaio";
-            case 2: return "febbraio";
-            case 3: return "marzo";
-            case 4: return "aprile";
-            case 5: return "maggio";
-            case 6: return "giugno";
-            case 7: return "luglio";
-            case 8: return "agosto";
-            case 9: return "settembre";
-            case 10: return "ottobre";
-            case 11: return "novembre";
-            case 12: return "dicembre";
-            default: return "";
-        }
-    }
-
-    public static String returnNomeMese(YearMonth target) {
+        public static String returnNomeMese(YearMonth target) {
         return target.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
     }
     public static int returnAnno(YearMonth target) {

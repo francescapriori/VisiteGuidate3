@@ -2,6 +2,7 @@
 <applicazione>
   <ambienteDaConfigurare>false</ambienteDaConfigurare>
   <ambitoTerritorialeCompetenza>AA</ambitoTerritorialeCompetenza>
-  <numeroMaxPerIniziativa>1</numeroMaxPerIniziativa>
-  <stato>DISP_APERTE</stato>
+  <numeroMaxPerIniziativa>4</numeroMaxPerIniziativa>
+  <stato>DISP_CHIUSE</stato>
+  <statoProduzione>PRODOTTE</statoProduzione>
 </applicazione>

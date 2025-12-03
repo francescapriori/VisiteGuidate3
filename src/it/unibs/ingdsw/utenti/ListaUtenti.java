@@ -9,6 +9,7 @@ public class ListaUtenti {
     public ListaUtenti() {
         this.listaUtenti = new ArrayList<>();
     }
+    public ListaUtenti(ArrayList<Utente> listaUtenti) {this.listaUtenti = listaUtenti;}
     public ArrayList<Utente> getListaUtenti() {
         return listaUtenti;
     }
@@ -43,6 +44,15 @@ public class ListaUtenti {
     }
 
     public boolean usernameInUso(String username) {
+        for (Utente u : this.listaUtenti) {
+            if (u.getUsername().equalsIgnoreCase(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean contieneUtente(String username) {
         for (Utente u : this.listaUtenti) {
             if (u.getUsername().equalsIgnoreCase(username)) {
                 return true;

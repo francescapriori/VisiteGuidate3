@@ -30,8 +30,8 @@ public class ServiceVolontari {
         return volontarioPerVisita;
     }
 
-    public void eliminaVolontari(Applicazione applicazione, int posizione) {
-        applicazione.rimuoviVolontarioIesimo(posizione);
+    public void eliminaVolontari(int posizione) {
+        this.applicazione.rimuoviVolontarioIesimo(posizione);
 
     }
 
@@ -41,5 +41,10 @@ public class ServiceVolontari {
 
     public int getNumeroVolontari() {
         return this.applicazione.getNumeroVolontari();
+    }
+
+
+    public void eliminaSeSenzaVisita() {
+        this.applicazione.eliminaSeSenzaVisita();
     }
 }

@@ -12,6 +12,7 @@ import it.unibs.ingdsw.visite.ListaVisite;
 import it.unibs.ingdsw.visite.Visita;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MenuConfiguratore extends MenuManager {
@@ -26,8 +27,8 @@ public class MenuConfiguratore extends MenuManager {
 
         Target targetApplicazione = new Target();
         YearMonth targetDisponibilita, targetProduzione, targetPerEsclusione;
-        targetDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
         targetPerEsclusione = targetApplicazione.calcolaDataTargetEsclusione();
+        targetDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
         targetProduzione = targetApplicazione.calcolaDataTargetProduzione();
 
         String nomeMesePerEsclusione = Data.returnNomeMese(targetPerEsclusione);
@@ -75,30 +76,19 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(5, "Visualizza tipi di visita per ciascun luogo", () -> {
-            System.out.println("-----\nLista de Luoghi registrati: ");
-            OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
+            System.out.println("-----\nLista de Luoghi registrati con relative visite: ");
+            OutputManager.visualizzaLuoghiEvisite(serviceLuoghi.getListaLuoghi());
 
-            do {
-                OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
-                int scelta = InputManager.leggiInteroConMinMax(
-                        "\nSeleziona il luogo di cui si vogliono visualizzare le visite: ",
-                        1, serviceLuoghi.getNumeroLuogo());
-                Luogo luogo = serviceLuoghi.scegliLuogo(scelta);
-                System.out.println("Visite associate al luogo \"" + luogo.getNome() + "\"");
-                OutputManager.visualizzaListaVisite(serviceVisite.getListaVisite());
-            } while ("sì".equals(InputManager.chiediSiNo("Vuoi visualizzare le visite per un altro luogo?")));
         });
 
-        m.aggiungi(6, "Visualizza visite per stato", () -> {
-            do {
-                //fa riferimento al calendario degli appuntamenti e non alle visite todo da modificare anche nelle altre versioni
-            } while("sì".equals(InputManager.chiediSiNo("Vuoi visualizzare le visite per un altro stato?")));
+        m.aggiungi(6, "Visualizza appuntamenti per stato", () -> {
+            OutputManager.visualizzaAppuntamentiPerStato(serviceApplicazione.getAppuntamenti());
         });
 
         m.aggiungi(7, "Apri raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(this.applicazione.getStato() == StatoRichiestaDisponibilita.DISP_CHIUSE) {
+            if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_CHIUSE) {
                 System.out.println("Da ora è possibile raccogliere le disponibilità dei Volontari per il mese di "+ nomeMeseDisponibilita + " " + annoDisponibilita);
-                this.applicazione.setStato(StatoRichiestaDisponibilita.DISP_APERTE); //serviceApplicazione
+                serviceApplicazione.setStatoDisp(StatoRichiestaDisponibilita.DISP_APERTE);
             }
             else {
                 System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono già in corso.");
@@ -106,25 +96,23 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(8, "Chiudi raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(this.applicazione.getStato() == StatoRichiestaDisponibilita.DISP_APERTE) {
+            if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_APERTE) {
                 System.out.println("Hai chiuso la raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita);
-                this.applicazione.setStato(StatoRichiestaDisponibilita.DISP_CHIUSE);
+                this.applicazione.setStatoDisp(StatoRichiestaDisponibilita.DISP_CHIUSE);
+            }
+            else {
+                System.out.println("Non è possibile chiudere la raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " perchè la raccolta disponibilità non è stata ancora aperta");
             }
         });
 
         m.aggiungi(9, "Produci il piano delle visite per il mese di " + nomeMeseProduzione + " " + annoProduzione, () -> {
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.NON_PRODOTTE) {
-
-                //HashMap<Visita, InsiemeDate> calendarioMensile = serviceApplicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.NON_PRODOTTE) {
 
                 CalendarioAppuntamenti calendario = serviceApplicazione.produciVisitePerIlMese(meseProduzione, annoProduzione);
 
                 OutputManager.visualizzaCalendario(calendario, nomeMeseProduzione, annoProduzione);
-//                if(!calendarioMensile.isEmpty()) {
-//                    this.applicazione.setCalendarioVisite(calendarioMensile); //viene sovrascritto tutte le volte
-//                } todo salvataggio su XML: modificare HashMap<Visita, InsiemeDate> calendarioVisite in CalendarioApuntamenti
+                serviceApplicazione.salvaCalendario(calendario);
 
-                // forse nel metodo è necessario cambiare lo stato della visita in PIANIFICATA se rientra nel calendario definitivo, nel caso ha senso mostrare la data se è pianificata nello stato delle visite opzione 6
                 this.applicazione.setStatoProduzione(StatoProduzioneVisite.PRODOTTE);
             }
             else {
@@ -133,8 +121,8 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(10, "Aggiungi un nuovo luogo all'elenco", () -> {
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
-                serviceLuoghi.aggiungiLuoghiSeNonPresenti(InputManager.chiediLuoghi(this.applicazione), this.applicazione.getListaLuoghi());
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+                serviceLuoghi.aggiungiLuoghiSeNonPresenti(InputManager.chiediLuoghi(this.applicazione), serviceLuoghi.getListaLuoghi());
             }
             else {
                 System.out.println("Non è possibile aggiungere un nuovo luogo all'elenco: è necessario produrre prima il piano delle visite per il mese " +
@@ -143,14 +131,19 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(11, "Elimina un luogo", () -> {
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo che si vuole rimuovere: ",
                         1, serviceLuoghi.getNumeroLuogo());
                 Luogo luogo = serviceLuoghi.scegliLuogo(scelta);
-                serviceLuoghi.rimuoviLuogo(luogo, this.applicazione);
+                serviceLuoghi.rimuoviLuogo(luogo);
                 System.out.println("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID());
+
+                // Se un volontario rimane senza visite, allora viene eliminato
+                serviceVolontari.eliminaSeSenzaVisita();
+                // todo aggiungere infdrmativa della rimozione utenti?
+
             }
             else {
                 System.out.println("Non è possibile rimuovere nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
@@ -159,7 +152,7 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(12, "Aggiungi una o più visite ad un luogo già esistente", () -> {
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaLuoghi(serviceLuoghi.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole aggiungere la/e visita/e: ",
@@ -170,14 +163,14 @@ public class MenuConfiguratore extends MenuManager {
 
             }
             else {
-                System.out.println("Non è possibile nessuna visita a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+                System.out.println("Non è possibile aggiungere nessuna visita a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
                         nomeMeseProduzione + " " + annoProduzione);
             }
         });
 
         m.aggiungi(13, "Aggiungi uno o più volontari ad una visita", () -> {
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
-                OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+                OutputManager.visualizzaLuoghiEvisite(serviceLuoghi.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
                         1, serviceLuoghi.getNumeroLuogo());
@@ -199,8 +192,8 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(14, "Elimina una visita associata ad un luogo", () -> {
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
-                OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+                OutputManager.visualizzaLuoghiEvisite(serviceLuoghi.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
                         1, serviceLuoghi.getNumeroLuogo());
@@ -211,13 +204,18 @@ public class MenuConfiguratore extends MenuManager {
                         1, serviceVisite.getNumeroVisita(luogo));
                 Visita visita = serviceVisite.scegliVisita(luogo, scelta2);
 
-                serviceVisite.rimuoviVisita(visita, luogo, this.applicazione);
+                serviceVisite.rimuoviVisita(visita, luogo);
 
                 // Se un luogo rimane senza visite, allora il luogo viene rimosso
                 if (luogo.luogoSenzaVisite()) {
-                    serviceLuoghi.rimuoviLuogo(luogo, this.applicazione);
+                    serviceLuoghi.rimuoviLuogo(luogo);
                     System.out.println("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID() + " perchè non sono presenti visite associate.");
                 }
+
+                // Se un volontario rimane senza visite, allora viene eliminato
+                serviceVolontari.eliminaSeSenzaVisita();
+                // todo aggiungere infdrmativa della rimozione utenti?
+
             }
             else {
                 System.out.println("Non è possibile rimuovere nessuna visita associata a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
@@ -227,22 +225,25 @@ public class MenuConfiguratore extends MenuManager {
 
         m.aggiungi(15, "Elimina un volontario", () -> {
 
-            if(this.applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+            if(serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
                 OutputManager.visualizzaSoloVolontari(this.applicazione);
+
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il volontario che si vuole eliminare: ",
-                        1, serviceVolontari.getNumeroVolontari()); //+1????? da verificare
-                serviceVolontari.eliminaVolontari(this.applicazione, scelta);
+                        1, serviceVolontari.getNumeroVolontari());
+                serviceVolontari.eliminaVolontari(scelta-1);
 
                 // se una visita risulta essere senza volontari viene rimossa
+                serviceVisite.eliminaSeSenzaVolontari(); // todo non funziona perchè rimuovendo un utente, rimane memorizzato dentro le visite
+
                 // se un luogo rimane senza visite viene rimosso
                 for(Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
                     for(Visita v : l.getInsiemeVisite().getListaVisite()) {
                         if(v.visitaSenzaVolontari()) {
-                            serviceVisite.rimuoviVisita(v, l, this.applicazione);
+                            serviceVisite.rimuoviVisita(v, l);
                         }
                         if(l.luogoSenzaVisite()) {
-                            serviceLuoghi.rimuoviLuogo(l, this.applicazione);
+                            serviceLuoghi.rimuoviLuogo(l);
                             System.out.println("Hai eliminato il luogo  " + l.getNome() + " - " + l.getLuogoID() + " perchè non sono presenti visite associate.");
                         }
                     }
