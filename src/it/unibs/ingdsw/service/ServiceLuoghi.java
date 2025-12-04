@@ -39,4 +39,7 @@ public class ServiceLuoghi {
 
     }
 
+    public void rimuoviLuogoSeSenzaVisite() {
+        this.applicazione.rimuoviLuogoSeSenzaVisite();
+    }
 }

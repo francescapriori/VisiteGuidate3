@@ -12,7 +12,6 @@ import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.Visita;
 import it.unibs.ingdsw.parsing.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -130,8 +129,14 @@ public class Applicazione {
         app.setDateEscluse(d.getInsiemeDate());
         app.setDisponibilitaPerVol(dV.getDisponibilitaPerVol());
         app.setCalendarioAppuntamenti(a.getAppuntamenti());
+        // se si accede con il nuovo mese (Target.SOGLIA_CAMBIO_MESE), il piano delle visite del mese prima è stato già
+        // prodotto, per cui viene settato di nuovo a NON_PRODOTTE, altrimenti vado a leggere quello che c'è sull'XML
+        if((new Target()).successivoASoglia() && pa.getStatoProduzione() == StatoProduzioneVisite.PRODOTTE) {
+            app.setStatoProduzione(StatoProduzioneVisite.NON_PRODOTTE);
+        } else {
+            app.setStatoProduzione(pa.getStatoProduzione());
+        }
         app.setStatoDisp(pa.getStato());
-        app.setStatoProduzione(pa.getStatoProduzione());
         return app;
     }
 
@@ -184,6 +189,7 @@ public class Applicazione {
             Utente u = it.next();
             if (u.getUsername().equalsIgnoreCase(vDaRimuovere.getUsername())) {
                 it.remove();
+                this.listaLuoghi.rimuoviVolontarioDaVisite(vDaRimuovere);
                 break;
             }
         }
@@ -296,5 +302,15 @@ public class Applicazione {
             l.getInsiemeVisite().getListaVisite().removeAll(visDaRimuovere);
         }
 
+    }
+
+    public void rimuoviLuogoSeSenzaVisite() {
+        ArrayList<Luogo> luoghiDaRimuovere = new ArrayList<>();
+        for (Luogo l : this.listaLuoghi.getListaLuoghi()) {
+            if (l.getInsiemeVisite().getListaVisite().isEmpty()) {
+                luoghiDaRimuovere.add(l);
+            }
+        }
+        this.listaLuoghi.getListaLuoghi().removeAll(luoghiDaRimuovere);
     }
 }

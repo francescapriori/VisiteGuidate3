@@ -3,7 +3,6 @@ package it.unibs.ingdsw.applicazione;
 import it.unibs.ingdsw.utenti.Configuratore;
 import it.unibs.ingdsw.utenti.Utente;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 
 public abstract class MenuManager {
@@ -25,23 +24,7 @@ public abstract class MenuManager {
         return YearMonth.now().plusMonths(mesePlus);
     }
 
-
-    // forse trasformarlo in boolean?
-    public int isDayAfterThreshold (){
-        LocalDate today = LocalDate.now();
-        if(today.getDayOfMonth() == INIZIO_PERIODO_ESCLUSIONE_DATE){
-            return 0;
-        }
-        else if(today.getDayOfMonth() < INIZIO_PERIODO_ESCLUSIONE_DATE){
-            return -1;
-        }
-        else {
-            return 1;
-        }
-    }
-
     public abstract void primaInizializzazione();
-
 
 
     public static MenuManager mostraPer(Applicazione applicazione, Utente utente) {

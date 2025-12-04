@@ -52,15 +52,6 @@ public class ListaUtenti {
         return false;
     }
 
-    public boolean contieneUtente(String username) {
-        for (Utente u : this.listaUtenti) {
-            if (u.getUsername().equalsIgnoreCase(username)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public String toString() {
         return this.listaUtenti.toString();

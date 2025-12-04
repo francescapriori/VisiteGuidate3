@@ -117,4 +117,14 @@ public class ListaLuoghi {
         }
         return false;
     }
+
+    public void rimuoviVolontarioDaVisite(Volontario vDaRimuovere) {
+        for (Luogo luogo : this.listaLuoghi) {
+            for (Visita v : luogo.getInsiemeVisite().getListaVisite()) {
+                if (v.getVolontariVisita().contains(vDaRimuovere)) {
+                    v.getVolontariVisita().remove(vDaRimuovere);
+                }
+            }
+        }
+    }
 }

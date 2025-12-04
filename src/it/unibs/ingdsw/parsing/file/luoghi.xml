@@ -500,12 +500,13 @@
         <volontari>
           <volontario password="andreab12" username="andreab12"/>
           <volontario password="danielel96" username="danielel96"/>
+          <volontario password="matildep04" username="matildep04"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
       </visita>
       <visita>
-        <titolo>PROVA</titolo>
+        <titolo>VISITA DA RIMUOVERE TEST</titolo>
         <descrizione>PROVA</descrizione>
         <posizione>
           <paese>Castiglione delle Stiviere</paese>
@@ -545,7 +546,7 @@
     </visite>
   </luogo>
   <luogo id="L007">
-    <nome>Santuarfgbhrtdhrthbsrth Luigi Gonzaga</nome>
+    <nome>LUOGO DA RIMUOVERE TES</nome>
     <descrizione>Il santuario basilica di San Luigi Gonzaga è un edificio religioso di Castiglione delle Stiviere, in provincia di Mantova e si affaccia nella piazza dedicata al santo, patrono mondiale della gioventù. Nell'aprile del 1964 papa Paolo VI lo elevò alla dignità di basilica minore.</descrizione>
     <posizione>
       <paese>Castiglione delle Stiviere</paese>
@@ -588,7 +589,7 @@
         <durataMinuti>90</durataMinuti>
         <presenzaBiglietto>false</presenzaBiglietto>
         <volontari>
-          <volontario password="io" username="io"/>
+          <volontario password="aaa" username="aaa"/>
         </volontari>
         <numeroMinimoPartecipanti>10</numeroMinimoPartecipanti>
         <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>

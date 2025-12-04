@@ -7,9 +7,11 @@ public class Target {
 
     public static final int SOGLIA_CAMBIO_MESE = 15;
 
-    private LocalDate oggi = LocalDate.now();
+    private final LocalDate oggi;
 
-    public Target() {}
+    public Target() {
+        oggi = LocalDate.now();
+    }
 
     public YearMonth calcolaDataTargetDisponibilita() {
         if (successivoASoglia()) {

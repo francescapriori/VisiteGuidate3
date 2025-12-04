@@ -12,7 +12,6 @@ import it.unibs.ingdsw.visite.ListaVisite;
 import it.unibs.ingdsw.visite.Visita;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MenuConfiguratore extends MenuManager {
@@ -86,7 +85,8 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(7, "Apri raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
-            if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_CHIUSE) {
+            // la raccolta disponibilità non può essere riaperta dopo la produzione delle visite, ma può essere riaperta a partire dal mese dopo.
+            if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_CHIUSE && serviceApplicazione.getStatoProd() == StatoProduzioneVisite.NON_PRODOTTE) {
                 System.out.println("Da ora è possibile raccogliere le disponibilità dei Volontari per il mese di "+ nomeMeseDisponibilita + " " + annoDisponibilita);
                 serviceApplicazione.setStatoDisp(StatoRichiestaDisponibilita.DISP_APERTE);
             }
@@ -142,7 +142,6 @@ public class MenuConfiguratore extends MenuManager {
 
                 // Se un volontario rimane senza visite, allora viene eliminato
                 serviceVolontari.eliminaSeSenzaVisita();
-                // todo aggiungere infdrmativa della rimozione utenti?
 
             }
             else {
@@ -179,7 +178,7 @@ public class MenuConfiguratore extends MenuManager {
                 int scelta2 = InputManager.leggiInteroConMinMax(
                         "\nSeleziona la visita a cui si vuole aggiungere un volontario: ",
                         1, serviceVisite.getNumeroVisita(luogo));
-                Visita visita = serviceVisite.scegliVisita(luogo, scelta);
+                Visita visita = serviceVisite.scegliVisita(luogo, scelta2);
 
                 //aggiungi Volontari alla Visita
                 serviceVolontari.aggiungiVolontariAllaVisita(visita, InputManager.associaVolontariAvisita(this.applicazione));
@@ -207,14 +206,10 @@ public class MenuConfiguratore extends MenuManager {
                 serviceVisite.rimuoviVisita(visita, luogo);
 
                 // Se un luogo rimane senza visite, allora il luogo viene rimosso
-                if (luogo.luogoSenzaVisite()) {
-                    serviceLuoghi.rimuoviLuogo(luogo);
-                    System.out.println("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID() + " perchè non sono presenti visite associate.");
-                }
+                serviceLuoghi.rimuoviLuogoSeSenzaVisite();
 
                 // Se un volontario rimane senza visite, allora viene eliminato
                 serviceVolontari.eliminaSeSenzaVisita();
-                // todo aggiungere infdrmativa della rimozione utenti?
 
             }
             else {
@@ -233,21 +228,12 @@ public class MenuConfiguratore extends MenuManager {
                         1, serviceVolontari.getNumeroVolontari());
                 serviceVolontari.eliminaVolontari(scelta-1);
 
-                // se una visita risulta essere senza volontari viene rimossa
-                serviceVisite.eliminaSeSenzaVolontari(); // todo non funziona perchè rimuovendo un utente, rimane memorizzato dentro le visite
+                // se una visita rimane senza volontari viene rimossa
+                serviceVisite.eliminaSeSenzaVolontari();
 
                 // se un luogo rimane senza visite viene rimosso
-                for(Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
-                    for(Visita v : l.getInsiemeVisite().getListaVisite()) {
-                        if(v.visitaSenzaVolontari()) {
-                            serviceVisite.rimuoviVisita(v, l);
-                        }
-                        if(l.luogoSenzaVisite()) {
-                            serviceLuoghi.rimuoviLuogo(l);
-                            System.out.println("Hai eliminato il luogo  " + l.getNome() + " - " + l.getLuogoID() + " perchè non sono presenti visite associate.");
-                        }
-                    }
-                }
+                serviceLuoghi.rimuoviLuogoSeSenzaVisite();
+
             }
             else {
                 System.out.println("Non è possibile rimuovere un volontario: è necessario produrre prima il piano delle visite per il mese " +
