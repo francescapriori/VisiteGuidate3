@@ -14,6 +14,7 @@ import it.unibs.ingdsw.visite.StatoVisita;
 import it.unibs.ingdsw.visite.Visita;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -130,17 +131,20 @@ public class InputManager {
         int giorno = 1;
         if (Data.isBisestile(anno) && mese == 2) {
             giorno = InputManager.leggiInteroConMinMax("Inserisci il giorno: ", 1, 29);
+            return giorno;
         }
         if (!Data.isBisestile(anno) && mese == 2) {
             giorno = InputManager.leggiInteroConMinMax("Inserisci il giorno: ", 1, 28);
+            return giorno;
         }
         if (mese == 1 || mese == 3 || mese == 5 || mese == 7 || mese == 8 || mese == 10 || mese == 12) {
             giorno = InputManager.leggiInteroConMinMax("Inserisci il giorno: ", 1, 31);
+            return giorno;
         }
         else {
             giorno = InputManager.leggiInteroConMinMax("Inserisci il giorno: ", 1, 30);
+            return giorno;
         }
-        return giorno;
     }
 
     public static StatoVisita chiediStatoVisita() {
@@ -215,14 +219,29 @@ public class InputManager {
 
         // giorni della settimana
         Giornate giornate = new Giornate();
+        ArrayList<GiornoSettimana> disponibili = new ArrayList<>(
+                Arrays.asList(GiornoSettimana.values())
+        );
         do {
-            GiornoSettimana g = InputManager.chiediGiornoSettimana();
-            if (!giornate.giornoPresente(g)) {
-                giornate.aggiungiGiornoDellaSettimana(g);
-            } else {
-                System.out.println("Giornata già presente.");
+            if (disponibili.isEmpty()) {
+                System.out.println("Non ci sono altri giorni disponibili.");
+                break;
             }
+            System.out.println("Seleziona il giorno della settimana:");
+            for (int i = 0; i < disponibili.size(); i++) {
+                System.out.println((i + 1) + ") " + disponibili.get(i));
+            }
+            int scelta = InputManager.leggiInteroConMinMax(
+                    "Seleziona (1-" + disponibili.size() + "): ",
+                    1,
+                    disponibili.size()
+            );
+            GiornoSettimana g = disponibili.get(scelta - 1);
+            giornate.aggiungiGiornoDellaSettimana(g);
+            System.out.println("Aggiunto: " + g);
+            disponibili.remove(g);
         } while ("sì".equals(InputManager.chiediSiNo("Vuoi aggiungere un'altra giornata per la visita?")));
+
 
         // validità (inizio <= fine)
         Data inizio, fine;
@@ -247,7 +266,7 @@ public class InputManager {
         boolean biglietto = "sì".equals(InputManager.chiediSiNo("È presente un biglietto di ingresso da pagare?"));
 
         // volontari: usa la lista utenti dell'istanza
-        ArrayList<Volontario> volontariThisVisita = associaVolontariAvisita(applicazione);
+        ArrayList<Volontario> volontariThisVisita = scegliVolontari(applicazione);
 
         // capienze
         int numMinP = InputManager.leggiInteroConMin("Numero minimo partecipanti: ", 1);
@@ -259,11 +278,11 @@ public class InputManager {
         );
     }
 
-    public static ArrayList<Volontario> associaVolontariAvisita(Applicazione applicazione) {
+    public static ArrayList<Volontario> associaVolontariAvisita(Applicazione applicazione, Visita visita) {
         String scelta = InputManager.chiediSiNo("Vuoi associare volontari già registrati nell'applicativo?");
         ArrayList<Volontario> volontariThisVisita = new ArrayList<>();
         if (scelta.equals("sì")){
-            volontariThisVisita = scegliVolontari(applicazione);
+            volontariThisVisita = scegliVolontari(applicazione, visita);
         } else {
             do {
                 Volontario nuovo = new Volontario(InputManager.richiediNuovoUsername(applicazione.getListaUtenti()), InputManager.richiediPasswordLogin());
@@ -274,34 +293,102 @@ public class InputManager {
         return volontariThisVisita;
     }
 
-    public static ArrayList<Volontario> scegliVolontari(Applicazione applicazione) {
+    public static ArrayList<Volontario> scegliVolontari(Applicazione applicazione, Visita visita) {
         ArrayList<Volontario> scelti = new ArrayList<>();
 
-        ArrayList<Volontario> volontari = applicazione.getListaUtenti().getVolontari();
+        ArrayList<Volontario> tuttiVolontari = applicazione.getListaUtenti().getVolontari();
 
-        if (volontari.isEmpty()) {
+        ArrayList<Volontario> volontariDisponibili = new ArrayList<>(tuttiVolontari);
+
+        ArrayList<Volontario> volontariPresenti = visita.getVolontariVisita();
+        volontariDisponibili.removeIf(v ->
+                volontariPresenti.stream()
+                        .anyMatch(p -> p.getUsername().equalsIgnoreCase(v.getUsername()))
+        );
+
+        if (volontariDisponibili.isEmpty()) {
             System.out.println("Nessun volontario disponibile.");
             return scelti;
         }
 
+        boolean continua;
         do {
+            if (volontariDisponibili.isEmpty()) {
+                System.out.println("Non ci sono altri volontari disponibili.");
+                break;
+            }
+
             System.out.println("Seleziona il volontario:");
-            for (int i = 0; i < volontari.size(); i++) {
-                System.out.println((i + 1) + ") " + volontari.get(i).getUsername());
+            for (int i = 0; i < volontariDisponibili.size(); i++) {
+                System.out.println((i + 1) + ") " + volontariDisponibili.get(i).getUsername());
             }
 
-            int scelta = InputManager.leggiInteroConMinMax("Scelta (1-" + volontari.size() + "): ", 1, volontari.size());
-            Volontario sel = volontari.get(scelta - 1);
+            int scelta = InputManager.leggiInteroConMinMax(
+                    "Scelta (1-" + volontariDisponibili.size() + "): ",
+                    1,
+                    volontariDisponibili.size()
+            );
 
-            boolean giaPresente = scelti.stream()
-                    .anyMatch(v -> v.getUsername().equalsIgnoreCase(sel.getUsername()));
-            if (giaPresente) {
-                System.out.println("Volontario già selezionato.");
-            } else {
-                scelti.add(sel);
-                System.out.println("Aggiunto: " + sel.getUsername());
+            Volontario sel = volontariDisponibili.get(scelta - 1);
+
+            scelti.add(sel);
+            System.out.println("Aggiunto: " + sel.getUsername());
+
+            volontariDisponibili.remove(sel);
+
+            if (volontariDisponibili.isEmpty()) {
+                System.out.println("Non ci sono altri volontari disponibili.");
+                break;
             }
-        } while ("sì".equals(InputManager.chiediSiNo("Vuoi scegliere un altro volontario?")));
+
+            continua = "sì".equals(InputManager.chiediSiNo("Vuoi scegliere un altro volontario?"));
+        } while (continua);
+
+        return scelti;
+    }
+
+    public static ArrayList<Volontario> scegliVolontari(Applicazione applicazione) {
+        ArrayList<Volontario> scelti = new ArrayList<>();
+
+        ArrayList<Volontario> volontariDisponibili = applicazione.getListaUtenti().getVolontari();
+
+        if (volontariDisponibili.isEmpty()) {
+            System.out.println("Nessun volontario disponibile.");
+            return scelti;
+        }
+
+        boolean continua;
+        do {
+            if (volontariDisponibili.isEmpty()) {
+                System.out.println("Non ci sono altri volontari disponibili.");
+                break;
+            }
+
+            System.out.println("Seleziona il volontario:");
+            for (int i = 0; i < volontariDisponibili.size(); i++) {
+                System.out.println((i + 1) + ") " + volontariDisponibili.get(i).getUsername());
+            }
+
+            int scelta = InputManager.leggiInteroConMinMax(
+                    "Scelta (1-" + volontariDisponibili.size() + "): ",
+                    1,
+                    volontariDisponibili.size()
+            );
+
+            Volontario sel = volontariDisponibili.get(scelta - 1);
+
+            scelti.add(sel);
+            System.out.println("Aggiunto: " + sel.getUsername());
+
+            volontariDisponibili.remove(sel);
+
+            if (volontariDisponibili.isEmpty()) {
+                System.out.println("Non ci sono altri volontari disponibili.");
+                break;
+            }
+
+            continua = "sì".equals(InputManager.chiediSiNo("Vuoi scegliere un altro volontario?"));
+        } while (continua);
 
         return scelti;
     }

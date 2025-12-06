@@ -3,8 +3,6 @@ package it.unibs.ingdsw.applicazione;
 import it.unibs.ingdsw.utenti.Configuratore;
 import it.unibs.ingdsw.utenti.Utente;
 
-import java.time.YearMonth;
-
 public abstract class MenuManager {
 
     public static final int INIZIO_PERIODO_ESCLUSIONE_DATE = 18;
@@ -18,11 +16,6 @@ public abstract class MenuManager {
     }
 
     public abstract Menu creaMenu();
-
-    // forse inserire qui dentro il controllo su isDayAfterThreshold e ritorna il valore?
-    public YearMonth calcolaDataTarget(int mesePlus) {
-        return YearMonth.now().plusMonths(mesePlus);
-    }
 
     public abstract void primaInizializzazione();
 

@@ -181,7 +181,7 @@ public class MenuConfiguratore extends MenuManager {
                 Visita visita = serviceVisite.scegliVisita(luogo, scelta2);
 
                 //aggiungi Volontari alla Visita
-                serviceVolontari.aggiungiVolontariAllaVisita(visita, InputManager.associaVolontariAvisita(this.applicazione));
+                serviceVolontari.aggiungiVolontariAllaVisita(visita, InputManager.associaVolontariAvisita(this.applicazione, visita));
 
             }
             else {
