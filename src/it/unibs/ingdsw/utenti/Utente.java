@@ -1,6 +1,7 @@
 package it.unibs.ingdsw.utenti;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
+import it.unibs.ingdsw.applicazione.Menu;
 import it.unibs.ingdsw.applicazione.MenuManager;
 
 import java.util.Objects;
@@ -48,15 +49,23 @@ public abstract class Utente {
     }
 
     public void operazioni(Applicazione applicazione) {
-        MenuManager menu = MenuManager.mostraPer(applicazione, this);
-        if(this.isPwProvvisoria()) {
-            menu.cambioPassword();
+        MenuManager menuManager = MenuManager.mostraPer(applicazione, this);
+
+        if (this.isPwProvvisoria()) {
+            menuManager.cambioPassword();
         }
         if (applicazione.isDaConfigurare()) {
-            menu.primaInizializzazione();
+            menuManager.primaInizializzazione();
         }
-        menu.creaMenu().mostra();
+
+        boolean continua = true;
+        while (continua) {
+            Menu menu = menuManager.creaMenu();
+            continua = menu.mostra();
+        }
     }
+
+
 
     public boolean pwUguale(String pwd) {
         if (this.password.equals(pwd)) {

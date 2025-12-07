@@ -12,6 +12,7 @@ import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.Visita;
 import it.unibs.ingdsw.parsing.*;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +29,7 @@ public class Applicazione {
     private HashMap<Volontario, InsiemeDate> disponibilitaPerVol;
     private CalendarioAppuntamenti calendarioAppuntamenti;
     private StatoRichiestaDisponibilita statoDisp;
+    private YearMonth nextDisponibilita;
     private StatoProduzioneVisite statoProduzione;
 
     public Applicazione() {}
@@ -112,6 +114,13 @@ public class Applicazione {
         return statoDisp;
     }
 
+    public YearMonth getNextDisponibilita() {
+        return nextDisponibilita;
+    }
+    public void setNextDisponibilita(YearMonth nextDisponibilita) {
+        this.nextDisponibilita = nextDisponibilita;
+    }
+
     public static Applicazione configuraApplicazione () {
         Applicazione app = new Applicazione();
         ParsParametriAppXMLFile pa = new ParsParametriAppXMLFile();
@@ -137,6 +146,7 @@ public class Applicazione {
             app.setStatoProduzione(pa.getStatoProduzione());
         }
         app.setStatoDisp(pa.getStato());
+        app.setNextDisponibilita(pa.getNextDisponibilita());
         return app;
     }
 
@@ -212,7 +222,7 @@ public class Applicazione {
 
             for (Data d1 : dateCalendarioProvvisorio.getInsiemeDate()) {
 
-                boolean assegnato = false;  //voglio AL MASSIMO un volontario per (visita, d1)
+                boolean assegnato = false;
 
                 for (Map.Entry<Volontario, InsiemeDate> entry2 : volontariConDate.entrySet()) {
                     Volontario volontario = entry2.getKey();

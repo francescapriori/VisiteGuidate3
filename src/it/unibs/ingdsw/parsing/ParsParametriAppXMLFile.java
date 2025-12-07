@@ -2,6 +2,7 @@ package it.unibs.ingdsw.parsing;
 
 import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
 import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
+import it.unibs.ingdsw.applicazione.Target;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -12,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.time.YearMonth;
 
 public class ParsParametriAppXMLFile {
 
@@ -20,8 +22,9 @@ public class ParsParametriAppXMLFile {
     private String ambitoTerritoriale;
     private int numeroMassimoIscrivibili;
     private boolean ambienteDaConfigurare;
-    private StatoRichiestaDisponibilita stato;          // DISP_APERTE, DISP_CHIUSE
-    private StatoProduzioneVisite statoProduzione;      // PRODOTTE, NON_PRODOTTE
+    private StatoRichiestaDisponibilita stato;     // DISP_APERTE, DISP_CHIUSE
+    private StatoProduzioneVisite statoProduzione; // PRODOTTE, NON_PRODOTTE
+    private YearMonth nextDisponibilita;
 
     public ParsParametriAppXMLFile() {
         try {
@@ -29,16 +32,19 @@ public class ParsParametriAppXMLFile {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             System.err.println("Errore nel parsing XML: " + e.getMessage());
             e.printStackTrace();
-            // fallback di sicurezza
             this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
             this.statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
+            this.nextDisponibilita = null;
         }
-        // default se non trovato a XML valido
+
         if (this.stato == null) {
             this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
         }
         if (this.statoProduzione == null) {
             this.statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
+        }
+        if (this.nextDisponibilita == null) {
+            this.nextDisponibilita = YearMonth.now();
         }
     }
 
@@ -73,7 +79,6 @@ public class ParsParametriAppXMLFile {
         String maxText = root.getElementsByTagName("numeroMaxPerIniziativa").item(0).getTextContent().trim();
         numeroMassimoIscrivibili = maxText.isEmpty() ? 0 : Integer.parseInt(maxText);
 
-
         if (root.getElementsByTagName("stato").getLength() > 0 &&
                 root.getElementsByTagName("stato").item(0) != null) {
 
@@ -81,7 +86,7 @@ public class ParsParametriAppXMLFile {
 
             if (!statoText.isEmpty()) {
                 try {
-                    stato = StatoRichiestaDisponibilita.valueOf(statoText);   // es. "DISP_APERTE"
+                    stato = StatoRichiestaDisponibilita.valueOf(statoText);
                 } catch (IllegalArgumentException ex) {
                     System.err.println("Valore di <stato> non valido: " + statoText
                             + ". Imposto default DISP_CHIUSE.");
@@ -97,7 +102,7 @@ public class ParsParametriAppXMLFile {
 
             if (!statoProdText.isEmpty()) {
                 try {
-                    statoProduzione = StatoProduzioneVisite.valueOf(statoProdText); // es. "PRODOTTE"
+                    statoProduzione = StatoProduzioneVisite.valueOf(statoProdText);
                 } catch (IllegalArgumentException ex) {
                     System.err.println("Valore di <statoProduzione> non valido: " + statoProdText
                             + ". Imposto default NON_PRODOTTE.");
@@ -106,6 +111,38 @@ public class ParsParametriAppXMLFile {
             }
         }
 
+        if (root.getElementsByTagName("nextDisponibilita").getLength() > 0 &&
+                root.getElementsByTagName("nextDisponibilita").item(0) != null) {
+
+            String nextText = root.getElementsByTagName("nextDisponibilita")
+                    .item(0)
+                    .getTextContent()
+                    .trim();
+
+            if (!nextText.isEmpty()) {
+                try {
+                    nextDisponibilita = YearMonth.parse(nextText);
+                } catch (Exception ex) {
+                    System.err.println("Valore di <nextDisponibilita> non valido: " + nextText
+                            + ". Uso la data calcolata da Target.");
+                    try {
+                        Target targetApplicazione = new Target();
+                        nextDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
+                    } catch (Exception ex2) {
+                        System.err.println("Errore nel calcolo della data target: " + ex2.getMessage());
+                        nextDisponibilita = null;
+                    }
+                }
+            } else {
+                try {
+                    Target targetApplicazione = new Target();
+                    nextDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
+                } catch (Exception ex2) {
+                    System.err.println("Errore nel calcolo della data target: " + ex2.getMessage());
+                    nextDisponibilita = null;
+                }
+            }
+        }
     }
 
     public String getAmbitoTerritoriale() {
@@ -128,19 +165,30 @@ public class ParsParametriAppXMLFile {
         return statoProduzione;
     }
 
+    public YearMonth getNextDisponibilita() {
+        return nextDisponibilita;
+    }
+
+
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
                                       StatoRichiestaDisponibilita statoDisp,
                                       StatoProduzioneVisite statoProduzione) {
-        salvaParametri(ambitoTerritoriale, numeroMaxIscrivibili,
-                false,                       // ambienteDaConfigurare
+
+        salvaParametri(
+                ambitoTerritoriale,
+                numeroMaxIscrivibili,
+                false,  // ambienteDaConfigurare
                 statoDisp != null ? statoDisp : StatoRichiestaDisponibilita.DISP_CHIUSE,
-                statoProduzione != null ? statoProduzione : StatoProduzioneVisite.NON_PRODOTTE);
+                statoProduzione != null ? statoProduzione : StatoProduzioneVisite.NON_PRODOTTE,
+                YearMonth.now()
+        );
     }
 
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
                                       boolean ambienteDaConfigurare,
                                       StatoRichiestaDisponibilita stato,
-                                      StatoProduzioneVisite statoProduzione) {
+                                      StatoProduzioneVisite statoProduzione,
+                                      YearMonth nextDisponibilita) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -173,6 +221,13 @@ public class ParsParametriAppXMLFile {
                     : StatoProduzioneVisite.NON_PRODOTTE).name());
             root.appendChild(eStatoProd);
 
+            Element eNext = doc.createElement("nextDisponibilita");
+            YearMonth effNext = (nextDisponibilita != null)
+                    ? nextDisponibilita
+                    : YearMonth.now();   // ulteriore safety net
+            eNext.setTextContent(effNext.toString());   // "YYYY-MM"
+            root.appendChild(eNext);
+
             File outFile = new File(DATA);
             File parent = outFile.getParentFile();
             if (parent != null) parent.mkdirs();
@@ -189,6 +244,5 @@ public class ParsParametriAppXMLFile {
             e.printStackTrace();
         }
     }
-
 
 }

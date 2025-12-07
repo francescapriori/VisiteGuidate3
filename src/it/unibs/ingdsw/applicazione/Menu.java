@@ -16,31 +16,41 @@ public class Menu {
         voci.put(numero, new Voce(etichetta, azione));
     }
 
-    public void mostra() {
+    public boolean mostra() {
         Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("\n--- " + titolo + " ---");
-            for (var e : voci.entrySet()) {
-                System.out.println(e.getKey() + ". " + e.getValue().etichetta);
-            }
-            System.out.println("0. Esci");
-            System.out.print("Scelta: ");
 
-            while (!sc.hasNextInt()) { System.out.println("Inserisci un numero."); sc.next(); }
-            int scelta = sc.nextInt(); sc.nextLine();
-
-            if (scelta == 0) { System.out.println("Uscita dal menu."); return; }
-
-            Voce voce = voci.get(scelta);
-            if (voce != null) {
-                try { voce.azione.run(); }
-                catch (Exception ex) { System.out.println("Errore: " + ex.getMessage()); }
-            } else {
-                System.out.println("Scelta non valida.");
-            }
+        System.out.println("\n--- " + titolo + " ---");
+        for (var e : voci.entrySet()) {
+            System.out.println(e.getKey() + ". " + e.getValue().etichetta);
         }
-    }
+        System.out.println("0. Esci");
+        System.out.print("Scelta: ");
 
+        while (!sc.hasNextInt()) {
+            System.out.println("Inserisci un numero.");
+            sc.next();
+        }
+        int scelta = sc.nextInt();
+        sc.nextLine();
+
+        if (scelta == 0) {
+            System.out.println("Uscita dal menu.");
+            return false; // segnala a chi chiama che l'utente vuole uscire
+        }
+
+        Voce voce = voci.get(scelta);
+        if (voce != null) {
+            try {
+                voce.azione.run();
+            } catch (Exception ex) {
+                System.out.println("Errore: " + ex.getMessage());
+            }
+        } else {
+            System.out.println("Scelta non valida.");
+        }
+
+        return true; // dopo aver eseguito l'azione, si può tornare al menu
+    }
     private static class Voce {
         final String etichetta;
         final Runnable azione;

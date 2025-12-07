@@ -32,7 +32,7 @@ public class MenuVolontario extends MenuManager {
         ServiceVisite serviceVisite = new ServiceVisite(applicazione);
         ServiceDate serviceDate = new ServiceDate(applicazione);
         ServiceApplicazione serviceApplicazione = new ServiceApplicazione(applicazione);
-        YearMonth targetDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
+        YearMonth targetDisponibilita = serviceApplicazione.getNextDisponibilita();
 
         String nomeMeseDisponibilita = Data.returnNomeMese(targetDisponibilita);
         int annoDisponibilita = Data.returnAnno(targetDisponibilita);

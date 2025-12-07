@@ -5,6 +5,8 @@ import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
 import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
 import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 
+import java.time.YearMonth;
+
 
 public class ServiceApplicazione {
     public Applicazione applicazione;
@@ -52,5 +54,13 @@ public class ServiceApplicazione {
 
     public StatoProduzioneVisite getStatoProd() {
         return this.applicazione.getStatoProd();
+    }
+
+    public YearMonth getNextDisponibilita() {
+        return this.applicazione.getNextDisponibilita();
+    }
+
+    public void setNextDisponibilita(YearMonth nextDisponibilita) {
+        this.applicazione.setNextDisponibilita(nextDisponibilita);
     }
 }

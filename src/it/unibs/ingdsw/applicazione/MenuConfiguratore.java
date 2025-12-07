@@ -25,9 +25,15 @@ public class MenuConfiguratore extends MenuManager {
         Menu m = new Menu("Menu Configuratore");
 
         Target targetApplicazione = new Target();
+        ServiceDate serviceDate = new ServiceDate(applicazione);
+        ServiceApplicazione serviceApplicazione = new ServiceApplicazione(applicazione);
+        ServiceLuoghi serviceLuoghi = new ServiceLuoghi(applicazione);
+        ServiceVolontari serviceVolontari = new ServiceVolontari(applicazione);
+        ServiceVisite serviceVisite = new ServiceVisite(applicazione);
         YearMonth targetDisponibilita, targetProduzione, targetPerEsclusione;
+
         targetPerEsclusione = targetApplicazione.calcolaDataTargetEsclusione();
-        targetDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
+        targetDisponibilita = serviceApplicazione.getNextDisponibilita();
         targetProduzione = targetApplicazione.calcolaDataTargetProduzione();
 
         String nomeMesePerEsclusione = Data.returnNomeMese(targetPerEsclusione);
@@ -35,16 +41,11 @@ public class MenuConfiguratore extends MenuManager {
         int mesePerEsclusione = Data.returnMese(targetPerEsclusione);
         String nomeMeseDisponibilita = Data.returnNomeMese(targetDisponibilita);
         int annoDisponibilita = Data.returnAnno(targetDisponibilita);
-        int meseDisponibilita = Data.returnMese(targetDisponibilita);
         String nomeMeseProduzione = Data.returnNomeMese(targetProduzione);
         int annoProduzione = Data.returnAnno(targetProduzione);
         int meseProduzione = Data.returnMese(targetProduzione);
 
-        ServiceDate serviceDate = new ServiceDate(applicazione);
-        ServiceApplicazione serviceApplicazione = new ServiceApplicazione(applicazione);
-        ServiceLuoghi serviceLuoghi = new ServiceLuoghi(applicazione);
-        ServiceVolontari serviceVolontari = new ServiceVolontari(applicazione);
-        ServiceVisite serviceVisite = new ServiceVisite(applicazione);
+
 
         m.aggiungi(1, "Indica le date da escludere per il mese di " + nomeMesePerEsclusione + " " + annoPerEsclusione, () -> {
             InsiemeDate dateEscluse = serviceDate.getDateEscluse(mesePerEsclusione, annoPerEsclusione);
@@ -86,7 +87,7 @@ public class MenuConfiguratore extends MenuManager {
 
         m.aggiungi(7, "Apri raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
             // la raccolta disponibilità non può essere riaperta dopo la produzione delle visite, ma può essere riaperta a partire dal mese dopo.
-            if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_CHIUSE && serviceApplicazione.getStatoProd() == StatoProduzioneVisite.NON_PRODOTTE) {
+            if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_CHIUSE) {
                 System.out.println("Da ora è possibile raccogliere le disponibilità dei Volontari per il mese di "+ nomeMeseDisponibilita + " " + annoDisponibilita);
                 serviceApplicazione.setStatoDisp(StatoRichiestaDisponibilita.DISP_APERTE);
             }
@@ -98,7 +99,9 @@ public class MenuConfiguratore extends MenuManager {
         m.aggiungi(8, "Chiudi raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {
             if(serviceApplicazione.getStatoDisp() == StatoRichiestaDisponibilita.DISP_APERTE) {
                 System.out.println("Hai chiuso la raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita);
-                this.applicazione.setStatoDisp(StatoRichiestaDisponibilita.DISP_CHIUSE);
+                serviceApplicazione.setStatoDisp(StatoRichiestaDisponibilita.DISP_CHIUSE);
+                // incrementa mese-anno
+                serviceApplicazione.setNextDisponibilita(targetDisponibilita.plusMonths(1));
             }
             else {
                 System.out.println("Non è possibile chiudere la raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " perchè la raccolta disponibilità non è stata ancora aperta");
