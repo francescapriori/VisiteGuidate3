@@ -1,12 +1,9 @@
 package it.unibs.ingdsw;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
-import it.unibs.ingdsw.applicazione.InputManager;
+import it.unibs.ingdsw.inputOutput.InputManager;
 import it.unibs.ingdsw.sicurezza.ServizioAutenticazione;
 import it.unibs.ingdsw.utenti.Utente;
-
-
-import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {

@@ -16,7 +16,7 @@ public class CalendarioAppuntamenti {
         this.calendarioVisite = appuntamenti;
     }
 
-    public ArrayList<Appuntamento> getCalendarioVisite() {
+    public ArrayList<Appuntamento> getAppuntamenti() {
         return calendarioVisite;
     }
     public void setCalendarioVisite(ArrayList<Appuntamento> calendarioVisite) {

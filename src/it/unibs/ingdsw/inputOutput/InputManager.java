@@ -1,5 +1,6 @@
-package it.unibs.ingdsw.applicazione;
+package it.unibs.ingdsw.inputOutput;
 
+import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.luoghi.Posizione;

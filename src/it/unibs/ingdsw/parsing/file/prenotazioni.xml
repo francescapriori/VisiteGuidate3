@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<prenotazioni>
+  <prenotazione>
+    <visita>
+      <luogoID>L001</luogoID>
+      <titolo>Alla Corte dei Gonzaga: Un Viaggio nel Cuore del Rinascimento</titolo>
+    </visita>
+    <data>
+      <giorno>20</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <fruitore username="rosmar"/>
+    <numeroPersonePerPrenotazione>4</numeroPersonePerPrenotazione>
+  </prenotazione>
+  <prenotazione>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>15</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <fruitore username="rosmar"/>
+    <numeroPersonePerPrenotazione>2</numeroPersonePerPrenotazione>
+  </prenotazione>
+</prenotazioni>

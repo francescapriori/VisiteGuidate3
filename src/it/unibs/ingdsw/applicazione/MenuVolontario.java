@@ -1,6 +1,6 @@
 package it.unibs.ingdsw.applicazione;
 
-import it.unibs.ingdsw.output.OutputManager;
+import it.unibs.ingdsw.inputOutput.*;
 import it.unibs.ingdsw.service.ServiceApplicazione;
 import it.unibs.ingdsw.service.ServiceDate;
 import it.unibs.ingdsw.service.ServiceVisite;

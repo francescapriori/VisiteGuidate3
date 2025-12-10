@@ -82,12 +82,15 @@ public class Data {
     }
 
         public static String returnNomeMese(YearMonth target) {
+        if (target == null) return "Non disponibile";
         return target.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
     }
     public static int returnAnno(YearMonth target) {
+        if (target == null) return 0;
         return target.getYear();
     }
     public static int returnMese(YearMonth target) {
+        if (target == null) return 0;
         return target.getMonthValue();
     }
 

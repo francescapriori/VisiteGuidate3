@@ -1,4 +1,4 @@
-package it.unibs.ingdsw.output;
+package it.unibs.ingdsw.inputOutput;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.luoghi.ListaLuoghi;
@@ -9,6 +9,7 @@ import it.unibs.ingdsw.visite.*;
 
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -46,13 +47,34 @@ public class OutputManager {
         }
     }
 
-    public static void visualizzaAppuntamentiPerStato(CalendarioAppuntamenti appuntamenti) {
+    public static void visualizzaAppuntamentiPerStato(CalendarioAppuntamenti appuntamenti, boolean ancheEffettuataeCancellata) {
         System.out.println("Gli appuntamenti disponibili suddivisi nei vari stati sono:\n");
+
         StatoVisita[] tutti = StatoVisita.values();
-        for(StatoVisita s : tutti) {
+
+        for (StatoVisita s : tutti) {
+            if (!ancheEffettuataeCancellata && s == StatoVisita.EFFETTUATA || !ancheEffettuataeCancellata && s == StatoVisita.CANCELLATA) {
+                continue; // passa al prossimo stato
+            }
+
             System.out.println("Stato: " + s.toString());
             System.out.println(appuntamenti.getAppuntamentiConStato(s).toString() + "\n");
         }
+    }
+
+    public static ArrayList<Appuntamento> visualizzaAppuntamentiPerPrenotazione (CalendarioAppuntamenti appuntamenti) {
+        System.out.println("Gli appuntamenti disponibili per la prenotazione sono:\n");
+        ArrayList<Appuntamento> appuntamentiPrenotabili = new ArrayList<>();
+        StatoVisita[] tutti = StatoVisita.values();
+        int i = 1;
+        for (Appuntamento a : appuntamenti.getAppuntamenti()) {
+            if(a.getStatoVisita() == StatoVisita.PROPOSTA) {
+                System.out.println(i + ") " + a.toString());
+                appuntamentiPrenotabili.add(a);
+                i++;
+            }
+        }
+        return appuntamentiPrenotabili;
     }
 
     public enum TipoRichiestaData {
@@ -103,8 +125,17 @@ public class OutputManager {
     public static void visualizzaCalendario(CalendarioAppuntamenti calendarioAppuntamenti, String nomeMeseV, int annoTargetV) {
 
         System.out.println("\n-----Lista degli appuntamenti per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
-        for(Appuntamento a : calendarioAppuntamenti.getCalendarioVisite()) {
+        for(Appuntamento a : calendarioAppuntamenti.getAppuntamenti()) {
             System.out.println(a.toString());
+        }
+    }
+
+    public static void visualizzaPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni, String nomeMeseV, int annoTargetV) {
+        System.out.println("\n-----I tuoi appuntamenti per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
+        int i = 1;
+        for (Prenotazione p : listaPrenotazioni) {
+            System.out.println(i + ") " + p.toString()); //todo fare alternativa a questo tostring
+            i++;
         }
     }
 }

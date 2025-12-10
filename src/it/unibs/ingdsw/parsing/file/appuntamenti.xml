@@ -2,8 +2,22 @@
 <appuntamenti>
   <appuntamento>
     <visita>
-      <luogoID>L006</luogoID>
-      <titolo>San Luigi e i Gonzaga: fede, arte e memoria a Castiglione</titolo>
+      <luogoID>L001</luogoID>
+      <titolo>Alla Corte dei Gonzaga: Un Viaggio nel Cuore del Rinascimento</titolo>
+    </visita>
+    <data>
+      <giorno>20</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="danielel96"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>4</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L001</luogoID>
+      <titolo>Alla Corte dei Gonzaga: Un Viaggio nel Cuore del Rinascimento</titolo>
     </visita>
     <data>
       <giorno>31</giorno>
@@ -12,6 +26,7 @@
     </data>
     <guida username="lorenzol00"/>
     <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
   <appuntamento>
     <visita>
@@ -23,8 +38,9 @@
       <mese>1</mese>
       <anno>2026</anno>
     </data>
-    <guida username="andreab12"/>
+    <guida username="gianb08"/>
     <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
   <appuntamento>
     <visita>
@@ -36,8 +52,9 @@
       <mese>1</mese>
       <anno>2026</anno>
     </data>
-    <guida username="andreab12"/>
+    <guida username="gianb08"/>
     <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
   <appuntamento>
     <visita>
@@ -49,8 +66,9 @@
       <mese>1</mese>
       <anno>2026</anno>
     </data>
-    <guida username="lorenzol00"/>
+    <guida username="annachiarap02"/>
     <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
   <appuntamento>
     <visita>
@@ -64,6 +82,175 @@
     </data>
     <guida username="annachiarap02"/>
     <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L002</luogoID>
+      <titolo>Eleganza e Musica: Un Viaggio nel Teatro Bibiena</titolo>
+    </visita>
+    <data>
+      <giorno>30</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="lorenzol00"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L002</luogoID>
+      <titolo>Eleganza e Musica: Un Viaggio nel Teatro Bibiena</titolo>
+    </visita>
+    <data>
+      <giorno>6</giorno>
+      <mese>2</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="andreab12"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>15</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="andreab12"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>2</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>19</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="gianb08"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>22</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="andreab12"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>26</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="danielel96"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>29</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="lorenzol00"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>2</giorno>
+      <mese>2</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="danielel96"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L003</luogoID>
+      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>9</giorno>
+      <mese>2</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="annachiarap02"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L001</luogoID>
+      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>19</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="annachiarap02"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L001</luogoID>
+      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>22</giorno>
+      <mese>1</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="annachiarap02"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
+  </appuntamento>
+  <appuntamento>
+    <visita>
+      <luogoID>L001</luogoID>
+      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
+    </visita>
+    <data>
+      <giorno>9</giorno>
+      <mese>2</mese>
+      <anno>2026</anno>
+    </data>
+    <guida username="danielel96"/>
+    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
   <appuntamento>
     <visita>
@@ -77,174 +264,6 @@
     </data>
     <guida username="elisab08"/>
     <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L004</luogoID>
-      <titolo>La Basilica di Sant'Andrea: Un Capolavoro del Rinascimento Mantovano</titolo>
-    </visita>
-    <data>
-      <giorno>30</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="lorenzol00"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L004</luogoID>
-      <titolo>La Basilica di Sant'Andrea: Un Capolavoro del Rinascimento Mantovano</titolo>
-    </visita>
-    <data>
-      <giorno>6</giorno>
-      <mese>2</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="andreab12"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Alla Corte dei Gonzaga: Un Viaggio nel Cuore del Rinascimento</titolo>
-    </visita>
-    <data>
-      <giorno>20</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="danielel96"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>15</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="gianb08"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>19</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="gianb08"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>22</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="gianb08"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>26</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="danielel96"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>29</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="annachiarap02"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>2</giorno>
-      <mese>2</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="danielel96"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L001</luogoID>
-      <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>9</giorno>
-      <mese>2</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="danielel96"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L003</luogoID>
-      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>19</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="annachiarap02"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L003</luogoID>
-      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>22</giorno>
-      <mese>1</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="annachiarap02"/>
-    <statoVisita>PROPOSTA</statoVisita>
-  </appuntamento>
-  <appuntamento>
-    <visita>
-      <luogoID>L003</luogoID>
-      <titolo>Piazza delle Erbe: Cuore Storico e Commercio di Mantova</titolo>
-    </visita>
-    <data>
-      <giorno>9</giorno>
-      <mese>2</mese>
-      <anno>2026</anno>
-    </data>
-    <guida username="annachiarap02"/>
-    <statoVisita>PROPOSTA</statoVisita>
+    <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
 </appuntamenti>

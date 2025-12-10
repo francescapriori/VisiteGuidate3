@@ -8,6 +8,7 @@ public class Appuntamento {
     private Data data;
     private Volontario guida;
     private StatoVisita statoVisita;
+    private int numeroPersonePrenotate;
 
     public Appuntamento(Visita visita, Data data, Volontario guida) {
         this.visita = visita;
@@ -38,8 +39,34 @@ public class Appuntamento {
         this.statoVisita = statoVisita;
     }
 
+    public int getNumeroPersonePrenotate() {
+        return numeroPersonePrenotate;
+    }
+    public void setNumeroPersonePrenotate(int numeroPersonePrenotate) {
+        this.numeroPersonePrenotate = numeroPersonePrenotate;
+    }
+
+    public void aggiungiPersonePrenotate (int numero) {
+        this.numeroPersonePrenotate += numero;
+    }
+
     @Override
     public String toString() {
         return String.format(this.visita.getTitolo() + "\t-\t" + data.toString() + " alle ore " + this.visita.getOraInizioVisita().toString() + "\t-\tguida: " + guida.toString() + "\t-\tstato: " + statoVisita.toString());
+    }
+
+    public int getPostiDisponibili() {
+        return visita.getNumeroMassimoPartecipanti() - numeroPersonePrenotate;
+    }
+
+    public boolean appuntamentoUguale(Appuntamento appuntamento){
+        if (this.visita.getTitolo().equalsIgnoreCase(appuntamento.getVisita().getTitolo()) && this.visita.getLuogoID().equalsIgnoreCase(appuntamento.getVisita().getLuogoID())) {
+            if (this.data.dateUguali(appuntamento.getData())) {
+                if (this.guida.utenteUguale(appuntamento.getGuida())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

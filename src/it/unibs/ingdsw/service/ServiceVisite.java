@@ -4,10 +4,8 @@ import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.ListaVisite;
-import it.unibs.ingdsw.visite.StatoVisita;
 import it.unibs.ingdsw.visite.Visita;
 
-import java.util.Iterator;
 
 public class ServiceVisite {
 

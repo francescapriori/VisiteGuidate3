@@ -1,6 +1,6 @@
 package it.unibs.ingdsw.sicurezza;
 
-import it.unibs.ingdsw.applicazione.InputManager;
+import it.unibs.ingdsw.inputOutput.InputManager;
 import it.unibs.ingdsw.utenti.ListaUtenti;
 import it.unibs.ingdsw.utenti.Utente;
 

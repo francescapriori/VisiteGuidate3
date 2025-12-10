@@ -48,7 +48,6 @@ public class ParsAppuntamentiXMLFile {
         return new CalendarioAppuntamenti(new ArrayList<>(appuntamenti));
     }
 
-
     private void parseXML()
             throws ParserConfigurationException, SAXException, IOException {
 
@@ -80,11 +79,11 @@ public class ParsAppuntamentiXMLFile {
             String luogoID = getText(eVisita, "luogoID", null);
             String titoloVisita = getText(eVisita, "titolo", null);
 
-            Visita visita = resolveVisita(luogoID, titoloVisita);   // niente parametri listaLuoghi
+            Visita visita = resolveVisita(luogoID, titoloVisita);
             if (visita == null) {
                 System.err.println("Visita non trovata per appuntamento: luogoID=" +
                         luogoID + ", titolo=" + titoloVisita);
-                continue; // se non trovo la visita, salto questo appuntamento
+                continue;
             }
 
             Data data = parseData(getFirst(eApp, "data"));
@@ -104,8 +103,11 @@ public class ParsAppuntamentiXMLFile {
                 }
             }
 
+            int numeroPersonePrenotate = getInt(eApp, "numeroPersonePrenotate", 0);
+
             Appuntamento app = new Appuntamento(visita, data, guida);
             app.setStatoVisita(stato);
+            app.setNumeroPersonePrenotate(numeroPersonePrenotate);
 
             appuntamenti.add(app);
         }
@@ -152,51 +154,55 @@ public class ParsAppuntamentiXMLFile {
         return d;
     }
 
-    public static void salvaAppuntamenti(ArrayList<Appuntamento> appuntamenti) {
+    /**
+     * Salva gli appuntamenti aggiornando quelli già presenti nell'XML
+     * (match su visita + data) e aggiungendo i nuovi.
+     */
+    public static void salvaAppuntamenti(ArrayList<Appuntamento> nuoviAppuntamenti) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            dbf.setIgnoringComments(true);
+            dbf.setIgnoringElementContentWhitespace(true);
+
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
 
-            Element root = doc.createElement("appuntamenti");
-            doc.appendChild(root);
+            File outFile = new File(DATA);
+            Document doc;
+            Element root;
 
-            if (appuntamenti != null) {
-                for (Appuntamento app : appuntamenti) {
-                    Element eApp = doc.createElement("appuntamento");
-                    root.appendChild(eApp);
+            if (outFile.exists()) {
+                doc = db.parse(outFile);
+                doc.getDocumentElement().normalize();
+                root = doc.getDocumentElement();
+                if (!"appuntamenti".equals(root.getTagName())) {
+                    System.err.println("Root non valida in appuntamenti.xml, ricreo il file.");
+                    doc = db.newDocument();
+                    root = doc.createElement("appuntamenti");
+                    doc.appendChild(root);
+                }
+            } else {
+                doc = db.newDocument();
+                root = doc.createElement("appuntamenti");
+                doc.appendChild(root);
+            }
 
-                    // --- visita (riferimento) ---
-                    Element eVisita = doc.createElement("visita");
-                    eApp.appendChild(eVisita);
-                    Visita v = app.getVisita();
-                    if (v != null) {
-                        appendText(doc, eVisita, "luogoID",
-                                v.getLuogoID() != null ? v.getLuogoID() : "");
-                        appendText(doc, eVisita, "titolo",
-                                v.getTitolo() != null ? v.getTitolo() : "");
+            removeWhitespaceTextNodes(root);
+
+            // Aggiorno o aggiungo i nuovi appuntamenti
+            if (nuoviAppuntamenti != null) {
+                for (Appuntamento app : nuoviAppuntamenti) {
+                    Element esistente = findAppuntamentoElement(root, app);
+                    if (esistente != null) {
+                        Node parent = esistente.getParentNode();
+                        parent.removeChild(esistente);
+                        appendAppuntamento(doc, (Element) parent, app);
+                    } else {
+                        appendAppuntamento(doc, root, app);
                     }
-
-                    // --- data ---
-                    appendData(doc, eApp, "data", app.getData());
-
-                    // --- guida ---
-                    Element eGuida = doc.createElement("guida");
-                    Volontario guida = app.getGuida();
-                    eGuida.setAttribute("username",
-                            guida != null && guida.getUsername() != null
-                                    ? guida.getUsername()
-                                    : "");
-                    eApp.appendChild(eGuida);
-
-                    // --- statoVisita ---
-                    StatoVisita stato = app.getStatoVisita();
-                    appendText(doc, eApp, "statoVisita",
-                            stato != null ? stato.name() : StatoVisita.PROPOSTA.name());
                 }
             }
 
-            File outFile = new File(DATA);
             if (outFile.getParentFile() != null) {
                 outFile.getParentFile().mkdirs();
             }
@@ -212,6 +218,54 @@ public class ParsAppuntamentiXMLFile {
             System.err.println("Errore salvataggio appuntamenti.xml: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static Element findAppuntamentoElement(Element root, Appuntamento app) {
+        if (app == null || app.getVisita() == null || app.getData() == null) return null;
+
+        NodeList nl = root.getElementsByTagName("appuntamento");
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element eApp = (Element) nl.item(i);
+
+            Element eVisita = getFirst(eApp, "visita");
+            String luogoID = getText(eVisita, "luogoID", null);
+            String titoloVisita = getText(eVisita, "titolo", null);
+
+            Element eData = getFirst(eApp, "data");
+            int g = getInt(eData, "giorno", -1);
+            int m = getInt(eData, "mese", -1);
+            int a = getInt(eData, "anno", -1);
+
+            if (stessaChiave(app, luogoID, titoloVisita, g, m, a)) {
+                return eApp;
+            }
+        }
+        return null;
+    }
+
+    private static boolean stessaChiave(Appuntamento app,
+                                        String luogoIDXml, String titoloXml,
+                                        int gXml, int mXml, int aXml) {
+
+        Visita v = app.getVisita();
+        if (v == null || app.getData() == null) return false;
+
+        String luogoIDApp = v.getLuogoID();
+        String titoloApp = v.getTitolo();
+        Data d = app.getData();
+
+        boolean stessoLuogo = (luogoIDApp == null && luogoIDXml == null)
+                || (luogoIDApp != null && luogoIDApp.equals(luogoIDXml));
+
+        boolean stessoTitolo = (titoloApp == null && titoloXml == null)
+                || (titoloApp != null && titoloApp.equals(titoloXml));
+
+        boolean stessaData =
+                d.getGiorno() == gXml &&
+                        d.getMese() == mXml &&
+                        d.getAnno() == aXml;
+
+        return stessoLuogo && stessoTitolo && stessaData;
     }
 
     private static Element getFirst(Element parent, String tag) {
@@ -234,6 +288,7 @@ public class ParsAppuntamentiXMLFile {
         }
     }
 
+
     private static void appendText(Document doc, Element parent, String tag, String text) {
         Element e = doc.createElement(tag);
         if (text != null) e.setTextContent(text);
@@ -247,5 +302,52 @@ public class ParsAppuntamentiXMLFile {
         appendText(doc, e, "giorno", String.valueOf(d.getGiorno()));
         appendText(doc, e, "mese", String.valueOf(d.getMese()));
         appendText(doc, e, "anno", String.valueOf(d.getAnno()));
+    }
+
+
+    private static void appendAppuntamento(Document doc, Element root, Appuntamento app) {
+        Element eApp = doc.createElement("appuntamento");
+        root.appendChild(eApp);
+
+        Element eVisita = doc.createElement("visita");
+        eApp.appendChild(eVisita);
+        Visita v = app.getVisita();
+        if (v != null) {
+            appendText(doc, eVisita, "luogoID",
+                    v.getLuogoID() != null ? v.getLuogoID() : "");
+            appendText(doc, eVisita, "titolo",
+                    v.getTitolo() != null ? v.getTitolo() : "");
+        }
+
+        appendData(doc, eApp, "data", app.getData());
+
+        Element eGuida = doc.createElement("guida");
+        Volontario guida = app.getGuida();
+        eGuida.setAttribute("username",
+                guida != null && guida.getUsername() != null
+                        ? guida.getUsername()
+                        : "");
+        eApp.appendChild(eGuida);
+
+        StatoVisita stato = app.getStatoVisita();
+        appendText(doc, eApp, "statoVisita",
+                stato != null ? stato.name() : StatoVisita.PROPOSTA.name());
+
+        appendText(doc, eApp, "numeroPersonePrenotate",
+                String.valueOf(app.getNumeroPersonePrenotate()));
+    }
+
+    private static void removeWhitespaceTextNodes(Node parent) {
+        Node child = parent.getFirstChild();
+        while (child != null) {
+            Node next = child.getNextSibling();
+            if (child.getNodeType() == Node.TEXT_NODE &&
+                    child.getTextContent().trim().isEmpty()) {
+                parent.removeChild(child);
+            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
+                removeWhitespaceTextNodes(child);
+            }
+            child = next;
+        }
     }
 }

@@ -1,7 +1,7 @@
 package it.unibs.ingdsw.applicazione;
 
 import it.unibs.ingdsw.luoghi.Luogo;
-import it.unibs.ingdsw.output.OutputManager;
+import it.unibs.ingdsw.inputOutput.*;
 import it.unibs.ingdsw.service.*;
 import it.unibs.ingdsw.tempo.Data;
 import it.unibs.ingdsw.tempo.InsiemeDate;
@@ -82,7 +82,7 @@ public class MenuConfiguratore extends MenuManager {
         });
 
         m.aggiungi(6, "Visualizza appuntamenti per stato", () -> {
-            OutputManager.visualizzaAppuntamentiPerStato(serviceApplicazione.getAppuntamenti());
+            OutputManager.visualizzaAppuntamentiPerStato(serviceApplicazione.getAppuntamenti(meseProduzione, annoProduzione), true);
         });
 
         m.aggiungi(7, "Apri raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita, () -> {

@@ -9,6 +9,7 @@ import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.Appuntamento;
 import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
+import it.unibs.ingdsw.visite.Prenotazione;
 import it.unibs.ingdsw.visite.Visita;
 import it.unibs.ingdsw.parsing.*;
 
@@ -31,6 +32,7 @@ public class Applicazione {
     private StatoRichiestaDisponibilita statoDisp;
     private YearMonth nextDisponibilita;
     private StatoProduzioneVisite statoProduzione;
+    private ArrayList<Prenotazione> prenotazioni;
 
     public Applicazione() {}
 
@@ -87,6 +89,31 @@ public class Applicazione {
     public CalendarioAppuntamenti getCalendarioAppuntamenti() {
         return calendarioAppuntamenti;
     }
+    public CalendarioAppuntamenti getAppuntamentiDelMese(int mese, int anno) {
+        CalendarioAppuntamenti appuntamentiDelMese = new CalendarioAppuntamenti();
+
+        int meseSuccessivo = (mese == 12) ? 1 : mese + 1;
+        int annoSuccessivo = (mese == 12) ? anno + 1 : anno;
+
+        for (Appuntamento a : calendarioAppuntamenti.getAppuntamenti()) {
+            int giorno = a.getData().getGiorno();
+            int m = a.getData().getMese();
+            int y = a.getData().getAnno();
+
+            boolean nelMeseCorrente =
+                    (m == mese && y == anno && giorno >= Target.SOGLIA_CAMBIO_MESE);
+
+            boolean nelMeseSuccessivo =
+                    (m == meseSuccessivo && y == annoSuccessivo && giorno < Target.SOGLIA_CAMBIO_MESE);
+
+            if (nelMeseCorrente || nelMeseSuccessivo) {
+                appuntamentiDelMese.getAppuntamenti().add(a);
+            }
+        }
+
+        return appuntamentiDelMese;
+    }
+
     public void setCalendarioAppuntamenti(CalendarioAppuntamenti calendario){
         this.calendarioAppuntamenti=calendario;
     }
@@ -121,6 +148,16 @@ public class Applicazione {
         this.nextDisponibilita = nextDisponibilita;
     }
 
+    public ArrayList<Prenotazione> getPrenotazioni() {
+        return this.prenotazioni;
+    }
+    public void setPrenotazioni (ArrayList<Prenotazione> prenotazioni) {
+        this.prenotazioni = prenotazioni;
+    }
+    public void aggiungiPrenotazione (Prenotazione prenotazione) {
+        this.prenotazioni.add(prenotazione);
+    }
+
     public static Applicazione configuraApplicazione () {
         Applicazione app = new Applicazione();
         ParsParametriAppXMLFile pa = new ParsParametriAppXMLFile();
@@ -147,6 +184,8 @@ public class Applicazione {
         }
         app.setStatoDisp(pa.getStato());
         app.setNextDisponibilita(pa.getNextDisponibilita());
+        ParsPrenotazioniXMLFile pp = new ParsPrenotazioniXMLFile(app.getCalendarioAppuntamenti().getAppuntamenti());
+        app.setPrenotazioni(pp.getPrenotazioni());
         return app;
     }
 
@@ -161,7 +200,8 @@ public class Applicazione {
         ParsDateEscluseXMLFile.salvaListaDate(this.dateEscluse);
         ParsLuoghiXMLFile.salvaLuoghi(this.listaLuoghi);
         ParsDisponibilitaVolontariXMLFile.salvaDisponibilitaVolontari(this.disponibilitaPerVol);
-        ParsAppuntamentiXMLFile.salvaAppuntamenti(this.calendarioAppuntamenti.getCalendarioVisite());
+        ParsAppuntamentiXMLFile.salvaAppuntamenti(this.calendarioAppuntamenti.getAppuntamenti());
+        ParsPrenotazioniXMLFile.salvaPrenotazioni(this.prenotazioni);
     }
 
     public InsiemeDate getDateEsclusePerMeseAnno (int mese, int anno) {
@@ -231,7 +271,7 @@ public class Applicazione {
                     if (dateDisponibilitaVolontario.dataPresente(d1) &&
                             !calendarioAppuntamenti.volontarioGiaPresenteInData(d1, volontario)) {
 
-                        calendarioAppuntamenti.getCalendarioVisite()
+                        calendarioAppuntamenti.getAppuntamenti()
                                 .add(new Appuntamento(visita, d1, volontario));
 
                         assegnato = true;
@@ -323,4 +363,53 @@ public class Applicazione {
         }
         this.listaLuoghi.getListaLuoghi().removeAll(luoghiDaRimuovere);
     }
+
+    public boolean prenotazioneGiaPresente(Prenotazione p) {
+        for (Prenotazione prenotazione : this.prenotazioni) {
+            if (prenotazione.prenotazioneUguale(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Prenotazione> prenotazioniDi(Utente u, int mese, int anno) {
+        ArrayList<Prenotazione> prenotazioniDellUtente = new ArrayList<>();
+        int meseSuccessivo = (mese == 12) ? 1 : mese + 1;
+        int annoSuccessivo = (mese == 12) ? anno + 1 : anno;
+
+        for (Prenotazione p : this.prenotazioni) {
+            if (!p.getUtenteChePrenota().utenteUguale(u)) {
+                continue;
+            }
+
+            Appuntamento a = p.getAppuntamento();
+            int giorno = a.getData().getGiorno();
+            int m = a.getData().getMese();
+            int y = a.getData().getAnno();
+
+            boolean nelMeseCorrente =
+                    (m == mese && y == anno && giorno >= Target.SOGLIA_CAMBIO_MESE);
+
+            boolean nelMeseSuccessivo =
+                    (m == meseSuccessivo && y == annoSuccessivo && giorno < Target.SOGLIA_CAMBIO_MESE);
+
+            if (nelMeseCorrente || nelMeseSuccessivo) {
+                prenotazioniDellUtente.add(p);
+            }
+        }
+        return prenotazioniDellUtente;
+    }
+
+    public void rimuoviPrenotazione(Prenotazione prenotazione) {
+        Iterator<Prenotazione> it = this.prenotazioni.iterator();
+        while (it.hasNext()) {
+            Prenotazione p = it.next();
+            if (prenotazione.prenotazioneUguale(p)) {
+                it.remove();
+                break;
+            }
+        }
+    }
+
 }

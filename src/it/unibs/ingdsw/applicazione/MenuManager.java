@@ -2,10 +2,10 @@ package it.unibs.ingdsw.applicazione;
 
 import it.unibs.ingdsw.utenti.Configuratore;
 import it.unibs.ingdsw.utenti.Utente;
+import it.unibs.ingdsw.inputOutput.InputManager;
+import it.unibs.ingdsw.utenti.Volontario;
 
 public abstract class MenuManager {
-
-    public static final int INIZIO_PERIODO_ESCLUSIONE_DATE = 18;
 
     public final Applicazione applicazione;
     public final Utente utente;
@@ -24,10 +24,12 @@ public abstract class MenuManager {
         if (utente instanceof Configuratore) {
             return new MenuConfiguratore(applicazione, utente);
         }
-        //if (utente instanceof Volontario) {
+        if (utente instanceof Volontario) {
             return new MenuVolontario(applicazione, utente);
-        //}
-        // todo fruitore
+        }
+        else {
+            return new MenuFruitore(applicazione, utente);
+        }
     }
 
     public void cambioPassword() {

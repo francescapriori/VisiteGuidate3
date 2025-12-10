@@ -65,7 +65,12 @@ public abstract class Utente {
         }
     }
 
-
+    public boolean utenteUguale (Utente utente) {
+        if (this.username.equalsIgnoreCase(utente.getUsername())) {
+            return true;
+        }
+        return false;
+    }
 
     public boolean pwUguale(String pwd) {
         if (this.password.equals(pwd)) {
