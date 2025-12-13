@@ -24,7 +24,7 @@ public class ParsParametriAppXMLFile {
     private boolean ambienteDaConfigurare;
     private StatoRichiestaDisponibilita stato;     // DISP_APERTE, DISP_CHIUSE
     private StatoProduzioneVisite statoProduzione; // PRODOTTE, NON_PRODOTTE
-    private YearMonth nextDisponibilita;           // può rimanere null
+    private YearMonth nextDisponibilita;
 
     public ParsParametriAppXMLFile() {
         try {
@@ -34,7 +34,7 @@ public class ParsParametriAppXMLFile {
             e.printStackTrace();
             this.stato = StatoRichiestaDisponibilita.DISP_CHIUSE;
             this.statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
-            this.nextDisponibilita = null;  // rimane null se c'è errore
+            this.nextDisponibilita = null;
         }
 
         if (this.stato == null) {
@@ -43,8 +43,6 @@ public class ParsParametriAppXMLFile {
         if (this.statoProduzione == null) {
             this.statoProduzione = StatoProduzioneVisite.NON_PRODOTTE;
         }
-        // NON forziamo più nextDisponibilita a YearMonth.now():
-        // se è null, resta null finché non viene settata da qualche logica applicativa.
     }
 
     private void parseXML() throws ParserConfigurationException, SAXException, IOException {
@@ -110,7 +108,6 @@ public class ParsParametriAppXMLFile {
             }
         }
 
-        // nextDisponibilita: può rimanere null
         if (root.getElementsByTagName("nextDisponibilita").getLength() > 0 &&
                 root.getElementsByTagName("nextDisponibilita").item(0) != null) {
 
@@ -134,7 +131,6 @@ public class ParsParametriAppXMLFile {
                     }
                 }
             } else {
-                // tag presente ma vuoto -> calcolo (se vuoi), altrimenti potresti anche lasciare null
                 try {
                     Target targetApplicazione = new Target();
                     nextDisponibilita = targetApplicazione.calcolaDataTargetDisponibilita();
@@ -171,10 +167,6 @@ public class ParsParametriAppXMLFile {
         return nextDisponibilita;
     }
 
-    /**
-     * Overload che NON imposta nextDisponibilita:
-     * la lascia null e quindi non verrà salvato alcun tag <nextDisponibilita>.
-     */
     public static void salvaParametri(String ambitoTerritoriale, int numeroMaxIscrivibili,
                                       StatoRichiestaDisponibilita statoDisp,
                                       StatoProduzioneVisite statoProduzione) {
@@ -182,10 +174,10 @@ public class ParsParametriAppXMLFile {
         salvaParametri(
                 ambitoTerritoriale,
                 numeroMaxIscrivibili,
-                false,  // ambienteDaConfigurare
+                false,
                 statoDisp != null ? statoDisp : StatoRichiestaDisponibilita.DISP_CHIUSE,
                 statoProduzione != null ? statoProduzione : StatoProduzioneVisite.NON_PRODOTTE,
-                null    // <--- NON YearMonth.now(), la lasciamo null
+                null
         );
     }
 

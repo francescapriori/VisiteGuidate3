@@ -15,7 +15,7 @@ public class Volontario extends Utente{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Utente)) return false; // ✅ accetta anche Volontario
+        if (!(o instanceof Utente)) return false;
         Utente utente = (Utente) o;
         return Objects.equals(getUsername(), utente.getUsername());
     }

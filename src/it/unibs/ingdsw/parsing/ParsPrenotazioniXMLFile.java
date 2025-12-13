@@ -25,10 +25,7 @@ public class ParsPrenotazioniXMLFile {
 
     private static final String DATA = "src/it/unibs/ingdsw/parsing/file/prenotazioni.xml";
 
-    // lista di appuntamenti esistenti nell'applicazione
     private final ArrayList<Appuntamento> appuntamenti;
-
-    // lista di prenotazioni lette dal file
     private final ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
 
     public ParsPrenotazioniXMLFile(ArrayList<Appuntamento> appuntamenti) {
@@ -45,8 +42,6 @@ public class ParsPrenotazioniXMLFile {
     public ArrayList<Prenotazione> getPrenotazioni() {
         return new ArrayList<>(prenotazioni);
     }
-
-    // ================== LETTURA ==================
 
     private void parseXML()
             throws ParserConfigurationException, SAXException, IOException {
@@ -75,18 +70,14 @@ public class ParsPrenotazioniXMLFile {
         for (int i = 0; i < nl.getLength(); i++) {
             Element ePren = (Element) nl.item(i);
 
-            // --- codicePrenotazione (può non esserci in file vecchi) ---
             String codicePren = getText(ePren, "codicePrenotazione", null);
 
-            // --- visita ---
             Element eVisita = getFirst(ePren, "visita");
             String luogoID = getText(eVisita, "luogoID", null);
             String titoloVisita = getText(eVisita, "titolo", null);
 
-            // --- data ---
             Data data = parseData(getFirst(ePren, "data"));
 
-            // Trovo l'appuntamento corrispondente
             Appuntamento appuntamento = resolveAppuntamento(luogoID, titoloVisita, data);
             if (appuntamento == null) {
                 System.err.println("Appuntamento non trovato per prenotazione: luogoID=" +
@@ -94,21 +85,16 @@ public class ParsPrenotazioniXMLFile {
                 continue; // salto questa prenotazione
             }
 
-            // --- fruitore ---
             Element eFruitore = getFirst(ePren, "fruitore");
             String usernameFruitore = (eFruitore != null) ? eFruitore.getAttribute("username") : null;
             Fruitore fruitore = new Fruitore(usernameFruitore, null); // oggetto minimale
 
-            // --- numero persone ---
             int numPersone = getInt(ePren, "numeroPersonePerPrenotazione", 1);
 
-            // --- costruzione Prenotazione con o senza codice (compatibilità file vecchi) ---
             Prenotazione p;
             if (codicePren != null && !codicePren.isEmpty()) {
-                // File contiene già il codice -> lo riuso
                 p = new Prenotazione(codicePren, appuntamento, fruitore, numPersone);
             } else {
-                // File vecchio senza codice -> ne genero uno nuovo nel costruttore
                 p = new Prenotazione(appuntamento, fruitore, numPersone);
             }
 
@@ -154,7 +140,6 @@ public class ParsPrenotazioniXMLFile {
         return null;
     }
 
-    // ================== SCRITTURA (SOVRASCRIVE IL FILE) ==================
 
     public static void salvaPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         try {
@@ -193,7 +178,6 @@ public class ParsPrenotazioniXMLFile {
         }
     }
 
-    // ============== helper DOM lettura ==============
 
     private static Element getFirst(Element parent, String tag) {
         if (parent == null) return null;
@@ -214,8 +198,6 @@ public class ParsPrenotazioniXMLFile {
             return def;
         }
     }
-
-    // ============== helper DOM scrittura ==============
 
     private static void appendText(Document doc, Element parent, String tag, String text) {
         Element e = doc.createElement(tag);
@@ -241,11 +223,9 @@ public class ParsPrenotazioniXMLFile {
         Data d = (app != null) ? app.getData() : null;
         Fruitore f = p.getUtenteChePrenota();
 
-        // --- codicePrenotazione ---
         appendText(doc, ePren, "codicePrenotazione",
                 p.getCodicePrenotazione() != null ? p.getCodicePrenotazione() : "");
 
-        // --- visita ---
         Element eVisita = doc.createElement("visita");
         ePren.appendChild(eVisita);
         if (v != null) {
@@ -255,16 +235,13 @@ public class ParsPrenotazioniXMLFile {
                     v.getTitolo() != null ? v.getTitolo() : "");
         }
 
-        // --- data ---
         appendData(doc, ePren, "data", d);
 
-        // --- fruitore ---
         Element eFruitore = doc.createElement("fruitore");
         eFruitore.setAttribute("username",
                 f != null && f.getUsername() != null ? f.getUsername() : "");
         ePren.appendChild(eFruitore);
 
-        // --- numeroPersonePerPrenotazione ---
         appendText(doc, ePren, "numeroPersonePerPrenotazione",
                 String.valueOf(p.getNumeroPersonePerPrenotazione()));
     }

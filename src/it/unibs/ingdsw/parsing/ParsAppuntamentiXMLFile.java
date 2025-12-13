@@ -137,7 +137,7 @@ public class ParsAppuntamentiXMLFile {
                 if (u instanceof Volontario v &&
                         v.getUsername() != null &&
                         v.getUsername().equalsIgnoreCase(username)) {
-                    return v; // istanza reale già presente
+                    return v;
                 }
             }
         }
@@ -154,10 +154,6 @@ public class ParsAppuntamentiXMLFile {
         return d;
     }
 
-    /**
-     * Salva gli appuntamenti aggiornando quelli già presenti nell'XML
-     * (match su visita + data) e aggiungendo i nuovi.
-     */
     public static void salvaAppuntamenti(ArrayList<Appuntamento> nuoviAppuntamenti) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -189,7 +185,6 @@ public class ParsAppuntamentiXMLFile {
 
             removeWhitespaceTextNodes(root);
 
-            // Aggiorno o aggiungo i nuovi appuntamenti
             if (nuoviAppuntamenti != null) {
                 for (Appuntamento app : nuoviAppuntamenti) {
                     Element esistente = findAppuntamentoElement(root, app);

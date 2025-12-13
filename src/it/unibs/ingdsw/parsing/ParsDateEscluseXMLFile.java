@@ -82,12 +82,10 @@ public class ParsDateEscluseXMLFile {
     }
 
     private static Data parseDataElement(Element eData) {
-        // prova con sotto-tag
         String gTxt = getText(eData, "giorno", null);
         String mTxt = getText(eData, "mese", null);
         String aTxt = getText(eData, "anno", null);
 
-        // fallback: attributi
         if (gTxt == null) gTxt = eData.getAttribute("giorno");
         if (mTxt == null) mTxt = eData.getAttribute("mese");
         if (aTxt == null) aTxt = eData.getAttribute("anno");

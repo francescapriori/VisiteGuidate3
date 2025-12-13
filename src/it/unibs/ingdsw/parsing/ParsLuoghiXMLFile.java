@@ -60,7 +60,6 @@ public class ParsLuoghiXMLFile {
             throw new IllegalArgumentException("Root <luoghi> attesa, trovata <" + root.getTagName() + ">.");
         }
 
-        // <luogo>...
         NodeList nl = root.getElementsByTagName("luogo");
         for (int i = 0; i < nl.getLength(); i++) {
             Element eLuogo = (Element) nl.item(i);
@@ -69,11 +68,9 @@ public class ParsLuoghiXMLFile {
             String nome = getText(eLuogo, "nome", "");
             String desc = getText(eLuogo, "descrizione", "");
 
-            // posizione luogo
             Element ePos = getFirst(eLuogo, "posizione");
             Posizione pos = parsePosizione(ePos);
 
-            // visite
             ListaVisite lv = parseVisite(getFirst(eLuogo, "visite"), id);
 
             listaLuoghi.aggiungiLuogo(new Luogo(id, nome, desc, pos, lv));
@@ -101,25 +98,20 @@ public class ParsLuoghiXMLFile {
             String titolo = getText(eV, "titolo", "");
             String descr  = getText(eV, "descrizione", "");
 
-            // posizione incontro della visita (può differire dal luogo)
             Posizione posV = parsePosizione(getFirst(eV, "posizione"));
 
-            // giornate
             Giornate giornate = parseGiornate(getFirst(eV, "giornate"));
 
-            // validità
             Element eVal = getFirst(eV, "validita");
             Data inizio  = parseData(getFirst(eVal, "inizio"));
             Data fine    = parseData(getFirst(eVal, "fine"));
 
-            // orario
             Element eOra = getFirst(eV, "oraInizio");
             Orario ora   = new Orario(getInt(eOra, "ora", 0), getInt(eOra, "minuti", 0));
 
             int durata   = getInt(eV, "durataMinuti", 0);
             boolean bigl = getBoolean(eV, "presenzaBiglietto", false);
 
-            // volontari
             ArrayList<Volontario> vols = parseVolontari(getFirst(eV, "volontari"));
 
             int minP = getInt(eV, "numeroMinimoPartecipanti", 0);
@@ -191,7 +183,6 @@ public class ParsLuoghiXMLFile {
                 appendText(doc, eLuogo, "nome", l.getNome());
                 appendText(doc, eLuogo, "descrizione", l.getDescrizione());
 
-                // posizione luogo
                 Element ePos = doc.createElement("posizione");
                 eLuogo.appendChild(ePos);
                 Posizione p = l.getPosizione();
@@ -203,7 +194,6 @@ public class ParsLuoghiXMLFile {
                     appendText(doc, ePos, "lon",   String.valueOf(p.getLongitudine()));
                 }
 
-                // visite
                 Element eVisite = doc.createElement("visite");
                 eLuogo.appendChild(eVisite);
                 ListaVisite lv = l.getInsiemeVisite();
@@ -215,7 +205,6 @@ public class ParsLuoghiXMLFile {
                         appendText(doc, eVisita, "titolo", v.getTitolo());
                         appendText(doc, eVisita, "descrizione", v.getDescrizione());
 
-                        // posizione incontro
                         Element ePosV = doc.createElement("posizione");
                         eVisita.appendChild(ePosV);
                         Posizione pV = v.getLuogoIncontro();
@@ -227,7 +216,6 @@ public class ParsLuoghiXMLFile {
                             appendText(doc, ePosV, "lon",   String.valueOf(pV.getLongitudine()));
                         }
 
-                        // giornate
                         Element eGiornate = doc.createElement("giornate");
                         eVisita.appendChild(eGiornate);
                         Giornate g = v.getGiornateVisita();
@@ -238,13 +226,11 @@ public class ParsLuoghiXMLFile {
                             }
                         }
 
-                        // validità
                         Element eValidita = doc.createElement("validita");
                         eVisita.appendChild(eValidita);
                         appendData(doc, eValidita, "inizio", v.getInizioValiditaVisita());
                         appendData(doc, eValidita, "fine",   v.getFineValiditaVisita());
 
-                        // ora
                         Element eOra = doc.createElement("oraInizio");
                         eVisita.appendChild(eOra);
                         Orario or = v.getOraInizioVisita();
@@ -254,7 +240,6 @@ public class ParsLuoghiXMLFile {
                         appendText(doc, eVisita, "durataMinuti", String.valueOf(v.getDurataMinutiVisita()));
                         appendText(doc, eVisita, "presenzaBiglietto", String.valueOf(v.isPresenzaBiglietto()));
 
-                        // volontari
                         Element eVols = doc.createElement("volontari");
                         eVisita.appendChild(eVols);
                         var vols = v.getVolontariVisita();

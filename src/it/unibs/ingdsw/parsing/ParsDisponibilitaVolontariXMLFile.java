@@ -52,7 +52,7 @@ public class ParsDisponibilitaVolontariXMLFile {
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("File XML non trovato -> " + xmlFile.getAbsolutePath());
-            return; // file assente: mappa vuota
+            return;
         }
 
         Document doc = db.parse(xmlFile);
