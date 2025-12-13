@@ -87,13 +87,13 @@ public class OutputManager {
         }
     }
 
-    public static ArrayList<Appuntamento> visualizzaAppuntamentiPerPrenotazione (CalendarioAppuntamenti appuntamenti) {
+    public static ArrayList<Appuntamento> visualizzaAppuntamentiPerPrenotazione(CalendarioAppuntamenti appuntamenti) {
         System.out.println("\nGli appuntamenti disponibili per la prenotazione sono:");
         ArrayList<Appuntamento> appuntamentiPrenotabili = new ArrayList<>();
         StatoVisita[] tutti = StatoVisita.values();
         int i = 1;
         for (Appuntamento a : appuntamenti.getAppuntamenti()) {
-            if(a.getStatoVisita() == StatoVisita.PROPOSTA) {
+            if (a.getStatoVisita() == StatoVisita.PROPOSTA) {
                 System.out.println(i + ") " + a.toString());
                 appuntamentiPrenotabili.add(a);
                 i++;
@@ -108,7 +108,7 @@ public class OutputManager {
 
     public static void visualizzaLuoghi(ListaLuoghi luoghi) {
         int i = 1;
-        for(Luogo l : luoghi.getListaLuoghi()) {
+        for (Luogo l : luoghi.getListaLuoghi()) {
             System.out.println(i + ") " + l.stampaSoloLuogo());
             i++;
         }
@@ -116,9 +116,9 @@ public class OutputManager {
 
     public static void visualizzaLuoghiEvisite(ListaLuoghi luoghi) {
         int i = 1;
-        for(Luogo l : luoghi.getListaLuoghi()) {
+        for (Luogo l : luoghi.getListaLuoghi()) {
             System.out.println(i + ") " + l.stampaLuogoBase());
-            for(Visita v : l.getInsiemeVisite().getListaVisite()) {
+            for (Visita v : l.getInsiemeVisite().getListaVisite()) {
                 System.out.println("\t-" + v.stampaVisitaBase());
             }
             i++;
@@ -141,7 +141,7 @@ public class OutputManager {
 
     public static void visualizzaListaVisite(ListaVisite listaVisite) {
         int i = 1;
-        for(Visita v : listaVisite.getListaVisite()) {
+        for (Visita v : listaVisite.getListaVisite()) {
             System.out.println(i + ") " + v.toString());
             i++;
         }
@@ -150,21 +150,31 @@ public class OutputManager {
     public static void visualizzaCalendario(CalendarioAppuntamenti calendarioAppuntamenti, String nomeMeseV, int annoTargetV) {
 
         System.out.println("\n-----Lista degli appuntamenti per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
-        for(Appuntamento a : calendarioAppuntamenti.getAppuntamenti()) {
+        for (Appuntamento a : calendarioAppuntamenti.getAppuntamenti()) {
             System.out.println(a.toString());
         }
     }
 
-    public static void visualizzaPrenotazioni(ArrayList<Prenotazione> listaPrenotazioni, String nomeMeseV, int annoTargetV) {
-        if (listaPrenotazioni.isEmpty()) {
-            System.out.println("Non hai ancora effettuato nessuna prenotazione.");
-            return;
-        }
-        System.out.println("\n-----I tuoi appuntamenti per il mese di " + nomeMeseV + " " + annoTargetV + "-----");
-        int i = 1;
-        for (Prenotazione p : listaPrenotazioni) {
-            System.out.println(i + ") " + p.toStringLungo());
-            i++;
+    public static void visualizzaPrenotazioni(ArrayList<Prenotazione> prenotazioni, ArrayList<Appuntamento> appuntamenti, StatoVisita[] statiDaEstrarre, String nomeMeseV, int annoTargetV) {
+        System.out.println("I tuoi appuntamenti prenotati per il mese di " + nomeMeseV + " " + annoTargetV + "sono: ");
+
+        for (StatoVisita sv : statiDaEstrarre) {
+            System.out.println("Stato: " + sv);
+            boolean trovatoInQuestoStato = false;
+            for (Prenotazione p : prenotazioni) {
+                if (p.getAppuntamento().getStatoVisita() == sv) {
+                    trovatoInQuestoStato = true;
+                    System.out.println(" - " + p.toString() + " - PER " + p.getAppuntamento().getVisita().getTitolo() + " - " + p.getAppuntamento().getData().toString());
+                    ArrayList<Prenotazione> prenotazioniAss = p.getAppuntamento().getPrenotazioniAssociate(prenotazioni);
+                    if (prenotazioniAss.isEmpty()) {
+                        System.out.println("  Nessuna prenotazione effettuata.");
+                    }
+                }
+            }
+            if (!trovatoInQuestoStato) {
+                System.out.println("  Non hai nessun appuntamento prenotato in questo stato.");
+            }
+            System.out.println();
         }
     }
 }

@@ -11,5 +11,8 @@
   <volontario password="lorenzol00" pwProvvisoria="false" username="lorenzol00"/>
   <volontario password="danielel96" pwProvvisoria="false" username="danielel96"/>
   <fruitore password="rosmar" pwProvvisoria="false" username="rosmar"/>
-  <fruitore password="matzan00" pwProvvisoria="true" username="matzan00"/>
+  <fruitore password="matzan00" pwProvvisoria="false" username="matzan00"/>
+  <fruitore password="ivapic70" pwProvvisoria="false" username="ivapic70"/>
+  <fruitore password="robpri70" pwProvvisoria="false" username="robpri70"/>
+
 </utenti>

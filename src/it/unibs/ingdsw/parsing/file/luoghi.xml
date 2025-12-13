@@ -48,7 +48,7 @@
           <volontario password="andreab12" username="andreab12"/>
         </volontari>
         <numeroMinimoPartecipanti>6</numeroMinimoPartecipanti>
-        <numeroMassimoPartecipanti>20</numeroMassimoPartecipanti>
+        <numeroMassimoPartecipanti>10</numeroMassimoPartecipanti>
       </visita>
       <visita>
         <titolo>Segreti e Meraviglie di Palazzo Ducale: Storia, Arte e Potere a Mantova</titolo>

@@ -12,6 +12,7 @@ import it.unibs.ingdsw.utenti.Fruitore;
 import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.visite.Appuntamento;
 import it.unibs.ingdsw.visite.Prenotazione;
+import it.unibs.ingdsw.visite.StatoVisita;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class MenuFruitore extends MenuManager {
 
         m.aggiungi(3, "Visualizza lo stato degli appuntamenti a cui sei iscritto per il mese di " + nomeMeseProduzione + " " + annoProduzione, () -> {
             if (serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
-                OutputManager.visualizzaPrenotazioni(servicePrenotazione.prenotazioniDi(this.utente, meseProduzione, annoProduzione), nomeMeseProduzione, annoProduzione);
+                OutputManager.visualizzaPrenotazioni(servicePrenotazione.getPrenotazioni(), serviceApplicazione.getAppuntamenti(meseProduzione, annoProduzione).getAppuntamenti(), new StatoVisita[] {StatoVisita.PROPOSTA, StatoVisita.CANCELLATA, StatoVisita.CONFERMATA}, nomeMeseProduzione, annoProduzione); // todo forse modificare la lista in modo dinamico: non vedo più gli appuntamenti per cui ho già fatto una prenotazione
             } else {
                 System.out.println("Non è possibile visualizzare gli appuntamenti per stato: è necessario produrre prima il piano delle visite per il mese " +
                         nomeMeseProduzione + " " + annoProduzione);

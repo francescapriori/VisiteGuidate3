@@ -13,6 +13,7 @@ import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.ListaVisite;
+import it.unibs.ingdsw.visite.StatoVisita;
 import it.unibs.ingdsw.visite.Visita;
 
 import java.time.YearMonth;
