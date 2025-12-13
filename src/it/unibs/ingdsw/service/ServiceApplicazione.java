@@ -3,10 +3,13 @@ package it.unibs.ingdsw.service;
 import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
 import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
+import it.unibs.ingdsw.utenti.Volontario;
+import it.unibs.ingdsw.visite.Appuntamento;
 import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.Prenotazione;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 
 
 public class ServiceApplicazione {
@@ -71,5 +74,9 @@ public class ServiceApplicazione {
 
     public void aggiungiPrenotazione(Prenotazione p){
         this.applicazione.aggiungiPrenotazione(p);
+    }
+
+    public ArrayList<Appuntamento> getAppuntamentiDellUtente(Volontario volontario) {
+        return this.applicazione.getAppuntamentiDellUtente(volontario);
     }
 }

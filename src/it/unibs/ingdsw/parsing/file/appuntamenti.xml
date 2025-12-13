@@ -11,8 +11,8 @@
       <anno>2026</anno>
     </data>
     <guida username="danielel96"/>
-    <statoVisita>PROPOSTA</statoVisita>
-    <numeroPersonePrenotate>4</numeroPersonePrenotate>
+    <statoVisita>CONFERMATA</statoVisita>
+    <numeroPersonePrenotate>7</numeroPersonePrenotate>
   </appuntamento>
   <appuntamento>
     <visita>
@@ -263,7 +263,7 @@
       <anno>2026</anno>
     </data>
     <guida username="elisab08"/>
-    <statoVisita>PROPOSTA</statoVisita>
+    <statoVisita>CANCELLATA</statoVisita>
     <numeroPersonePrenotate>0</numeroPersonePrenotate>
   </appuntamento>
 </appuntamenti>

@@ -148,16 +148,6 @@ public class InputManager {
         }
     }
 
-    public static StatoVisita chiediStatoVisita() {
-        StatoVisita[] vals = StatoVisita.values();
-        for (int i = 0; i < vals.length; i++) {
-            System.out.println((i + 1) + ") " + vals[i]);
-        }
-        int scelta = leggiInteroConMinMax("Seleziona (1-" + vals.length + "): ", 1, vals.length);
-        return vals[scelta - 1];
-    }
-
-
     public static Posizione chiediPosizione() {
         return new Posizione(
                 InputManager.leggiStringaNonVuota("Inserisci il nome del paese: "),
@@ -174,14 +164,6 @@ public class InputManager {
             if (cap.matches("\\d{" + Posizione.LUNGHEZZA_CAP + "}")) return cap;
             System.out.println("Errore: il CAP deve essere un numero di " + Posizione.LUNGHEZZA_CAP + " cifre.");
         }
-    }
-
-
-    public static GiornoSettimana chiediGiornoSettimana() {
-        GiornoSettimana[] vals = GiornoSettimana.values();
-        for (int i = 0; i < vals.length; i++) System.out.println((i + 1) + ") " + vals[i]);
-        int scelta = InputManager.leggiInteroConMinMax("Seleziona (1-" + vals.length + "): ", 1, vals.length);
-        return vals[scelta - 1];
     }
 
     public static ListaLuoghi chiediLuoghi(Applicazione applicazione) {

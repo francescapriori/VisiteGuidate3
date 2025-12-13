@@ -75,6 +75,9 @@ public class ParsPrenotazioniXMLFile {
         for (int i = 0; i < nl.getLength(); i++) {
             Element ePren = (Element) nl.item(i);
 
+            // --- codicePrenotazione (può non esserci in file vecchi) ---
+            String codicePren = getText(ePren, "codicePrenotazione", null);
+
             // --- visita ---
             Element eVisita = getFirst(ePren, "visita");
             String luogoID = getText(eVisita, "luogoID", null);
@@ -99,8 +102,16 @@ public class ParsPrenotazioniXMLFile {
             // --- numero persone ---
             int numPersone = getInt(ePren, "numeroPersonePerPrenotazione", 1);
 
-            // Costruttore Prenotazione: aggiorna anche persone prenotate sull'appuntamento
-            Prenotazione p = new Prenotazione(appuntamento, fruitore, numPersone);
+            // --- costruzione Prenotazione con o senza codice (compatibilità file vecchi) ---
+            Prenotazione p;
+            if (codicePren != null && !codicePren.isEmpty()) {
+                // File contiene già il codice -> lo riuso
+                p = new Prenotazione(codicePren, appuntamento, fruitore, numPersone);
+            } else {
+                // File vecchio senza codice -> ne genero uno nuovo nel costruttore
+                p = new Prenotazione(appuntamento, fruitore, numPersone);
+            }
+
             prenotazioni.add(p);
         }
     }
@@ -229,6 +240,10 @@ public class ParsPrenotazioniXMLFile {
         Visita v = (app != null) ? app.getVisita() : null;
         Data d = (app != null) ? app.getData() : null;
         Fruitore f = p.getUtenteChePrenota();
+
+        // --- codicePrenotazione ---
+        appendText(doc, ePren, "codicePrenotazione",
+                p.getCodicePrenotazione() != null ? p.getCodicePrenotazione() : "");
 
         // --- visita ---
         Element eVisita = doc.createElement("visita");

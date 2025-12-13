@@ -1,16 +1,16 @@
 package it.unibs.ingdsw.utenti;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
-import it.unibs.ingdsw.applicazione.Menu;
-import it.unibs.ingdsw.applicazione.MenuManager;
+import it.unibs.ingdsw.menu.Menu;
+import it.unibs.ingdsw.menu.MenuManager;
 
 import java.util.Objects;
 
 public abstract class Utente {
 
-    private String username;
+    private final String username;
     private String password;
-    private Ruolo ruolo;
+    private final Ruolo ruolo;
     private boolean pwProvvisoria;
 
     public Utente(String username, String password, Ruolo ruolo) {
@@ -50,14 +50,12 @@ public abstract class Utente {
 
     public void operazioni(Applicazione applicazione) {
         MenuManager menuManager = MenuManager.mostraPer(applicazione, this);
-
         if (this.isPwProvvisoria()) {
             menuManager.cambioPassword();
         }
         if (applicazione.isDaConfigurare()) {
             menuManager.primaInizializzazione();
         }
-
         boolean continua = true;
         while (continua) {
             Menu menu = menuManager.creaMenu();
@@ -66,17 +64,11 @@ public abstract class Utente {
     }
 
     public boolean utenteUguale (Utente utente) {
-        if (this.username.equalsIgnoreCase(utente.getUsername())) {
-            return true;
-        }
-        return false;
+        return this.username.equalsIgnoreCase(utente.getUsername());
     }
 
     public boolean pwUguale(String pwd) {
-        if (this.password.equals(pwd)) {
-            return true;
-        }
-        return false;
+        return this.password.equals(pwd);
     }
 
     @Override

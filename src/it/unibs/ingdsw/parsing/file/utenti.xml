@@ -3,14 +3,13 @@
   <volontario password="oo" pwProvvisoria="false" username="oo"/>
   <configuratore password="prifrn" pwProvvisoria="false" username="prifrn"/>
   <configuratore password="admin" pwProvvisoria="true" username="admin"/>
-  <volontario password="gianb08" pwProvvisoria="true" username="gianb08"/>
-  <volontario password="andreab12" pwProvvisoria="true" username="andreab12"/>
+  <volontario password="gianb08" pwProvvisoria="false" username="gianb08"/>
+  <volontario password="andreab12" pwProvvisoria="false" username="andreab12"/>
   <volontario password="elisab08" pwProvvisoria="false" username="elisab08"/>
   <volontario password="matildep04" pwProvvisoria="false" username="matildep04"/>
   <volontario password="annachiarap02" pwProvvisoria="false" username="annachiarap02"/>
   <volontario password="lorenzol00" pwProvvisoria="false" username="lorenzol00"/>
   <volontario password="danielel96" pwProvvisoria="false" username="danielel96"/>
-  <volontario password="io" pwProvvisoria="false" username="io"/>
-  <volontario password="aaa" pwProvvisoria="false" username="aaa"/>
   <fruitore password="rosmar" pwProvvisoria="false" username="rosmar"/>
+  <fruitore password="matzan00" pwProvvisoria="true" username="matzan00"/>
 </utenti>

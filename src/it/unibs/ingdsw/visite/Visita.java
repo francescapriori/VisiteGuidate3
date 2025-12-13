@@ -130,17 +130,11 @@ public class Visita {
     public InsiemeDate getDatePerVisita(int meseRiferimento, int annoRiferimento) {
         InsiemeDate risultato = new InsiemeDate();
 
-        LocalDate start = LocalDate.of(inizioValiditaVisita.getAnno(),
-                inizioValiditaVisita.getMese(),
-                inizioValiditaVisita.getGiorno());
-        LocalDate end   = LocalDate.of(fineValiditaVisita.getAnno(),
-                fineValiditaVisita.getMese(),
-                fineValiditaVisita.getGiorno());
-
-        int var = Target.SOGLIA_CAMBIO_MESE;
+        LocalDate start = LocalDate.of(inizioValiditaVisita.getAnno(), inizioValiditaVisita.getMese(), inizioValiditaVisita.getGiorno());
+        LocalDate end   = LocalDate.of(fineValiditaVisita.getAnno(), fineValiditaVisita.getMese(), fineValiditaVisita.getGiorno());
 
         java.time.YearMonth ym = java.time.YearMonth.of(annoRiferimento, meseRiferimento);
-        int safeDay = Math.min(var, ym.lengthOfMonth());
+        int safeDay = Math.min(Target.SOGLIA_CAMBIO_MESE, ym.lengthOfMonth());
 
         LocalDate from = LocalDate.of(annoRiferimento, meseRiferimento, safeDay);
         LocalDate to   = from.plusMonths(1).minusDays(1);
@@ -149,7 +143,7 @@ public class Visita {
         if (to.isAfter(end)) to = end;
 
         if (from.isAfter(to)) {
-            return risultato; // Nessuna data nella finestra
+            return risultato;
         }
 
         for (LocalDate d = from; !d.isAfter(to); d = d.plusDays(1)) {
@@ -171,14 +165,4 @@ public class Visita {
         }
         return risultato;
     }
-
-    public boolean visitaSenzaVolontari() {
-        if (this.volontariVisita.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-
-
 }

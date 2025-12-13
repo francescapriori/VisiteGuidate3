@@ -1,5 +1,6 @@
-package it.unibs.ingdsw.applicazione;
+package it.unibs.ingdsw.menu;
 
+import it.unibs.ingdsw.applicazione.Applicazione;
 import it.unibs.ingdsw.utenti.Configuratore;
 import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.inputOutput.InputManager;

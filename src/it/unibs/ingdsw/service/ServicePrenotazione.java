@@ -1,6 +1,7 @@
 package it.unibs.ingdsw.service;
 
 import it.unibs.ingdsw.applicazione.Applicazione;
+import it.unibs.ingdsw.utenti.Fruitore;
 import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.visite.Appuntamento;
 import it.unibs.ingdsw.visite.Prenotazione;
@@ -18,15 +19,23 @@ public class ServicePrenotazione {
         return appuntamento.getPostiDisponibili();
     }
 
-    public boolean prenotazioneGiaPresente(Prenotazione p) {
-        return this.applicazione.prenotazioneGiaPresente(p);
+    public boolean prenotazioneGiaPresente(Appuntamento appuntamento, Fruitore fruitore) {
+        return this.applicazione.prenotazioneGiaPresente(appuntamento, fruitore);
     }
 
     public ArrayList<Prenotazione> prenotazioniDi(Utente u, int mese, int anno) {
         return this.applicazione.prenotazioniDi(u, mese, anno);
     }
 
-    public void rimuoviPrenotazione(Prenotazione p) {
-        this.applicazione.rimuoviPrenotazione(p);
+    public ArrayList<Prenotazione> getPrenotazioni() {
+        return this.applicazione.getPrenotazioni();
+    }
+
+    public boolean rimozionePrenotazioneConCodice(String codicePDaRimuovere) {
+        return this.applicazione.rimozionePrenotazioneConCodice(codicePDaRimuovere);
+    }
+
+    public ArrayList<Prenotazione> getPrenotazioniUtente(Fruitore utente) {
+        return this.applicazione.getPrenotazioniUtente(utente);
     }
 }

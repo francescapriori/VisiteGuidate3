@@ -1,4 +1,4 @@
-package it.unibs.ingdsw.applicazione;
+package it.unibs.ingdsw.menu;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class Menu {
 
         if (scelta == 0) {
             System.out.println("Uscita dal menu.");
-            return false; // segnala a chi chiama che l'utente vuole uscire
+            return false;
         }
 
         Voce voce = voci.get(scelta);
@@ -49,7 +49,7 @@ public class Menu {
             System.out.println("Scelta non valida.");
         }
 
-        return true; // dopo aver eseguito l'azione, si può tornare al menu
+        return true;
     }
     private static class Voce {
         final String etichetta;

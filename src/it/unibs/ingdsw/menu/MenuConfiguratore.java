@@ -1,5 +1,9 @@
-package it.unibs.ingdsw.applicazione;
+package it.unibs.ingdsw.menu;
 
+import it.unibs.ingdsw.applicazione.Applicazione;
+import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
+import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
+import it.unibs.ingdsw.applicazione.Target;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.inputOutput.*;
 import it.unibs.ingdsw.service.*;

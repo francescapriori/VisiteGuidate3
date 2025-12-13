@@ -1,14 +1,20 @@
-package it.unibs.ingdsw.applicazione;
+package it.unibs.ingdsw.menu;
 
+import it.unibs.ingdsw.applicazione.Applicazione;
+import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
+import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
+import it.unibs.ingdsw.applicazione.Target;
 import it.unibs.ingdsw.inputOutput.*;
 import it.unibs.ingdsw.service.ServiceApplicazione;
 import it.unibs.ingdsw.service.ServiceDate;
+import it.unibs.ingdsw.service.ServicePrenotazione;
 import it.unibs.ingdsw.service.ServiceVisite;
 import it.unibs.ingdsw.tempo.Data;
 import it.unibs.ingdsw.tempo.InsiemeDate;
 import it.unibs.ingdsw.utenti.Utente;
 import it.unibs.ingdsw.utenti.Volontario;
 import it.unibs.ingdsw.visite.ListaVisite;
+import it.unibs.ingdsw.visite.StatoVisita;
 
 import java.time.Month;
 import java.time.YearMonth;
@@ -31,12 +37,17 @@ public class MenuVolontario extends MenuManager {
         Target targetApplicazione = new Target();
         ServiceVisite serviceVisite = new ServiceVisite(applicazione);
         ServiceDate serviceDate = new ServiceDate(applicazione);
+        ServicePrenotazione servicePrenotazione = new ServicePrenotazione(applicazione);
         ServiceApplicazione serviceApplicazione = new ServiceApplicazione(applicazione);
         YearMonth targetDisponibilita = serviceApplicazione.getNextDisponibilita();
+        YearMonth targetProduzione = targetApplicazione.calcolaDataTargetProduzione();
 
         String nomeMeseDisponibilita = Data.returnNomeMese(targetDisponibilita);
         int annoDisponibilita = Data.returnAnno(targetDisponibilita);
         int meseDisponibilita = Data.returnMese(targetDisponibilita);
+        String nomeMeseProduzione = Data.returnNomeMese(targetProduzione);
+        int annoProduzione = Data.returnAnno(targetProduzione);
+        int meseProduzione = Data.returnMese(targetProduzione);
 
         m.aggiungi(1, "Visualizza le visite a cui sei stato associato: ", () -> {
             System.out.println("Volontario " + this.utente.toString() + " sei stato associato alle seguenti visite: ");
@@ -75,6 +86,14 @@ public class MenuVolontario extends MenuManager {
             }
             else {
                 System.out.println("La raccolta disponibilità per il mese di " + nomeMeseDisponibilita + " " + annoDisponibilita + " sono chiuse.");
+            }
+        });
+        m.aggiungi(3, "Visualizza gli appuntamenti confermati e cancellati a cui sei stato associato per il mese di " + nomeMeseProduzione + " " + annoProduzione, () -> {
+            if (serviceApplicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+                OutputManager.visualizzaAppuntamentiPerStato(servicePrenotazione.getPrenotazioni(), serviceApplicazione.getAppuntamentiDellUtente((Volontario) this.utente), new StatoVisita[] {StatoVisita.CONFERMATA, StatoVisita.CANCELLATA});
+            } else {
+                System.out.println("Non è possibile visualizzare le tue visite confermate: è necessario produrre prima il piano delle visite per il mese " +
+                        nomeMeseProduzione + " " + annoProduzione);
             }
         });
 

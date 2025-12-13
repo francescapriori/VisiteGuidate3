@@ -3,6 +3,7 @@ package it.unibs.ingdsw.applicazione;
 import it.unibs.ingdsw.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.luoghi.Luogo;
 import it.unibs.ingdsw.tempo.*;
+import it.unibs.ingdsw.utenti.Fruitore;
 import it.unibs.ingdsw.utenti.ListaUtenti;
 import it.unibs.ingdsw.tempo.InsiemeDate;
 import it.unibs.ingdsw.utenti.Utente;
@@ -11,6 +12,7 @@ import it.unibs.ingdsw.visite.Appuntamento;
 import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
 import it.unibs.ingdsw.visite.Prenotazione;
 import it.unibs.ingdsw.visite.Visita;
+import it.unibs.ingdsw.visite.StatoVisita;
 import it.unibs.ingdsw.parsing.*;
 
 import java.time.YearMonth;
@@ -158,6 +160,16 @@ public class Applicazione {
         this.prenotazioni.add(prenotazione);
     }
 
+    public ArrayList<Prenotazione> getPrenotazioniUtente(Fruitore utente) {
+        ArrayList<Prenotazione> prenotazioniDellUtente = new ArrayList<>();
+        for (Prenotazione p : this.prenotazioni) {
+            if (p.getUtenteChePrenota().utenteUguale(utente)) {
+                prenotazioniDellUtente.add(p);
+            }
+        }
+        return prenotazioniDellUtente;
+    }
+
     public static Applicazione configuraApplicazione () {
         Applicazione app = new Applicazione();
         ParsParametriAppXMLFile pa = new ParsParametriAppXMLFile();
@@ -186,16 +198,29 @@ public class Applicazione {
         app.setNextDisponibilita(pa.getNextDisponibilita());
         ParsPrenotazioniXMLFile pp = new ParsPrenotazioniXMLFile(app.getCalendarioAppuntamenti().getAppuntamenti());
         app.setPrenotazioni(pp.getPrenotazioni());
+
+        app.modificaStatoAppuntamenti();
+
         return app;
     }
 
+    private void modificaStatoAppuntamenti() {
+        for (Appuntamento appuntamento : calendarioAppuntamenti.getAppuntamenti()) {
+            if (appuntamento.treGiorniPrima()) {
+                appuntamento.cambiaStato3giorniPrima();
+            }
+            // se una visita di trova in stato proposta o completa e non viene mai confermata, e quel giorno viene superato, la visita risulta cancellata
+            if (appuntamento.superato() && (appuntamento.getStatoVisita()==StatoVisita.PROPOSTA || appuntamento.getStatoVisita()==StatoVisita.COMPLETA)) {
+                appuntamento.setStatoVisita(StatoVisita.CANCELLATA);
+            }
+            if (appuntamento.superato() && appuntamento.getStatoVisita()==StatoVisita.CONFERMATA) {
+                appuntamento.setStatoVisita(StatoVisita.EFFETTUATA);
+            }
+        }
+    }
+
     public void salvaApplicazione() {
-        ParsParametriAppXMLFile.salvaParametri(
-                this.ambitoTerritoriale,
-                this.numeroMassimoIscrivibili,
-                this.statoDisp,
-                this.statoProduzione
-        );
+        ParsParametriAppXMLFile.salvaParametri(this.ambitoTerritoriale, this.numeroMassimoIscrivibili, this.statoDisp, this.statoProduzione);
         ParsUtentiXMLFile.salvaListaUtenti(this.listaUtenti);
         ParsDateEscluseXMLFile.salvaListaDate(this.dateEscluse);
         ParsLuoghiXMLFile.salvaLuoghi(this.listaLuoghi);
@@ -221,7 +246,7 @@ public class Applicazione {
 
     public void aggiungiVolontariAllaVisita(Visita visita, ArrayList<Volontario> volontari) {
         for(Volontario v: volontari) {
-            visita.getVolontariVisita().add(v); //non è necessario fare controllo se già presente poichè fatto già prima
+            visita.getVolontariVisita().add(v); //non è necessario fare controllo se già presente poiché fatto già prima
         }
     }
 
@@ -320,7 +345,6 @@ public class Applicazione {
                 return true;
             }
         }
-
         return false; //nessuna visita trovata e rimossa
     }
 
@@ -364,14 +388,16 @@ public class Applicazione {
         this.listaLuoghi.getListaLuoghi().removeAll(luoghiDaRimuovere);
     }
 
-    public boolean prenotazioneGiaPresente(Prenotazione p) {
-        for (Prenotazione prenotazione : this.prenotazioni) {
-            if (prenotazione.prenotazioneUguale(p)) {
+    public boolean prenotazioneGiaPresente(Appuntamento appuntamento, Fruitore fruitore) {
+        for (Prenotazione p : prenotazioni) { // o come si chiama la tua lista interna
+            if (p.getAppuntamento() == appuntamento &&
+                    p.getUtenteChePrenota().utenteUguale(fruitore)) {
                 return true;
             }
         }
         return false;
     }
+
 
     public ArrayList<Prenotazione> prenotazioniDi(Utente u, int mese, int anno) {
         ArrayList<Prenotazione> prenotazioniDellUtente = new ArrayList<>();
@@ -401,15 +427,47 @@ public class Applicazione {
         return prenotazioniDellUtente;
     }
 
-    public void rimuoviPrenotazione(Prenotazione prenotazione) {
-        Iterator<Prenotazione> it = this.prenotazioni.iterator();
-        while (it.hasNext()) {
-            Prenotazione p = it.next();
-            if (prenotazione.prenotazioneUguale(p)) {
-                it.remove();
-                break;
+    public ArrayList<Appuntamento> getAppuntamentiDellUtente(Volontario volontario) {
+        ArrayList<Appuntamento> appuntamentoDellUtente = new ArrayList<>();
+        for (Appuntamento a : this.calendarioAppuntamenti.getAppuntamenti()) {
+            if (a.getGuida().utenteUguale(volontario)) {
+                appuntamentoDellUtente.add(a);
             }
         }
+        return appuntamentoDellUtente;
+    }
+
+    public boolean rimozionePrenotazioneConCodice(String codicePDaRimuovere) {
+        if (codicePDaRimuovere == null) {
+            return false;
+        }
+
+        Iterator<Prenotazione> it = prenotazioni.iterator();
+
+        while (it.hasNext()) {
+            Prenotazione p = it.next();
+
+            if (p.getCodicePrenotazione() != null &&
+                    p.getCodicePrenotazione().equalsIgnoreCase(codicePDaRimuovere)) {
+
+                Appuntamento app = p.getAppuntamento();
+                if (app != null) {
+                    int num = p.getNumeroPersonePerPrenotazione();
+                    app.aggiungiPersonePrenotate(-num);
+
+                    // se prima era COMPLETA e ora non lo è più, rimetto la visita in PROPOSTA (o APERTA)
+                    if (app.getNumeroPersonePrenotate() < app.getVisita().getNumeroMassimoPartecipanti()
+                            && app.getStatoVisita() == StatoVisita.COMPLETA) {
+                        app.setStatoVisita(StatoVisita.PROPOSTA);
+                    }
+                }
+
+                it.remove();   // rimozione sicura dalla lista
+                return true;   // rimozione avvenuta
+            }
+        }
+
+        return false; // nessuna prenotazione con quel codice trovata
     }
 
 }
