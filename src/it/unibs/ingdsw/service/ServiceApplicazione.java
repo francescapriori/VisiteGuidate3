@@ -1,26 +1,16 @@
 package it.unibs.ingdsw.service;
 
-import it.unibs.ingdsw.applicazione.Applicazione;
-import it.unibs.ingdsw.applicazione.StatoProduzioneVisite;
-import it.unibs.ingdsw.applicazione.StatoRichiestaDisponibilita;
-import it.unibs.ingdsw.utenti.Volontario;
-import it.unibs.ingdsw.visite.Appuntamento;
-import it.unibs.ingdsw.visite.CalendarioAppuntamenti;
-import it.unibs.ingdsw.visite.Prenotazione;
+import it.unibs.ingdsw.model.applicazione.Applicazione;
+import it.unibs.ingdsw.model.applicazione.StatoProduzioneVisite;
+import it.unibs.ingdsw.model.applicazione.StatoRichiestaDisponibilita;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
-
 
 public class ServiceApplicazione {
-    public Applicazione applicazione;
+    private final Applicazione applicazione;
 
     public ServiceApplicazione(Applicazione applicazione) {
         this.applicazione = applicazione;
-    }
-
-    public void modificaNumeroMassimoIscrivibili(int numeroMassimoIscrivibili) {
-        this.applicazione.setNumeroMassimoIscrivibili(numeroMassimoIscrivibili);
     }
 
     public void setAmbitoTerritoriale(String ambitoTerritoriale) {
@@ -33,19 +23,6 @@ public class ServiceApplicazione {
 
     public void setDaConfigurare(boolean val) {
         this.applicazione.setDaConfigurare(val);
-    }
-
-    public CalendarioAppuntamenti produciVisitePerIlMese (int mese, int anno) {
-        return applicazione.produciVisitePerIlMese(mese, anno);
-
-    }
-
-    public CalendarioAppuntamenti getAppuntamenti(int mese, int anno) {
-        return this.applicazione.getAppuntamentiDelMese(mese, anno);
-    }
-
-    public void salvaCalendario(CalendarioAppuntamenti calendario) {
-        this.applicazione.setCalendarioAppuntamenti(calendario);
     }
 
     public void setStatoDisp(StatoRichiestaDisponibilita statoRichiestaDisponibilita) {
@@ -70,13 +47,5 @@ public class ServiceApplicazione {
 
     public Integer getNumMaxIscrivibili() {
         return this.applicazione.getNumeroMassimoIscrivibili();
-    }
-
-    public void aggiungiPrenotazione(Prenotazione p){
-        this.applicazione.aggiungiPrenotazione(p);
-    }
-
-    public ArrayList<Appuntamento> getAppuntamentiDellUtente(Volontario volontario) {
-        return this.applicazione.getAppuntamentiDellUtente(volontario);
     }
 }

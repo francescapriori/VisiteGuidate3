@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<utenti>
+  <configuratore password="prifrn" pwProvvisoria="false" username="prifrn"/>
+  <configuratore password="admin" pwProvvisoria="true" username="admin"/>
+  <volontario password="gianb08" pwProvvisoria="false" username="gianb08"/>
+  <volontario password="andreab12" pwProvvisoria="false" username="andreab12"/>
+  <volontario password="elisab08" pwProvvisoria="false" username="elisab08"/>
+  <volontario password="matildep04" pwProvvisoria="false" username="matildep04"/>
+  <volontario password="annachiarap02" pwProvvisoria="false" username="annachiarap02"/>
+  <volontario password="lorenzol00" pwProvvisoria="false" username="lorenzol00"/>
+  <volontario password="danielel96" pwProvvisoria="false" username="danielel96"/>
+  <fruitore password="mattzan" pwProvvisoria="false" username="mattzan"/>
+  <fruitore password="aldo" pwProvvisoria="false" username="aldo"/>
+  <fruitore password="pippo" pwProvvisoria="false" username="pippo"/>
+  <fruitore password="ivapic70" pwProvvisoria="false" username="ivapic70"/>
+  <fruitore password="robpri70" pwProvvisoria="false" username="robpri70"/>
+</utenti>

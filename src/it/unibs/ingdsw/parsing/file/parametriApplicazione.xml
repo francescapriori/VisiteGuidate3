@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<applicazione>
-  <ambienteDaConfigurare>false</ambienteDaConfigurare>
-  <ambitoTerritorialeCompetenza>Le Bellezze storiche e artistiche di Mantova e provincia</ambitoTerritorialeCompetenza>
-  <numeroMaxPerIniziativa>4</numeroMaxPerIniziativa>
-  <stato>DISP_CHIUSE</stato>
-  <statoProduzione>PRODOTTE</statoProduzione>
-</applicazione>
