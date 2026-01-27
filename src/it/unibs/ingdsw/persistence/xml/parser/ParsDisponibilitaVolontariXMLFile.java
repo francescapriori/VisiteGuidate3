@@ -8,7 +8,6 @@ import it.unibs.ingdsw.model.utenti.Volontario;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -41,12 +40,7 @@ public class ParsDisponibilitaVolontariXMLFile {
     private void parseXML(ListaUtenti listaUtenti)
             throws ParserConfigurationException, SAXException, IOException {
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("File XML non trovato -> " + xmlFile.getAbsolutePath());
@@ -68,7 +62,7 @@ public class ParsDisponibilitaVolontariXMLFile {
             if (username == null || username.isBlank()) continue;
 
             Volontario v = resolveVolontario(listaUtenti, username);
-            InsiemeDate insieme = parseInsiemeDate(getFirst(eVol, "disponibilita"));
+            InsiemeDate insieme = parseInsiemeDate(XmlElementReader.getFirst(eVol, "disponibilita"));
             disponibilitaPerVol.put(v, insieme);
         }
     }
@@ -102,9 +96,9 @@ public class ParsDisponibilitaVolontariXMLFile {
 
     private Data parseData(Element e) {
         if (e == null) return new Data(1,1,1970);
-        int g = getInt(e, "giorno", 1);
-        int m = getInt(e, "mese", 1);
-        int a = getInt(e, "anno", 1970);
+        int g = XmlElementReader.getInt(e, "giorno", 1);
+        int m = XmlElementReader.getInt(e, "mese", 1);
+        int a = XmlElementReader.getInt(e, "anno", 1970);
         Data d = new Data(g, m, a);
         if (!d.dataValida()) System.err.println("Data non valida: " + d);
         return d;
@@ -112,9 +106,7 @@ public class ParsDisponibilitaVolontariXMLFile {
 
     public static void salvaDisponibilitaVolontari(HashMap<Volontario, InsiemeDate> mappa) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
+            Document doc = XmlDocumentBuilderProvider.newDocument();
 
             Element root = doc.createElement("disponibilitaVolontari");
             doc.appendChild(root);
@@ -135,9 +127,9 @@ public class ParsDisponibilitaVolontariXMLFile {
                         for (Data d : ins.getInsiemeDate()) {
                             Element eData = doc.createElement("data");
                             eDisp.appendChild(eData);
-                            appendText(doc, eData, "giorno", String.valueOf(d.getGiorno()));
-                            appendText(doc, eData, "mese",  String.valueOf(d.getMese()));
-                            appendText(doc, eData, "anno",  String.valueOf(d.getAnno()));
+                            XmlElementWriter.appendText(doc, eData, "giorno", String.valueOf(d.getGiorno()));
+                            XmlElementWriter.appendText(doc, eData, "mese",  String.valueOf(d.getMese()));
+                            XmlElementWriter.appendText(doc, eData, "anno",  String.valueOf(d.getAnno()));
                         }
                     }
                 }
@@ -158,23 +150,4 @@ public class ParsDisponibilitaVolontariXMLFile {
         }
     }
 
-    private static Element getFirst(Element parent, String tag) {
-        if (parent == null) return null;
-        NodeList nl = parent.getElementsByTagName(tag);
-        return (nl == null || nl.getLength() == 0) ? null : (Element) nl.item(0);
-    }
-
-    private static int getInt(Element parent, String tag, int def) {
-        try {
-            Element e = getFirst(parent, tag);
-            String t = (e == null) ? null : e.getTextContent().trim();
-            return (t == null || t.isEmpty()) ? def : Integer.parseInt(t);
-        } catch (NumberFormatException ex) { return def; }
-    }
-
-    private static void appendText(Document doc, Element parent, String tag, String text) {
-        Element e = doc.createElement(tag);
-        if (text != null) e.setTextContent(text);
-        parent.appendChild(e);
-    }
 }

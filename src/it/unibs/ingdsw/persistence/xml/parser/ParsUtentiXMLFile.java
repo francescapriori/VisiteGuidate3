@@ -4,7 +4,6 @@ import it.unibs.ingdsw.model.utenti.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -32,12 +31,7 @@ public class ParsUtentiXMLFile {
     }
 
     private void parseXML() throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("Errore: file XML non trovato: " + xmlFile.getAbsolutePath());
@@ -119,9 +113,7 @@ public class ParsUtentiXMLFile {
 
     public static void salvaListaUtenti(ListaUtenti lista) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
+            Document doc = XmlDocumentBuilderProvider.newDocument();
 
             Element root = doc.createElement("utenti");
             doc.appendChild(root);
