@@ -39,8 +39,8 @@ public class XmlApplicazioneRepository implements ApplicazioneRepository {
         ParsPrenotazioniXMLFile pp = new ParsPrenotazioniXMLFile(app.getCalendarioAppuntamenti().getAppuntamenti());
         app.setPrenotazioni(pp.getPrenotazioni());
 
-        ServiceAppuntamenti serviceApp = new ServiceAppuntamenti(app);
-        serviceApp.aggiornaStati(app.getCalendarioAppuntamenti(), LocalDate.now());
+        ServiceAppuntamenti serviceApp = new ServiceAppuntamenti(app.getCalendarioAppuntamenti());
+        serviceApp.aggiornaStati(LocalDate.now());
 
         return app;
     }

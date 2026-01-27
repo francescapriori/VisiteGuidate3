@@ -1,29 +1,38 @@
 package it.unibs.ingdsw.controller;
 
 import it.unibs.ingdsw.model.applicazione.Applicazione;
+import it.unibs.ingdsw.model.applicazione.StatoProduzioneVisite;
+import it.unibs.ingdsw.model.luoghi.Luogo;
 import it.unibs.ingdsw.model.luoghi.Posizione;
 import it.unibs.ingdsw.model.tempo.Data;
 import it.unibs.ingdsw.model.tempo.Giornate;
 import it.unibs.ingdsw.model.tempo.GiornoSettimana;
 import it.unibs.ingdsw.model.tempo.Orario;
+import it.unibs.ingdsw.model.utenti.Utente;
 import it.unibs.ingdsw.model.utenti.Volontario;
 import it.unibs.ingdsw.model.visite.ListaVisite;
 import it.unibs.ingdsw.model.visite.Visita;
+import it.unibs.ingdsw.service.ServiceLuoghi;
 import it.unibs.ingdsw.service.ServiceUtenti;
 import it.unibs.ingdsw.service.ServiceVisite;
 import it.unibs.ingdsw.view.cli.io.InputManager;
+import it.unibs.ingdsw.view.cli.io.OutputManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class VisiteController {
 
+    private final Applicazione applicazione;
     private final ServiceVisite serviceVisite;
     private final UtentiController utentiController;
+    private final ServiceUtenti serviceVolontari;
 
-    public VisiteController(ServiceVisite serviceVisite, UtentiController utentiController) {
-        this.serviceVisite = serviceVisite;
+    public VisiteController(UtentiController utentiController) {
+        this.applicazione = Applicazione.getApplicazione();
+        this.serviceVisite = new ServiceVisite(Applicazione.getApplicazione().getListaLuoghi().getTotaleVisite());
         this.utentiController = utentiController;
+        this.serviceVolontari = new ServiceUtenti(Applicazione.getApplicazione());
     }
 
     public ListaVisite chiediVisite(Posizione posizioneLuogo, String luogoId) {
@@ -38,24 +47,20 @@ public class VisiteController {
         String titolo = InputManager.leggiStringaNonVuota("Inserisci il titolo della visita: ");
         String descrizione = InputManager.leggiStringaNonVuota("Inserisci la descrizione della visita: ");
 
-        // luogo di incontro (può coincidere con la posizione del luogo)
         boolean diverso = "sì".equals(InputManager.chiediSiNo(
                 "Vuoi definire un luogo di incontro differente rispetto alla posizione del luogo?"));
-        Posizione luogoIncontro = diverso ? InputManager.chiediPosizione() : posizioneLuogo;
+        Posizione luogoIncontro = diverso ? LuogoController.chiediPosizione() : posizioneLuogo;
 
-        // giorni della settimana
         Giornate giornate = new Giornate();
-        ArrayList<GiornoSettimana> disponibili = new ArrayList<>(
-                Arrays.asList(GiornoSettimana.values())
-        );
+        ArrayList<GiornoSettimana> disponibili = new ArrayList<>(Arrays.asList(GiornoSettimana.values()));
         do {
             if (disponibili.isEmpty()) {
-                System.out.println("Non ci sono altri giorni disponibili.");
+                OutputManager.visualizzaMessaggio("Non ci sono altri giorni disponibili.");
                 break;
             }
-            System.out.println("Definisci i giorni della settimana in cui verrà effettuata la visita: ");
+            OutputManager.visualizzaMessaggio("Definisci i giorni della settimana in cui verrà effettuata la visita: ");
             for (int i = 0; i < disponibili.size(); i++) {
-                System.out.println((i + 1) + ") " + disponibili.get(i));
+                OutputManager.visualizzaMessaggio((i + 1) + ") " + disponibili.get(i));
             }
             int scelta = InputManager.leggiInteroConMinMax(
                     "Seleziona (1-" + disponibili.size() + "): ",
@@ -64,37 +69,31 @@ public class VisiteController {
             );
             GiornoSettimana g = disponibili.get(scelta - 1);
             giornate.aggiungiGiornoDellaSettimana(g);
-            System.out.println("Aggiunto: " + g);
+            OutputManager.visualizzaMessaggio("Aggiunto: " + g);
             disponibili.remove(g);
         } while ("sì".equals(InputManager.chiediSiNo("Vuoi aggiungere un'altra giornata per la visita?")));
 
-
-        // validità (inizio <= fine)
         Data inizio, fine;
         do {
-            System.out.println("Inserire la data di inizio validità della visita: ");
-            inizio = InputManager.chiediData();
-            System.out.println("Inserire la data di fine validità della visita: ");
-            fine = InputManager.chiediData();
-            if (!inizio.precede(fine)) System.out.println("Errore: la data di fine deve essere successiva alla data di inizio.");
+            OutputManager.visualizzaMessaggio("Inserire la data di inizio validità della visita: ");
+            inizio = DateController.chiediData();
+            OutputManager.visualizzaMessaggio("Inserire la data di fine validità della visita: ");
+            fine = DateController.chiediData();
+            if (!inizio.precede(fine))
+                OutputManager.visualizzaMessaggio("Errore: la data di fine deve essere successiva alla data di inizio.");
         } while (!inizio.precede(fine));
 
-        // orario inizio
-        System.out.println("Inserire l'orario di inizio della visita: ");
+        OutputManager.visualizzaMessaggio("Inserire l'orario di inizio della visita: ");
         int hh = InputManager.leggiInteroConMinMax("Ora: ", 0, 23);
         int mm = InputManager.leggiInteroConMinMax("Minuti: ", 0, 59);
         Orario oraInizio = new Orario(hh, mm);
 
-        // durata
         int durataMin = InputManager.leggiInteroConMin("Inserire la durata in minuti della visita: ", 1);
 
-        // biglietto
         boolean biglietto = "sì".equals(InputManager.chiediSiNo("È presente un biglietto di ingresso da pagare?"));
 
-        // volontari: usa la lista utenti dell'istanza
         ArrayList<Volontario> volontariThisVisita = utentiController.scegliVolontari();
 
-        // capienze
         int numMinP = InputManager.leggiInteroConMin("Numero minimo partecipanti: ", 1);
         int numMaxP = InputManager.leggiInteroConMin("Numero massimo partecipanti: ", numMinP);
 
@@ -104,7 +103,7 @@ public class VisiteController {
         );
     }
 
-    public ArrayList<Volontario> associaVolontariAvisita(Applicazione applicazione, Visita visita, ServiceUtenti serviceUtenti) {
+    public ArrayList<Volontario> associaVolontariAvisita(Applicazione applicazione) {
         String scelta = InputManager.chiediSiNo("Vuoi associare volontari già registrati nell'applicativo?");
         ArrayList<Volontario> volontariThisVisita = new ArrayList<>();
         if (scelta.equals("sì")){
@@ -117,5 +116,51 @@ public class VisiteController {
             } while ("sì".equals(InputManager.chiediSiNo("Vuoi aggiungere un altro volontario?")));
         }
         return volontariThisVisita;
+    }
+
+    public void aggiungiVisita(String nomeMeseProduzione, int annoProduzione) {
+        if(applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+            OutputManager.visualizzaLuoghi(applicazione.getListaLuoghi());
+            int scelta = InputManager.leggiInteroConMinMax(
+                    "\nSeleziona il luogo di cui si vuole aggiungere la/e visita/e: ",
+                    1, this.applicazione.getListaLuoghi().getNumeroLuogo());
+            Luogo luogo = this.applicazione.getListaLuoghi().scegliLuogo(scelta-1);
+            ListaVisite listaDaAggiungere = chiediVisite(luogo.getPosizione(), luogo.getLuogoID());
+            luogo.aggiungiVisite(listaDaAggiungere);
+        }
+        else {
+            OutputManager.visualizzaMessaggio("Non è possibile aggiungere nessuna visita a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+                    nomeMeseProduzione + " " + annoProduzione);
+        }
+    }
+
+    public void aggiungiVolontatiAVisita(String nomeMeseProduzione, int annoProduzione) {
+        if(applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
+            OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
+            int scelta = InputManager.leggiInteroConMinMax(
+                    "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
+                    1, this.applicazione.getListaLuoghi().getNumeroLuogo());
+            Luogo luogo = this.applicazione.getListaLuoghi().scegliLuogo(scelta-1);
+            OutputManager.visualizzaListaVisite(luogo.getInsiemeVisite());
+            int scelta2 = InputManager.leggiInteroConMinMax(
+                    "\nSeleziona la visita a cui si vuole aggiungere un volontario: ",
+                    1, luogo.getInsiemeVisite().getNumeroVisite());
+            Visita visita = serviceVisite.scegliVisita(luogo, scelta2);
+
+            serviceVolontari.aggiungiVolontariAllaVisita(visita, associaVolontariAvisita(this.applicazione));
+        }
+        else {
+            OutputManager.visualizzaMessaggio("Non è possibile aggiungere volontari a nessuna visita: è necessario produrre prima il piano delle visite per il mese " +
+                    nomeMeseProduzione + " " + annoProduzione);
+        }
+    }
+
+    public void visualizzaVisiteDelVol(Utente utente) {
+        OutputManager.visualizzaMessaggio("Volontario " + utente.toString() + " sei stato associato alle seguenti visite: ");
+        ListaVisite lista = serviceVisite.visiteDelVolontario((Volontario) utente);
+        OutputManager.visualizzaListaVisite(lista);
+        if (lista.getListaVisite().isEmpty()) {
+            OutputManager.visualizzaMessaggio("Nessuna visita disponibile.");
+        }
     }
 }

@@ -21,7 +21,7 @@ public class ServiceUtenti {
     }
 
     public HashMap<Volontario, ListaVisite> getVolontariConVisiteAssociate() {
-        ServiceVisite sv = new ServiceVisite(applicazione);
+        ServiceVisite sv = new ServiceVisite(applicazione.getListaLuoghi().getTotaleVisite());
         HashMap<Volontario, ListaVisite> volontarioPerVisita = new HashMap<Volontario, ListaVisite>();
 
         for (Volontario vol : this.applicazione.getListaUtenti().getVolontari()) {
@@ -44,11 +44,6 @@ public class ServiceUtenti {
         }
     }
 
-    public int getNumeroVolontari() {
-        return this.applicazione.getListaUtenti().getNumeroVolontari();
-    }
-
-
     public void eliminaSeSenzaVisita() {
         ArrayList<Utente> volDaRimuovere = new ArrayList<>();
         for(Utente u : this.applicazione.getListaUtenti().getListaUtenti()) {
@@ -62,15 +57,11 @@ public class ServiceUtenti {
         this.applicazione.getListaUtenti().getListaUtenti().removeAll(volDaRimuovere);
     }
 
-    public ArrayList<Volontario> getVolontari() {
-        return this.applicazione.getListaUtenti().getVolontari();
-    }
-
     public void rimuoviVolontarioIesimo(int posizione) {
         ArrayList<Utente> utenti = this.applicazione.getListaUtenti().getListaUtenti();
         ArrayList<Volontario> vol = this.applicazione.getListaUtenti().getVolontari();
         Volontario vDaRimuovere = vol.get(posizione);
-        ServiceVisite sv = new ServiceVisite(this.applicazione);
+        ServiceVisite sv = new ServiceVisite(this.applicazione.getListaLuoghi().getTotaleVisite());
 
         Iterator<Utente> it = utenti.iterator();
         while (it.hasNext()) {
@@ -81,7 +72,6 @@ public class ServiceUtenti {
                 break;
             }
         }
-
         this.applicazione.setListaUtenti(new ListaUtenti(utenti));
     }
 

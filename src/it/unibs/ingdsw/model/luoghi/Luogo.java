@@ -64,4 +64,8 @@ public class Luogo {
         if (n < 1) n = 1;
         return (n < 1000) ? String.format("L%03d", n) : "L" + n;
     }
+
+    public boolean isSenzaVisite(){
+        return this.getInsiemeVisite().getListaVisite().isEmpty();
+    }
 }

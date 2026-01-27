@@ -48,19 +48,15 @@ public abstract class Utente {
         return this.password != null && this.password.equals(pwd);
     }
 
-    public void operazioni(Applicazione applicazione) {
-        MenuManager menuManager = MenuManager.mostraPer(applicazione, this);
+    public MenuManager operazioni(Applicazione applicazione) {
+        MenuManager menuManager = MenuManager.mostraPer(this);
         if (this.isPwProvvisoria()) {
             menuManager.cambioPassword();
         }
         if (applicazione.isDaConfigurare()) {
             menuManager.inizializza();
         }
-        boolean continua = true;
-        while (continua) {
-            Menu menu = menuManager.creaMenu();
-            continua = menu.mostra();
-        }
+        return menuManager;
     }
 
     public boolean utenteUguale(Utente utente) {

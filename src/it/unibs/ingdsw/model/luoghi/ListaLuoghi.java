@@ -5,6 +5,7 @@ import it.unibs.ingdsw.model.visite.Visita;
 import it.unibs.ingdsw.model.utenti.Volontario;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 
 public class ListaLuoghi {
@@ -83,5 +84,15 @@ public class ListaLuoghi {
             }
         }
         return false;
+    }
+
+    public void rimuoviLuogo(String nomeTarget){
+        for (Iterator<Luogo> it = this.listaLuoghi.iterator(); it.hasNext(); ) {
+            Luogo corrente = it.next();
+            if (corrente != null && nomeTarget.equals(corrente.getNome())) {
+                it.remove();
+            }
+
+        }
     }
 }

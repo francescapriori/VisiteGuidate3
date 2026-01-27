@@ -17,25 +17,14 @@ public class ServicePrenotazione {
         this.applicazione = applicazione;
     }
 
-    // togliere???
-    public int numeroPostiDisponibili(Appuntamento appuntamento) {
-        return appuntamento.getPostiDisponibili();
-    }
-
     public boolean prenotazioneGiaPresente(Appuntamento appuntamento, Fruitore fruitore) {
         for (Prenotazione p : this.applicazione.getPrenotazioni()) {
             if (appuntamento.equals(p.getAppuntamento()) &&
                     p.getUtenteChePrenota().utenteUguale(fruitore)) {
                 return true;
             }
-
         }
         return false;
-    }
-
-    // togliere???
-    public ArrayList<Prenotazione> getPrenotazioni() {
-        return this.applicazione.getPrenotazioni();
     }
 
 

@@ -1,35 +1,32 @@
 package it.unibs.ingdsw.view.cli.menu;
 
-import it.unibs.ingdsw.model.applicazione.Applicazione;
 import it.unibs.ingdsw.model.utenti.Configuratore;
 import it.unibs.ingdsw.model.utenti.Utente;
 import it.unibs.ingdsw.view.cli.io.InputManager;
 import it.unibs.ingdsw.model.utenti.Volontario;
 
+import java.time.YearMonth;
+
 public abstract class MenuManager {
 
-    protected final Applicazione applicazione;
     protected final Utente utente;
 
-    public MenuManager(Applicazione applicazione, Utente utente) {
-        this.applicazione = applicazione;
+    public MenuManager(Utente utente) {
         this.utente = utente;
     }
 
-    public abstract Menu creaMenu();
+    public abstract Menu creaMenu(YearMonth nexDisponibilita);
 
     public abstract void inizializza();
 
-
-    public static MenuManager mostraPer(Applicazione applicazione, Utente utente) {
+    public static MenuManager mostraPer(Utente utente) {
         if (utente instanceof Configuratore c) {
-            return new MenuConfiguratore(applicazione, c);
+            return new MenuConfiguratore(c);
         }
         if (utente instanceof Volontario v) {
-            return new MenuVolontario(applicazione, v);
+            return new MenuVolontario(v);
         }
-        return new MenuFruitore(applicazione, utente);
-
+        return new MenuFruitore(utente);
     }
 
     public void cambioPassword() {

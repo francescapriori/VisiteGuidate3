@@ -25,6 +25,7 @@ public class Applicazione {
     private YearMonth nextDisponibilita;
     private StatoProduzioneVisite statoProduzione;
     private ArrayList<Prenotazione> prenotazioni;
+    private static Applicazione instance;
 
     public Applicazione() {}
 
@@ -126,5 +127,13 @@ public class Applicazione {
 
     public void aggiungiPrenotazione (Prenotazione prenotazione) {
         this.prenotazioni.add(prenotazione);
+    }
+
+    public static Applicazione getApplicazione(){
+        return instance;
+    }
+
+    public static void setInstance(Applicazione app){
+        Applicazione.instance = app;
     }
 }

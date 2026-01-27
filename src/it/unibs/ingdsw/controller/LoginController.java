@@ -1,14 +1,16 @@
 package it.unibs.ingdsw.controller;
 
+import it.unibs.ingdsw.model.applicazione.Applicazione;
 import it.unibs.ingdsw.service.ServiceAutenticazione;
 import it.unibs.ingdsw.view.cli.io.InputManager;
 import it.unibs.ingdsw.model.utenti.Utente;
+import it.unibs.ingdsw.view.cli.io.OutputManager;
 
 public class LoginController {
     private final ServiceAutenticazione auth;
 
-    public LoginController(ServiceAutenticazione auth) {
-        this.auth = auth;
+    public LoginController() {
+        this.auth = new ServiceAutenticazione(Applicazione.getApplicazione().getListaUtenti());
     }
 
     public Utente autenticazione() {
@@ -17,7 +19,7 @@ public class LoginController {
             String password = InputManager.richiediPasswordLogin();
 
             return auth.login(username, password).orElseGet(() -> {
-                        System.out.println("Credenziali non valide. Riprova.\n");
+                        OutputManager.visualizzaMessaggio("Credenziali non valide. Riprova.\n");
                         return null;
                     });
         }

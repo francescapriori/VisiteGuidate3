@@ -14,20 +14,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-// rivedere
 public class ServiceVisite {
 
-    private final Applicazione applicazione;
+    private final ListaVisite listaVisite;
 
-    public ServiceVisite(Applicazione applicazione) {
-        this.applicazione = applicazione;
+    public ServiceVisite(ListaVisite listaVisite) {
+        this.listaVisite = listaVisite;
     }
 
+    // controller
     public ListaVisite visiteDelVolontario(Volontario volontario) {
         ListaVisite lista = new ListaVisite();
         String user = volontario.getUsername();
 
-        for (Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
+        for (Luogo l : Applicazione.getApplicazione().getListaLuoghi().getListaLuoghi()) {
             for (Visita v : l.getInsiemeVisite().getListaVisite()) {
                 boolean assegnato = v.getVolontariVisita().stream()
                         .anyMatch(vol -> vol != null
@@ -39,14 +39,6 @@ public class ServiceVisite {
             }
         }
         return lista;
-    }
-
-    public void aggiungiVisite(Luogo l, ListaVisite listaVisiteDaAggiungere) {
-        l.aggiungiVisite(listaVisiteDaAggiungere);
-    }
-
-    public int getNumeroVisita(Luogo luogo) {
-        return luogo.getInsiemeVisite().getNumeroVisite();
     }
 
     public Visita scegliVisita(Luogo l, int scelta) {
@@ -77,7 +69,7 @@ public class ServiceVisite {
     public void eliminaSeSenzaVolontari() {
         ArrayList<Visita> visDaRimuovere = new ArrayList<>();
 
-        for (Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
+        for (Luogo l : Applicazione.getApplicazione().getListaLuoghi().getListaLuoghi()) {
             for (Visita v : l.getInsiemeVisite().getListaVisite()) {
                 if(v.getVolontariVisita().isEmpty()) {
                     visDaRimuovere.add(v);
@@ -99,15 +91,14 @@ public class ServiceVisite {
 
     public HashMap<Visita, InsiemeDate> calendarioProvvisiorioVisiteDelMese(int meseRiferimento, int annoRiferimento){
         HashMap<Visita, InsiemeDate> calendarioDelMese = new HashMap<>();
-        ServiceVisite serviceVisite = new ServiceVisite(this.applicazione);
-        for(Visita v : this.applicazione.getListaLuoghi().getTotaleVisite().getListaVisite()) {
-            calendarioDelMese.put(v, serviceVisite.dateVisitaNelMeseTarget(v, meseRiferimento, annoRiferimento));
+        for(Visita v : Applicazione.getApplicazione().getListaLuoghi().getTotaleVisite().getListaVisite()) {
+            calendarioDelMese.put(v, dateVisitaNelMeseTarget(v, meseRiferimento, annoRiferimento));
         }
         return calendarioDelMese;
     }
 
     public void rimuoviVolontarioDaVisite(Volontario vDaRimuovere) {
-        for (Luogo luogo : this.applicazione.getListaLuoghi().getListaLuoghi()) {
+        for (Luogo luogo : Applicazione.getApplicazione().getListaLuoghi().getListaLuoghi()) {
             for (Visita v : luogo.getInsiemeVisite().getListaVisite()) {
                 if (v.getVolontariVisita().contains(vDaRimuovere)) {
                     v.getVolontariVisita().remove(vDaRimuovere);

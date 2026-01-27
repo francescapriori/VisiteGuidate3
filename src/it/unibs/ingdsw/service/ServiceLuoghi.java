@@ -8,15 +8,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class ServiceLuoghi {
-    private final Applicazione applicazione;
 
-    public ServiceLuoghi(Applicazione applicazione) {
-        this.applicazione = applicazione;
+    private final ListaLuoghi listaLuoghi;
+
+    public ServiceLuoghi(ListaLuoghi listaLuoghi) {
+        this.listaLuoghi = listaLuoghi;
     }
 
     public void aggiungiLuoghiSeNonPresenti(ListaLuoghi nuovi) {
         for (Luogo l : nuovi.getListaLuoghi()) {
-            if (this.applicazione.getListaLuoghi().aggiungiLuogoSeNonPresente(l)) {
+            if (this.listaLuoghi.aggiungiLuogoSeNonPresente(l)) {
                 System.out.println("Aggiunto: " + l.getNome());
             } else {
                 System.out.println("Il luogo " + l.getNome() + " è già presente nell'elenco.");
@@ -24,41 +25,7 @@ public class ServiceLuoghi {
         }
     }
 
-    public ListaLuoghi getListaLuoghi() {
-        return this.applicazione.getListaLuoghi();
-    }
-
-    public int getNumeroLuogo() {
-        return this.applicazione.getListaLuoghi().getNumeroLuogo();
-    }
-
-    public void setListaLuoghi(ListaLuoghi lista) {
-        this.applicazione.setListaLuoghi(lista);
-    }
-
-    public Luogo scegliLuogo(int scelta) {
-        return getListaLuoghi().scegliLuogo(scelta - 1);
-    }
-
-    public void rimuoviLuogo(Luogo luogo) {
-        String nomeTarget = luogo.getNome();
-        ArrayList<Luogo> lista = getListaLuoghi().getListaLuoghi();
-
-        for (Iterator<Luogo> it = lista.iterator(); it.hasNext(); ) {
-            Luogo corrente = it.next();
-            if (corrente != null && nomeTarget.equals(corrente.getNome())) {
-                it.remove();
-            }
-        }
-    }
-
     public void rimuoviLuogoSeSenzaVisite() {
-        ArrayList<Luogo> luoghiDaRimuovere = new ArrayList<>();
-        for (Luogo l : this.applicazione.getListaLuoghi().getListaLuoghi()) {
-            if (l.getInsiemeVisite().getListaVisite().isEmpty()) {
-                luoghiDaRimuovere.add(l);
-            }
-        }
-        this.applicazione.getListaLuoghi().getListaLuoghi().removeAll(luoghiDaRimuovere);
+        this.listaLuoghi.getListaLuoghi().removeIf(Luogo::isSenzaVisite);
     }
 }

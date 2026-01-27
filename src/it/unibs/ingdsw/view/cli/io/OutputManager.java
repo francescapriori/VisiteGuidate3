@@ -21,6 +21,10 @@ import java.util.Locale;
 
 public class OutputManager {
 
+    public static void visualizzaMessaggio(String messaggio) {
+        System.out.println(messaggio);
+    }
+
     public static void visualizzaDatePerMeseAnno(InsiemeDate date, int mese, int anno, TipoRichiestaData tipo) {
         String nomeMese;
         nomeMese = Month.of(mese).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
