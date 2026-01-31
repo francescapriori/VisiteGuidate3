@@ -1,12 +1,15 @@
 package it.unibs.ingdsw.service;
 
 import it.unibs.ingdsw.model.applicazione.Target;
+import it.unibs.ingdsw.model.appuntamenti.StatoAppuntamento;
 import it.unibs.ingdsw.model.utenti.Volontario;
 import it.unibs.ingdsw.model.appuntamenti.Appuntamento;
 import it.unibs.ingdsw.model.appuntamenti.InsiemeAppuntamenti;
+import it.unibs.ingdsw.view.format.Formatters;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServiceAppuntamenti {
 
@@ -41,13 +44,13 @@ public class ServiceAppuntamenti {
         return result;
     }
 
-    public ArrayList<Appuntamento> getAppuntamentiDellUtente(Volontario volontario) {
-        ArrayList<Appuntamento> appuntamentoDellUtente = new ArrayList<>();
-        for (Appuntamento a : this.insiemeAppuntamenti.getAppuntamenti()) {
-            if (a.getGuida().utenteUguale(volontario)) {
-                appuntamentoDellUtente.add(a);
+    public List<Appuntamento> getAppuntamentiPrenotabili() {
+        ArrayList<Appuntamento> appuntamentiPrenotabili = new ArrayList<>();
+        for (Appuntamento a : insiemeAppuntamenti.getAppuntamenti()) {
+            if (a.getStatoVisita() == StatoAppuntamento.PROPOSTA) {
+                appuntamentiPrenotabili.add(a);
             }
         }
-        return appuntamentoDellUtente;
+        return appuntamentiPrenotabili;
     }
 }

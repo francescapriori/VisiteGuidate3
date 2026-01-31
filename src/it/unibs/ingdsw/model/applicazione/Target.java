@@ -17,13 +17,10 @@ public class Target {
 
     private final LocalDate oggi;
 
-    public Target() {
-        oggi = LocalDate.now();
-    }
+    public Target() {oggi = LocalDate.now();}
 
     public YearMonth calcolaDataTarget(TargetTipo tipo) {
         int mesiDaAggiungere = successivoASoglia() ? tipo.mesiDopoSoglia() : tipo.mesiPrimaSoglia();
-
         return YearMonth.from(oggi).plusMonths(mesiDaAggiungere);
     }
 

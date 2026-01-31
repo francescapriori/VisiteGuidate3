@@ -1,16 +1,17 @@
 package it.unibs.ingdsw.model.tempo;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class Giornate {
 
-    private ArrayList<GiornoSettimana> giornate;
+    private List<GiornoSettimana> giornate;
 
     public Giornate() {
         this.giornate = new ArrayList<>();
     }
 
-    public ArrayList<GiornoSettimana> getGiornate() {
+    public List<GiornoSettimana> getGiornate() {
         return giornate;
     }
 

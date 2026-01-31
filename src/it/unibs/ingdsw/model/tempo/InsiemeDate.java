@@ -1,15 +1,16 @@
 package it.unibs.ingdsw.model.tempo;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class InsiemeDate {
-    private ArrayList<Data> insiemeDate;
+    private List<Data> insiemeDate;
 
     public InsiemeDate() {
-        this.insiemeDate = new ArrayList();
+        this.insiemeDate = new ArrayList<>();
     }
 
-    public ArrayList<Data> getInsiemeDate() {
+    public List<Data> getInsiemeDate() {
         return insiemeDate;
     }
 
@@ -45,7 +46,6 @@ public class InsiemeDate {
         return dateEscluse;
     }
 
-    // forse spostare in Data e farlo non statico
     private static int confronta(Data a, Data b) {
         if (a.getAnno() != b.getAnno()) return a.getAnno() - b.getAnno();
         if (a.getMese() != b.getMese()) return a.getMese() - b.getMese();

@@ -3,55 +3,93 @@ package it.unibs.ingdsw.persistence.xml;
 import it.unibs.ingdsw.model.applicazione.Applicazione;
 import it.unibs.ingdsw.model.applicazione.StatoProduzioneVisite;
 import it.unibs.ingdsw.model.applicazione.Target;
+import it.unibs.ingdsw.model.appuntamenti.InsiemeAppuntamenti;
 import it.unibs.ingdsw.persistence.ApplicazioneRepository;
-import it.unibs.ingdsw.persistence.xml.parser.*;
+import it.unibs.ingdsw.persistence.mapper.*;
+import it.unibs.ingdsw.persistence.xml.reader.*;
+import it.unibs.ingdsw.persistence.xml.writer.*;
 import it.unibs.ingdsw.service.ServiceAppuntamenti;
 
+import java.io.File;
 import java.time.LocalDate;
 
 public class XmlApplicazioneRepository implements ApplicazioneRepository {
-    public Applicazione configuraApplicazione () {
-        Applicazione app = new Applicazione();
-        ParsParametriAppXMLFile pa = new ParsParametriAppXMLFile();
-        ParsUtentiXMLFile ut = new ParsUtentiXMLFile();
-        ParsDateEscluseXMLFile d = new ParsDateEscluseXMLFile();
-        ParsLuoghiXMLFile l = new ParsLuoghiXMLFile();
-        ParsDisponibilitaVolontariXMLFile dV = new ParsDisponibilitaVolontariXMLFile(ut.getListaUtenti());
-        ParsAppuntamentiXMLFile a = new ParsAppuntamentiXMLFile(l.getListaLuoghi(), ut.getListaUtenti());
 
-        app.setAmbitoTerritoriale(pa.getAmbitoTerritoriale());
-        app.setNumeroMassimoIscrivibili(pa.getNumeroMassimoIscrivibili());
-        app.setDaConfigurare(pa.isAmbienteDaConfigurare());
-        app.setListaUtenti(ut.getListaUtenti());
-        app.setListaLuoghi(l.getListaLuoghi());
-        app.setDateEscluse(d.getInsiemeDate());
-        app.setDisponibilitaPerVol(dV.getDisponibilitaPerVol());
-        app.setCalendarioAppuntamenti(a.getAppuntamenti());
-        // se si accede con il nuovo mese (Target.SOGLIA_CAMBIO_MESE), il piano delle visite del mese prima è stato già
-        // prodotto, per cui viene settato di nuovo a NON_PRODOTTE, altrimenti vado a leggere quello che c'è sull'XML
-        if((new Target()).successivoASoglia() && pa.getStatoProduzione() == StatoProduzioneVisite.PRODOTTE) {
+    private static final File FILE_PARAMETRI = new File("parametriApplicazione.xml");
+    private static final File FILE_UTENTI = new File("utenti.xml");
+    private static final File FILE_DATE_ESCLUSE = new File("dateEscluse.xml");
+    private static final File FILE_LUOGHI = new File("luoghi.xml");
+    private static final File FILE_DISPONIBILITA = new File("disponibilitaVolontari.xml");
+    private static final File FILE_APPUNTAMENTI = new File("appuntamenti.xml");
+    private static final File FILE_PRENOTAZIONI = new File("prenotazioni.xml");
+
+    @Override
+    public Applicazione configuraApplicazione() {
+        Applicazione app = new Applicazione();
+
+        ParametriApplicazioneXmlReader.Result par = new ParametriApplicazioneXmlReader(FILE_PARAMETRI).readOrDefault();
+        var listaUtenti = new UtentiXmlReader(FILE_UTENTI).read();
+        var listaLuoghi = new LuoghiXmlReader(FILE_LUOGHI).read();
+        var dateEscluse = new DateEscluseXmlReader(FILE_DATE_ESCLUSE).read();
+        var dispDtos = new DisponibilitaVolontariXmlReader(FILE_DISPONIBILITA).readAll();
+        var disponibilitaPerVol = new DisponibilitaVolontariMapper(listaUtenti).toDomain(dispDtos);
+        var appDtos = new AppuntamentiXmlReader(FILE_APPUNTAMENTI).readAll();
+        var calendario = new AppuntamentiMapper(listaLuoghi, listaUtenti).toDomain(appDtos);
+        if (calendario == null) calendario = new InsiemeAppuntamenti();
+        var prenDtos = new PrenotazioniXmlReader(FILE_PRENOTAZIONI).readAll();
+        var prenotazioni = new PrenotazioniMapper(calendario.getAppuntamenti()).toDomain(prenDtos);
+
+        app.setAmbitoTerritoriale(par.ambitoTerritoriale);
+        app.setNumeroMassimoIscrivibili(par.numeroMax);
+        app.setDaConfigurare(par.ambienteDaConfigurare);
+        app.setListaUtenti(listaUtenti);
+        app.setListaLuoghi(listaLuoghi);
+        app.setDateEscluse(dateEscluse);
+        app.setDisponibilitaPerVol(disponibilitaPerVol);
+        app.setCalendarioAppuntamenti(calendario);
+
+        if ((new Target()).successivoASoglia() && par.statoProduzione == StatoProduzioneVisite.PRODOTTE) {
             app.setStatoProduzione(StatoProduzioneVisite.NON_PRODOTTE);
         } else {
-            app.setStatoProduzione(pa.getStatoProduzione());
+            app.setStatoProduzione(par.statoProduzione);
         }
-        app.setStatoDisp(pa.getStato());
-        app.setNextDisponibilita(pa.getNextDisponibilita());
-        ParsPrenotazioniXMLFile pp = new ParsPrenotazioniXMLFile(app.getCalendarioAppuntamenti().getAppuntamenti());
-        app.setPrenotazioni(pp.getPrenotazioni());
 
+        app.setStatoDisp(par.statoDisp);
+        app.setNextDisponibilita(par.nextDisponibilita);
+        app.setPrenotazioni(prenotazioni);
         ServiceAppuntamenti serviceApp = new ServiceAppuntamenti(app.getCalendarioAppuntamenti());
         serviceApp.aggiornaStati(LocalDate.now());
+
+        if (par.shouldRewrite) {
+            new ParametriApplicazioneXmlWriter(FILE_PARAMETRI).write(
+                    app.getAmbitoTerritoriale(),
+                    app.getNumeroMassimoIscrivibili(),
+                    app.isDaConfigurare(),
+                    app.getStatoDisp(),
+                    app.getStatoProd(),
+                    app.getNextDisponibilita()
+            );
+        }
 
         return app;
     }
 
+    @Override
     public void salvaApplicazione(Applicazione app) {
-        ParsParametriAppXMLFile.salvaParametri(app.getAmbitoTerritoriale(), app.getNumeroMassimoIscrivibili(), app.getStatoDisp(), app.getStatoProd(), app.getNextDisponibilita());
-        ParsUtentiXMLFile.salvaListaUtenti(app.getListaUtenti());
-        ParsDateEscluseXMLFile.salvaListaDate(app.getDateEscluse());
-        ParsLuoghiXMLFile.salvaLuoghi(app.getListaLuoghi());
-        ParsDisponibilitaVolontariXMLFile.salvaDisponibilitaVolontari(app.getDisponibilitaPerVol());
-        ParsAppuntamentiXMLFile.salvaAppuntamenti(app.getCalendarioAppuntamenti().getAppuntamenti());
-        ParsPrenotazioniXMLFile.salvaPrenotazioni(app.getPrenotazioni());
+        new ParametriApplicazioneXmlWriter(FILE_PARAMETRI).write(
+                app.getAmbitoTerritoriale(),
+                app.getNumeroMassimoIscrivibili(),
+                app.isDaConfigurare(),
+                app.getStatoDisp(),
+                app.getStatoProd(),
+                app.getNextDisponibilita()
+        );
+
+        new UtentiXmlWriter(FILE_UTENTI).write(app.getListaUtenti());
+        new DateEscluseXmlWriter(FILE_DATE_ESCLUSE).write(app.getDateEscluse());
+        new LuoghiXmlWriter(FILE_LUOGHI).write(app.getListaLuoghi());
+        new DisponibilitaVolontariXmlWriter(FILE_DISPONIBILITA).write(app.getDisponibilitaPerVol());
+        new AppuntamentiXmlWriter(FILE_APPUNTAMENTI).upsertAll(app.getCalendarioAppuntamenti().getAppuntamenti());
+        new PrenotazioniXmlWriter(FILE_PRENOTAZIONI).writeAll(app.getPrenotazioni());
     }
 }

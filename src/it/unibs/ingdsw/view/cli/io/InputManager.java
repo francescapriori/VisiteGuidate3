@@ -1,18 +1,7 @@
 package it.unibs.ingdsw.view.cli.io;
 
-import it.unibs.ingdsw.model.applicazione.Applicazione;
-import it.unibs.ingdsw.model.luoghi.ListaLuoghi;
-import it.unibs.ingdsw.model.luoghi.Luogo;
-import it.unibs.ingdsw.model.luoghi.Posizione;
-import it.unibs.ingdsw.model.tempo.Data;
-import it.unibs.ingdsw.model.tempo.Giornate;
-import it.unibs.ingdsw.model.tempo.GiornoSettimana;
-import it.unibs.ingdsw.model.tempo.Orario;
 import it.unibs.ingdsw.model.utenti.ListaUtenti;
-import it.unibs.ingdsw.model.utenti.Volontario;
-import it.unibs.ingdsw.model.visite.Visita;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -82,6 +71,7 @@ public class InputManager {
         }
     }
 
+    // spostare
     public static String richiediUsernameLogin(){
         return leggiStringaNonVuota("Inserisci l'username: ");
     }

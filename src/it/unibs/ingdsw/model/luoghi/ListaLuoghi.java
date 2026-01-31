@@ -6,17 +6,18 @@ import it.unibs.ingdsw.model.utenti.Volontario;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class ListaLuoghi {
 
-    private ArrayList<Luogo> listaLuoghi;
+    private List<Luogo> listaLuoghi;
 
     public ListaLuoghi() {
         this.listaLuoghi = new ArrayList<>();
     }
 
-    public ArrayList<Luogo> getListaLuoghi() {
+    public List<Luogo> getListaLuoghi() {
         return listaLuoghi;
     }
 
@@ -30,14 +31,6 @@ public class ListaLuoghi {
 
     public Luogo scegliLuogo(int posizione) {
         return listaLuoghi.get(posizione);
-    }
-
-    public ArrayList<String> estraiNomeLuoghi() {
-        ArrayList<String> listaNomeLuoghi = new ArrayList<>();
-        for (Luogo luogo : this.listaLuoghi) {
-            listaNomeLuoghi.add(luogo.getNome());
-        }
-        return listaNomeLuoghi;
     }
 
     public String generaProssimoId() {

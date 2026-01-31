@@ -10,6 +10,7 @@ import it.unibs.ingdsw.model.utenti.Volontario;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Applicazione {
 
@@ -24,7 +25,7 @@ public class Applicazione {
     private StatoRichiestaDisponibilita statoDisp;
     private YearMonth nextDisponibilita;
     private StatoProduzioneVisite statoProduzione;
-    private ArrayList<Prenotazione> prenotazioni;
+    private List<Prenotazione> prenotazioni;
     private static Applicazione instance;
 
     public Applicazione() {}
@@ -117,11 +118,11 @@ public class Applicazione {
         this.nextDisponibilita = nextDisponibilita;
     }
 
-    public ArrayList<Prenotazione> getPrenotazioni() {
+    public List<Prenotazione> getPrenotazioni() {
         return this.prenotazioni;
     }
 
-    public void setPrenotazioni (ArrayList<Prenotazione> prenotazioni) {
+    public void setPrenotazioni (List<Prenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
 

@@ -1,4 +1,4 @@
-package it.unibs.ingdsw.view.cli.format;
+package it.unibs.ingdsw.view.format;
 
 import it.unibs.ingdsw.model.applicazione.Applicazione;
 import it.unibs.ingdsw.model.appuntamenti.Appuntamento;
@@ -14,8 +14,8 @@ import it.unibs.ingdsw.model.utenti.Volontario;
 import it.unibs.ingdsw.model.visite.ListaVisite;
 import it.unibs.ingdsw.model.visite.Visita;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 public class Formatters {
@@ -63,7 +63,7 @@ public class Formatters {
         return join(listaUtenti.getListaUtenti(), ", ", Formatters::utente);
     }
 
-    public static String volontariVisita(ArrayList<Volontario> volontari) {
+    public static String volontariVisita(List<Volontario> volontari) {
         return join(volontari, ", ", Formatters::utente);
     }
 

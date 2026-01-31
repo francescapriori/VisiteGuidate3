@@ -7,6 +7,7 @@ import it.unibs.ingdsw.model.utenti.Volontario;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Visita {
 
@@ -20,7 +21,7 @@ public class Visita {
     private Orario oraInizioVisita;
     private int durataMinutiVisita;
     private boolean presenzaBiglietto;
-    private ArrayList<Volontario> volontariVisita;
+    private List<Volontario> volontariVisita;
     private int numeroMinimoPartecipanti;
     private int numeroMassimoPartecipanti;
     private StatoAppuntamento statoAppuntamento;
@@ -28,7 +29,7 @@ public class Visita {
     public Visita(String titolo, String descrizione, String luogoID, Posizione luogoIncontro,
                   Giornate giornateVisita, Data inizioValiditaVisita, Data fineValiditaVisita,
                   Orario oraInizioVisita,  int durataMinutiVisita, boolean presenzaBiglietto,
-                  ArrayList<Volontario> volontariVisita, int numeroMinimoPartecipanti,
+                  List<Volontario> volontariVisita, int numeroMinimoPartecipanti,
                   int numeroMassimoPartecipanti) {
         this.titolo = titolo;
         this.descrizione = descrizione;
@@ -86,7 +87,7 @@ public class Visita {
         return presenzaBiglietto;
     }
 
-    public ArrayList<Volontario> getVolontariVisita() {
+    public List<Volontario> getVolontariVisita() {
         return volontariVisita;
     }
 

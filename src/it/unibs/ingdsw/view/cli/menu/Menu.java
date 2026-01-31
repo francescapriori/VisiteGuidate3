@@ -1,6 +1,7 @@
 package it.unibs.ingdsw.view.cli.menu;
 
 import it.unibs.ingdsw.view.cli.io.InputManager;
+import it.unibs.ingdsw.view.cli.io.Output;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,9 +9,11 @@ import java.util.Map;
 public class Menu {
     private final String titolo;
     private final Map<Integer, Voce> voci = new LinkedHashMap<>();
+    private final Output out;
 
-    public Menu(String titolo) {
+    public Menu(String titolo, Output out) {
         this.titolo = titolo;
+        this.out = out;
     }
 
     public void aggiungi(int numero, String etichetta, Runnable azione) {
@@ -18,11 +21,11 @@ public class Menu {
     }
 
     public boolean mostra() {
-        System.out.println("\n--- " + titolo + " ---");
+        out.println("\n--- " + titolo + " ---");
         for (var e : voci.entrySet()) {
-            System.out.println(e.getKey() + ". " + e.getValue().etichetta);
+            out.println(e.getKey() + ". " + e.getValue().etichetta);
         }
-        System.out.println("0. Esci");
+        out.println("0. Esci");
 
         int max = voci.keySet().stream().mapToInt(Integer::intValue).max().orElse(0);
         int scelta = InputManager.leggiInteroConMinMax("Scelta: ", 0, max);
@@ -33,14 +36,14 @@ public class Menu {
 
         Voce voce = voci.get(scelta);
         if (voce == null) {
-            System.out.println("Scelta non valida.");
+            out.println("Scelta non valida.");
             return true;
         }
 
         try {
             voce.azione.run();
         } catch (Exception ex) {
-            System.out.println("Errore: " + ex.getMessage());
+            out.println("Errore: " + ex.getMessage());
         }
 
         return true;
@@ -49,6 +52,7 @@ public class Menu {
     private static class Voce {
         final String etichetta;
         final Runnable azione;
+
         Voce(String etichetta, Runnable azione) {
             this.etichetta = etichetta;
             this.azione = azione;

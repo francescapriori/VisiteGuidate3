@@ -10,8 +10,10 @@ import it.unibs.ingdsw.model.visite.Visita;
 import it.unibs.ingdsw.service.ServiceLuoghi;
 import it.unibs.ingdsw.service.ServiceUtenti;
 import it.unibs.ingdsw.service.ServiceVisite;
+import it.unibs.ingdsw.view.VisiteView;
 import it.unibs.ingdsw.view.cli.io.InputManager;
-import it.unibs.ingdsw.view.cli.io.OutputManager;
+import it.unibs.ingdsw.view.LuoghiView;
+import it.unibs.ingdsw.view.cli.io.Output;
 
 public class LuogoController {
 
@@ -20,13 +22,19 @@ public class LuogoController {
     private final VisiteController visiteController;
     private final ServiceUtenti serviceVolontari;
     private final ServiceVisite serviceVisite;
+    private final LuoghiView luoghiView;
+    private final VisiteView visiteView;
+    private final Output out;
 
-    public LuogoController(VisiteController visiteController) {
+    public LuogoController(VisiteController visiteController, Output out) {
         this.applicazione = Applicazione.getApplicazione();
         this.serviceLuoghi = new ServiceLuoghi(Applicazione.getApplicazione().getListaLuoghi());
         this.visiteController = visiteController;
         this.serviceVolontari = new ServiceUtenti(Applicazione.getApplicazione());
         this.serviceVisite = new ServiceVisite(Applicazione.getApplicazione().getListaLuoghi().getTotaleVisite());
+        this.luoghiView = new LuoghiView(out);
+        this.visiteView = new VisiteView(out);
+        this.out = out;
     }
 
     public void configuraLuoghi() {
@@ -68,18 +76,18 @@ public class LuogoController {
         while (true) {
             String cap = InputManager.leggiStringaNonVuota("Inserire il CAP: ").trim();
             if (cap.matches("\\d{" + Posizione.LUNGHEZZA_CAP + "}")) return cap;
-            OutputManager.visualizzaMessaggio("Errore: il CAP deve essere un numero di " + Posizione.LUNGHEZZA_CAP + " cifre.");
+            System.out.println("Errore: il CAP deve essere un numero di " + Posizione.LUNGHEZZA_CAP + " cifre.");
         }
     }
 
     public void visualizzaElencoLuoghi() {
-        OutputManager.visualizzaMessaggio("Elenco dei luoghi visitabili disponibili: ");
-        OutputManager.visualizzaLuoghi(applicazione.getListaLuoghi());
+        out.println("Elenco dei luoghi visitabili disponibili: ");
+        luoghiView.visualizzaLuoghi(applicazione.getListaLuoghi());
     }
 
     public void visualizzaLuoghiEvisite() {
-        OutputManager.visualizzaMessaggio("-----\nLista de Luoghi registrati con relative visite: ");
-        OutputManager.visualizzaLuoghiEvisite(applicazione.getListaLuoghi());
+        out.println("-----\nLista de Luoghi registrati con relative visite: ");
+        luoghiView.visualizzaLuoghiEvisite(applicazione.getListaLuoghi());
     }
 
     public void aggiungiLuogo(String nomeMeseProduzione, int annoProduzione) {
@@ -87,7 +95,7 @@ public class LuogoController {
             aggiungiLuoghiSeNonPresenti();
         }
         else {
-            OutputManager.visualizzaMessaggio("Non è possibile aggiungere un nuovo luogo all'elenco: è necessario produrre prima il piano delle visite per il mese " +
+            out.println("Non è possibile aggiungere un nuovo luogo all'elenco: è necessario produrre prima il piano delle visite per il mese " +
                     nomeMeseProduzione + " " + annoProduzione);
         }
     }
@@ -95,23 +103,23 @@ public class LuogoController {
     public void eliminaLuogo(String nomeMeseProduzione, int annoProduzione) {
         if(applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
             if(!this.applicazione.getListaLuoghi().getListaLuoghi().isEmpty()) {
-                OutputManager.visualizzaLuoghi(this.applicazione.getListaLuoghi());
+                luoghiView.visualizzaLuoghi(this.applicazione.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo che si vuole rimuovere: ",
                         1, this.applicazione.getListaLuoghi().getNumeroLuogo());
                 Luogo luogo = this.applicazione.getListaLuoghi().scegliLuogo(scelta-1);
                 this.applicazione.getListaLuoghi().rimuoviLuogo(luogo.getNome());
-                OutputManager.visualizzaMessaggio("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID());
+                out.println("Hai eliminato il luogo  " + luogo.getNome() + " - " + luogo.getLuogoID());
                 // Se un volontario rimane senza visite, allora viene eliminato
                 serviceVolontari.eliminaSeSenzaVisita();
             }
             else {
-                OutputManager.visualizzaMessaggio("Nessun luogo registrato, impossibile rimuovere un luogo.");
+                out.println("Nessun luogo registrato, impossibile rimuovere un luogo.");
             }
 
         }
         else {
-            OutputManager.visualizzaMessaggio("Non è possibile rimuovere nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+            out.println("Non è possibile rimuovere nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
                     nomeMeseProduzione + " " + annoProduzione);
         }
     }
@@ -119,12 +127,12 @@ public class LuogoController {
     public void eliminaVisitaDaLuogo(String nomeMeseProduzione, int annoProduzione) {
         if(applicazione.getStatoProd() == StatoProduzioneVisite.PRODOTTE) {
             if(!this.applicazione.getListaLuoghi().getListaLuoghi().isEmpty()) {
-                OutputManager.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
+                luoghiView.visualizzaLuoghiEvisite(this.applicazione.getListaLuoghi());
                 int scelta = InputManager.leggiInteroConMinMax(
                         "\nSeleziona il luogo di cui si vuole selezionare la visita: ",
                         1, this.applicazione.getListaLuoghi().getNumeroLuogo());
                 Luogo luogo = this.applicazione.getListaLuoghi().scegliLuogo(scelta-1);
-                OutputManager.visualizzaListaVisite(luogo.getInsiemeVisite());
+                visiteView.visualizzaListaVisite(luogo.getInsiemeVisite());
                 int scelta2 = InputManager.leggiInteroConMinMax(
                         "\nSeleziona la visita che si vuole rimuovere: ",
                         1, luogo.getInsiemeVisite().getNumeroVisite());
@@ -139,12 +147,12 @@ public class LuogoController {
                 serviceVolontari.eliminaSeSenzaVisita();
             }
             else {
-                OutputManager.visualizzaMessaggio("Nessun luogo registrato, impossibile rimuovere una visita associata ad un luogo.");
+                out.println("Nessun luogo registrato, impossibile rimuovere una visita associata ad un luogo.");
             }
 
         }
         else {
-            OutputManager.visualizzaMessaggio("Non è possibile rimuovere nessuna visita associata a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
+            out.println("Non è possibile rimuovere nessuna visita associata a nessun luogo: è necessario produrre prima il piano delle visite per il mese " +
                     nomeMeseProduzione + " " + annoProduzione);
         }
     }

@@ -3,28 +3,31 @@ package it.unibs.ingdsw;
 import it.unibs.ingdsw.model.applicazione.Applicazione;
 import it.unibs.ingdsw.persistence.xml.XmlApplicazioneRepository;
 import it.unibs.ingdsw.controller.LoginController;
+import it.unibs.ingdsw.view.cli.io.ConsoleOutput;
 import it.unibs.ingdsw.view.cli.io.InputManager;
 import it.unibs.ingdsw.model.utenti.Utente;
+import it.unibs.ingdsw.view.cli.io.Output;
 import it.unibs.ingdsw.view.cli.menu.Menu;
 import it.unibs.ingdsw.view.cli.menu.MenuManager;
 
 public class Main {
     public static void main(String[] args) {
+        Output out = new ConsoleOutput(System.out);
         XmlApplicazioneRepository appR = new XmlApplicazioneRepository();
         Applicazione applicazione = appR.configuraApplicazione();
         Applicazione.setInstance(applicazione);
 
-        LoginController login = new LoginController();
+        LoginController login = new LoginController(out);
 
-        System.out.println("Login");
+        out.println("Login");
         while (true) {
             Utente utenteAutenticato = login.autenticazione();
 
-            System.out.println("Benvenuto utente " + utenteAutenticato.getUsername()
+            out.println("Benvenuto utente " + utenteAutenticato.getUsername()
                     + " (" + utenteAutenticato.getRuolo() + ")");
 
             //inversione del controllo
-            MenuManager menuManager = utenteAutenticato.operazioni(applicazione);
+            MenuManager menuManager = utenteAutenticato.operazioni(applicazione, out);
             boolean continua = true;
             while (continua) {
                 Menu menu = menuManager.creaMenu(applicazione.getNextDisponibilita());

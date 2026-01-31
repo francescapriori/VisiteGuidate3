@@ -1,11 +1,8 @@
 package it.unibs.ingdsw.service;
 
-import it.unibs.ingdsw.model.applicazione.Applicazione;
 import it.unibs.ingdsw.model.luoghi.ListaLuoghi;
 import it.unibs.ingdsw.model.luoghi.Luogo;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ServiceLuoghi {
 

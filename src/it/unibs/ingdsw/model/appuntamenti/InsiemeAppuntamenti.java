@@ -1,19 +1,20 @@
 package it.unibs.ingdsw.model.appuntamenti;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InsiemeAppuntamenti {
-    ArrayList<Appuntamento> insiemeAppuntamenti;
+    List<Appuntamento> insiemeAppuntamenti;
 
     public InsiemeAppuntamenti() {
         this.insiemeAppuntamenti = new ArrayList<>();
     }
 
-    public InsiemeAppuntamenti(ArrayList<Appuntamento> insiemeAppuntamenti) {
+    public InsiemeAppuntamenti(List<Appuntamento> insiemeAppuntamenti) {
         this.insiemeAppuntamenti = insiemeAppuntamenti;
     }
 
-    public ArrayList<Appuntamento> getAppuntamenti() {
+    public List<Appuntamento> getAppuntamenti() {
         return insiemeAppuntamenti;
     }
 

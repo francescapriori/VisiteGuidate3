@@ -10,8 +10,8 @@ import it.unibs.ingdsw.model.visite.Visita;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
-// rivedere
 public class ServiceUtenti {
 
     private final Applicazione applicazione;
@@ -38,14 +38,14 @@ public class ServiceUtenti {
 
     }
 
-    public void aggiungiVolontariAllaVisita(Visita visita, ArrayList<Volontario> volontari) {
+    public void aggiungiVolontariAllaVisita(Visita visita, List<Volontario> volontari) {
         for(Volontario v: volontari) {
             visita.getVolontariVisita().add(v); //non è necessario fare controllo se già presente poiché fatto già prima
         }
     }
 
     public void eliminaSeSenzaVisita() {
-        ArrayList<Utente> volDaRimuovere = new ArrayList<>();
+        List<Utente> volDaRimuovere = new ArrayList<>();
         for(Utente u : this.applicazione.getListaUtenti().getListaUtenti()) {
             if (u instanceof Volontario) {
                 if(!this.applicazione.getListaLuoghi().volConAlmenoUnaVisita((Volontario) u)) {
@@ -58,8 +58,8 @@ public class ServiceUtenti {
     }
 
     public void rimuoviVolontarioIesimo(int posizione) {
-        ArrayList<Utente> utenti = this.applicazione.getListaUtenti().getListaUtenti();
-        ArrayList<Volontario> vol = this.applicazione.getListaUtenti().getVolontari();
+        List<Utente> utenti = this.applicazione.getListaUtenti().getListaUtenti();
+        List<Volontario> vol = this.applicazione.getListaUtenti().getVolontari();
         Volontario vDaRimuovere = vol.get(posizione);
         ServiceVisite sv = new ServiceVisite(this.applicazione.getListaLuoghi().getTotaleVisite());
 

@@ -1,6 +1,7 @@
 package it.unibs.ingdsw.model.utenti;
 
 import it.unibs.ingdsw.model.applicazione.Applicazione;
+import it.unibs.ingdsw.view.cli.io.Output;
 import it.unibs.ingdsw.view.cli.menu.Menu;
 import it.unibs.ingdsw.view.cli.menu.MenuManager;
 
@@ -48,8 +49,8 @@ public abstract class Utente {
         return this.password != null && this.password.equals(pwd);
     }
 
-    public MenuManager operazioni(Applicazione applicazione) {
-        MenuManager menuManager = MenuManager.mostraPer(this);
+    public MenuManager operazioni(Applicazione applicazione, Output out) {
+        MenuManager menuManager = MenuManager.mostraPer(this, out);
         if (this.isPwProvvisoria()) {
             menuManager.cambioPassword();
         }
@@ -62,7 +63,6 @@ public abstract class Utente {
     public boolean utenteUguale(Utente utente) {
         return utente != null && this.username != null && utente.getUsername() != null && this.username.equalsIgnoreCase(utente.getUsername());
     }
-
 
     public boolean pwUguale(String pwd) {
         return this.password.equals(pwd);

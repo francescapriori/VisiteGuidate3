@@ -1,16 +1,17 @@
 package it.unibs.ingdsw.model.visite;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListaVisite {
 
-    private ArrayList<Visita> listaVisite;
+    private List<Visita> listaVisite;
 
     public ListaVisite() {
         this.listaVisite = new ArrayList<>();
     }
 
-    public ArrayList<Visita> getListaVisite() {
+    public List<Visita> getListaVisite() {
         return listaVisite;
     }
 

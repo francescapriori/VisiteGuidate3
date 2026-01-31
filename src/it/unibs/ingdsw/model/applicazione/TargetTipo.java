@@ -20,11 +20,6 @@ public enum TargetTipo {
         this.dopoSoglia = dopoSoglia;
     }
 
-    public int mesiPrimaSoglia() {
-        return primaSoglia;
-    }
-
-    public int mesiDopoSoglia()  {
-        return dopoSoglia;
-    }
+    public int mesiPrimaSoglia() {return primaSoglia;}
+    public int mesiDopoSoglia()  { return dopoSoglia;}
 }

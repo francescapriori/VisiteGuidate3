@@ -4,6 +4,7 @@ import it.unibs.ingdsw.controller.*;
 import it.unibs.ingdsw.model.applicazione.*;
 import it.unibs.ingdsw.model.tempo.Data;
 import it.unibs.ingdsw.model.utenti.Utente;
+import it.unibs.ingdsw.view.cli.io.Output;
 
 import java.time.YearMonth;
 
@@ -15,20 +16,22 @@ public class MenuConfiguratore extends MenuManager {
     private final LuogoController luogoController;
     private final VisiteController visiteController;
     private final AppuntamentiController appuntamentiController;
+    private final Output out;
 
-    public MenuConfiguratore(Utente utente) {
-        super(utente);
-        this.controller = new ApplicazioneController();
-        this.dateController = new DateController();
-        this.utentiController = new UtentiController();
-        this.visiteController = new VisiteController(utentiController);
-        this.luogoController = new LuogoController(visiteController);
-        this.appuntamentiController = new AppuntamentiController();
+    public MenuConfiguratore(Utente utente, Output out) {
+        super(utente, out);
+        this.controller = new ApplicazioneController(out);
+        this.dateController = new DateController(out);
+        this.utentiController = new UtentiController(out);
+        this.visiteController = new VisiteController(utentiController, out);
+        this.luogoController = new LuogoController(visiteController, out);
+        this.appuntamentiController = new AppuntamentiController(out);
+        this.out = out;
     }
 
     @Override
     public Menu creaMenu(YearMonth targetDisponibilita) {
-        Menu m = new Menu("Menu Configuratore");
+        Menu m = new Menu("Menu Configuratore", out);
 
         Target targetApplicazione = new Target();
         YearMonth targetProduzione, targetPerEsclusione;
@@ -45,7 +48,8 @@ public class MenuConfiguratore extends MenuManager {
         int annoProduzione = Data.returnAnno(targetProduzione);
         int meseProduzione = Data.returnMese(targetProduzione);
 
-        m.aggiungi(1, "Indica le date da escludere per il mese di " + nomeMesePerEsclusione + " " + annoPerEsclusione,
+        m.aggiungi(1, "Indica le date da escludere per il mese di " + nomeMesePerEsclusione + " "
+                        + annoPerEsclusione,
                 () -> dateController.indicaDateDaEscludere(mesePerEsclusione, annoPerEsclusione));
 
         m.aggiungi(2, "Modifica numero massimo persone per iscrizione",

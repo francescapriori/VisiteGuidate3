@@ -1,16 +1,17 @@
 package it.unibs.ingdsw.model.utenti;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class ListaUtenti {
-    private ArrayList<Utente> listaUtenti;
+    private List<Utente> listaUtenti;
 
     public ListaUtenti() {
         this.listaUtenti = new ArrayList<>();
     }
-    public ListaUtenti(ArrayList<Utente> listaUtenti) {this.listaUtenti = listaUtenti;}
-    public ArrayList<Utente> getListaUtenti() {
+    public ListaUtenti(List<Utente> listaUtenti) {this.listaUtenti = listaUtenti;}
+    public List<Utente> getListaUtenti() {
         return listaUtenti;
     }
 
@@ -35,8 +36,8 @@ public class ListaUtenti {
         return Optional.empty();
     }
 
-    public ArrayList<Volontario> getVolontari() {
-        ArrayList<Volontario> volontari = new ArrayList<>();
+    public List<Volontario> getVolontari() {
+        List<Volontario> volontari = new ArrayList<>();
         for (Utente u : this.listaUtenti) {
             if (u instanceof Volontario) volontari.add((Volontario) u);
         }

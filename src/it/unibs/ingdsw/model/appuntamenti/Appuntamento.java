@@ -7,6 +7,7 @@ import it.unibs.ingdsw.model.visite.Visita;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Appuntamento {
     private Visita visita;
@@ -47,6 +48,7 @@ public class Appuntamento {
     public int getNumeroPersonePrenotate() {
         return numeroPersonePrenotate;
     }
+
     public void setNumeroPersonePrenotate(int numeroPersonePrenotate) {
         this.numeroPersonePrenotate = numeroPersonePrenotate;
     }
@@ -89,8 +91,8 @@ public class Appuntamento {
         return oggi.isAfter(dataVisita);
     }
 
-    public ArrayList<Prenotazione> getPrenotazioniAssociate(ArrayList<Prenotazione> prenotazioni) {
-        ArrayList<Prenotazione> prenotazioniDellAppuntamento = new ArrayList<>();
+    public List<Prenotazione> getPrenotazioniAssociate(List<Prenotazione> prenotazioni) {
+        List<Prenotazione> prenotazioniDellAppuntamento = new ArrayList<>();
 
         for (Prenotazione prenotazione : prenotazioni) {
             if (prenotazione.getAppuntamento() == this) {

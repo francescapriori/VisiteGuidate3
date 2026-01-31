@@ -8,6 +8,7 @@ import it.unibs.ingdsw.model.prenotazione.Prenotazione;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ServicePrenotazione {
 
@@ -60,8 +61,8 @@ public class ServicePrenotazione {
         return false;
     }
 
-    public ArrayList<Prenotazione> getPrenotazioniUtente(Fruitore utente) {
-        ArrayList<Prenotazione> prenotazioniDellUtente = new ArrayList<>();
+    public List<Prenotazione> getPrenotazioniUtente(Fruitore utente) {
+        List<Prenotazione> prenotazioniDellUtente = new ArrayList<>();
         for (Prenotazione p : this.applicazione.getPrenotazioni()) {
             if (p.getUtenteChePrenota().utenteUguale(utente)) {
                 prenotazioniDellUtente.add(p);

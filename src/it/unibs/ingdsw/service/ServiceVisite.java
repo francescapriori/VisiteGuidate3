@@ -13,6 +13,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 public class ServiceVisite {
 
@@ -67,7 +68,7 @@ public class ServiceVisite {
     }
 
     public void eliminaSeSenzaVolontari() {
-        ArrayList<Visita> visDaRimuovere = new ArrayList<>();
+        List<Visita> visDaRimuovere = new ArrayList<>();
 
         for (Luogo l : Applicazione.getApplicazione().getListaLuoghi().getListaLuoghi()) {
             for (Visita v : l.getInsiemeVisite().getListaVisite()) {
