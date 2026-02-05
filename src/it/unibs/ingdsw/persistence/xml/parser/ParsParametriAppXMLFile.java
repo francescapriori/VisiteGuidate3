@@ -8,9 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
@@ -68,12 +66,7 @@ public class ParsParametriAppXMLFile {
     private boolean parseXML() throws ParserConfigurationException, SAXException, IOException {
         boolean nextCorrettaDaSalvare = false;
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
 
         if (!xmlFile.exists()) {
@@ -224,9 +217,7 @@ public class ParsParametriAppXMLFile {
                 }
             }
 
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
+            Document doc = XmlDocumentBuilderProvider.newDocument();
 
             Element root = doc.createElement("applicazione");
             doc.appendChild(root);

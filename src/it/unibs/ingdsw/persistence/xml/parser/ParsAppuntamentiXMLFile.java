@@ -14,9 +14,7 @@ import it.unibs.ingdsw.model.visite.Visita;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -55,12 +53,7 @@ public class ParsAppuntamentiXMLFile {
     private void parseXML()
             throws ParserConfigurationException, SAXException, IOException {
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("File appuntamenti XML non trovato -> " + xmlFile.getAbsolutePath());
@@ -79,9 +72,9 @@ public class ParsAppuntamentiXMLFile {
         for (int i = 0; i < nl.getLength(); i++) {
             Element eApp = (Element) nl.item(i);
 
-            Element eVisita = getFirst(eApp, "visita");
-            String luogoID = getText(eVisita, "luogoID", null);
-            String titoloVisita = getText(eVisita, "titolo", null);
+            Element eVisita = XmlElementReader.getFirst(eApp, "visita");
+            String luogoID = XmlElementReader.getText(eVisita, "luogoID", null);
+            String titoloVisita = XmlElementReader.getText(eVisita, "titolo", null);
 
             Visita visita = resolveVisita(luogoID, titoloVisita);
             if (visita == null) {
@@ -90,13 +83,13 @@ public class ParsAppuntamentiXMLFile {
                 continue;
             }
 
-            Data data = parseData(getFirst(eApp, "data"));
+            Data data = parseData(XmlElementReader.getFirst(eApp, "data"));
 
-            Element eGuida = getFirst(eApp, "guida");
+            Element eGuida = XmlElementReader.getFirst(eApp, "guida");
             String usernameGuida = eGuida != null ? eGuida.getAttribute("username") : null;
             Volontario guida = resolveVolontario(usernameGuida);
 
-            String statoStr = getText(eApp, "statoVisita", null);
+            String statoStr = XmlElementReader.getText(eApp, "statoVisita", null);
             StatoAppuntamento stato = StatoAppuntamento.PROPOSTA;
             if (statoStr != null && !statoStr.isBlank()) {
                 try {
@@ -107,7 +100,7 @@ public class ParsAppuntamentiXMLFile {
                 }
             }
 
-            int numeroPersonePrenotate = getInt(eApp, "numeroPersonePrenotate", 0);
+            int numeroPersonePrenotate = XmlElementReader.getInt(eApp, "numeroPersonePrenotate", 0);
 
             Appuntamento app = new Appuntamento(visita, data, guida);
             app.setStatoVisita(stato);
@@ -150,9 +143,9 @@ public class ParsAppuntamentiXMLFile {
 
     private Data parseData(Element e) {
         if (e == null) return new Data(1, 1, 1970);
-        int g = getInt(e, "giorno", 1);
-        int m = getInt(e, "mese", 1);
-        int a = getInt(e, "anno", 1970);
+        int g = XmlElementReader.getInt(e, "giorno", 1);
+        int m = XmlElementReader.getInt(e, "mese", 1);
+        int a = XmlElementReader.getInt(e, "anno", 1970);
         Data d = new Data(g, m, a);
         if (!d.dataValida()) System.err.println("Data non valida: " + d);
         return d;
@@ -160,12 +153,7 @@ public class ParsAppuntamentiXMLFile {
 
     public static void salvaAppuntamenti(ArrayList<Appuntamento> nuoviAppuntamenti) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            dbf.setIgnoringComments(true);
-            dbf.setIgnoringElementContentWhitespace(true);
-
-            DocumentBuilder db = dbf.newDocumentBuilder();
+            DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
 
             File outFile = new File(DATA);
             Document doc;
@@ -187,7 +175,7 @@ public class ParsAppuntamentiXMLFile {
                 doc.appendChild(root);
             }
 
-            removeWhitespaceTextNodes(root);
+            XmlWhitespaceCleaner.removeWhitespaceTextNodes(root);
 
             if (nuoviAppuntamenti != null) {
                 for (Appuntamento app : nuoviAppuntamenti) {
@@ -226,14 +214,14 @@ public class ParsAppuntamentiXMLFile {
         for (int i = 0; i < nl.getLength(); i++) {
             Element eApp = (Element) nl.item(i);
 
-            Element eVisita = getFirst(eApp, "visita");
-            String luogoID = getText(eVisita, "luogoID", null);
-            String titoloVisita = getText(eVisita, "titolo", null);
+            Element eVisita = XmlElementReader.getFirst(eApp, "visita");
+            String luogoID = XmlElementReader.getText(eVisita, "luogoID", null);
+            String titoloVisita = XmlElementReader.getText(eVisita, "titolo", null);
 
-            Element eData = getFirst(eApp, "data");
-            int g = getInt(eData, "giorno", -1);
-            int m = getInt(eData, "mese", -1);
-            int a = getInt(eData, "anno", -1);
+            Element eData = XmlElementReader.getFirst(eApp, "data");
+            int g = XmlElementReader.getInt(eData, "giorno", -1);
+            int m = XmlElementReader.getInt(eData, "mese", -1);
+            int a = XmlElementReader.getInt(eData, "anno", -1);
 
             if (stessaChiave(app, luogoID, titoloVisita, g, m, a)) {
                 return eApp;
@@ -262,39 +250,12 @@ public class ParsAppuntamentiXMLFile {
         return stessoLuogo && stessoTitolo && stessaData;
     }
 
-    private static Element getFirst(Element parent, String tag) {
-        if (parent == null) return null;
-        NodeList nl = parent.getElementsByTagName(tag);
-        return (nl == null || nl.getLength() == 0) ? null : (Element) nl.item(0);
-    }
-
-    private static String getText(Element parent, String tag, String def) {
-        Element e = getFirst(parent, tag);
-        return (e == null) ? def : e.getTextContent().trim();
-    }
-
-    private static int getInt(Element parent, String tag, int def) {
-        try {
-            String t = getText(parent, tag, null);
-            return (t == null || t.isEmpty()) ? def : Integer.parseInt(t);
-        } catch (NumberFormatException ex) {
-            return def;
-        }
-    }
-
     private static void appendText(Document doc, Element parent, String tag, String text) {
-        Element e = doc.createElement(tag);
-        if (text != null) e.setTextContent(text);
-        parent.appendChild(e);
+        XmlElementWriter.appendText(doc, parent, tag, text);
     }
 
     private static void appendData(Document doc, Element parent, String tag, Data d) {
-        Element e = doc.createElement(tag);
-        parent.appendChild(e);
-        if (d == null) d = new Data(1, 1, 1970);
-        appendText(doc, e, "giorno", String.valueOf(d.getGiorno()));
-        appendText(doc, e, "mese", String.valueOf(d.getMese()));
-        appendText(doc, e, "anno", String.valueOf(d.getAnno()));
+        XmlElementWriter.appendData(doc, parent, tag, d);
     }
 
     private static void appendAppuntamento(Document doc, Element root, Appuntamento app) {
@@ -305,10 +266,10 @@ public class ParsAppuntamentiXMLFile {
         eApp.appendChild(eVisita);
         Visita v = app.getVisita();
         if (v != null) {
-            appendText(doc, eVisita, "luogoID",
-                    v.getLuogoID() != null ? v.getLuogoID() : "");
-            appendText(doc, eVisita, "titolo",
-                    v.getTitolo() != null ? v.getTitolo() : "");
+        appendText(doc, eVisita, "luogoID",
+                v.getLuogoID() != null ? v.getLuogoID() : "");
+        appendText(doc, eVisita, "titolo",
+                v.getTitolo() != null ? v.getTitolo() : "");
         }
 
         appendData(doc, eApp, "data", app.getData());
@@ -324,17 +285,4 @@ public class ParsAppuntamentiXMLFile {
         appendText(doc, eApp, "numeroPersonePrenotate", String.valueOf(app.getNumeroPersonePrenotate()));
     }
 
-    private static void removeWhitespaceTextNodes(Node parent) {
-        Node child = parent.getFirstChild();
-        while (child != null) {
-            Node next = child.getNextSibling();
-            if (child.getNodeType() == Node.TEXT_NODE &&
-                    child.getTextContent().trim().isEmpty()) {
-                parent.removeChild(child);
-            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
-                removeWhitespaceTextNodes(child);
-            }
-            child = next;
-        }
-    }
 }

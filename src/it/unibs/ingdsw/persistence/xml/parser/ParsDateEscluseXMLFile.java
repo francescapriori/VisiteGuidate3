@@ -5,9 +5,7 @@ import it.unibs.ingdsw.model.tempo.InsiemeDate;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -38,12 +36,7 @@ public class ParsDateEscluseXMLFile {
     }
 
     private void parseXML() throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("Errore: file XML non trovato: " + xmlFile.getAbsolutePath());
@@ -80,15 +73,17 @@ public class ParsDateEscluseXMLFile {
     }
 
     private static Data parseDataElement(Element eData) {
-        String gTxt = getText(eData, "giorno", null);
-        String mTxt = getText(eData, "mese", null);
-        String aTxt = getText(eData, "anno", null);
+        String gTxt = XmlElementReader.getText(eData, "giorno", null);
+        String mTxt = XmlElementReader.getText(eData, "mese", null);
+        String aTxt = XmlElementReader.getText(eData, "anno", null);
 
         if (gTxt == null) gTxt = eData.getAttribute("giorno");
         if (mTxt == null) mTxt = eData.getAttribute("mese");
         if (aTxt == null) aTxt = eData.getAttribute("anno");
 
-        if (isBlank(gTxt) || isBlank(mTxt) || isBlank(aTxt)) {
+        if (XmlElementReader.isBlank(gTxt) ||
+                XmlElementReader.isBlank(mTxt) ||
+                XmlElementReader.isBlank(aTxt)) {
             System.err.println("Data con elementi mancanti: giorno='" + gTxt + "', mese='" + mTxt + "', anno='" + aTxt + "'");
             return null;
         }
@@ -104,20 +99,9 @@ public class ParsDateEscluseXMLFile {
         }
     }
 
-    private static String getText(Element parent, String tag, String def) {
-        NodeList nl = parent.getElementsByTagName(tag);
-        if (nl.getLength() == 0) return def;
-        String t = nl.item(0).getTextContent();
-        return t == null ? def : t.trim();
-    }
-
-    private static boolean isBlank(String s) { return s == null || s.trim().isEmpty(); }
-
     public static void salvaListaDate(InsiemeDate lista) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
+            Document doc = XmlDocumentBuilderProvider.newDocument();
 
             Element root = doc.createElement("insiemeDateEscluse");
             doc.appendChild(root);
@@ -127,9 +111,9 @@ public class ParsDateEscluseXMLFile {
                     Element eData = doc.createElement("data");
                     root.appendChild(eData);
 
-                    appendText(doc, eData, "giorno", Integer.toString(d.getGiorno()));
-                    appendText(doc, eData, "mese",  Integer.toString(d.getMese()));
-                    appendText(doc, eData, "anno",  Integer.toString(d.getAnno()));
+                    XmlElementWriter.appendText(doc, eData, "giorno", Integer.toString(d.getGiorno()));
+                    XmlElementWriter.appendText(doc, eData, "mese",  Integer.toString(d.getMese()));
+                    XmlElementWriter.appendText(doc, eData, "anno",  Integer.toString(d.getAnno()));
                 }
             }
 
@@ -144,9 +128,4 @@ public class ParsDateEscluseXMLFile {
         }
     }
 
-    private static void appendText(Document doc, Element parent, String tag, String text) {
-        Element e = doc.createElement(tag);
-        if (text != null) e.setTextContent(text);
-        parent.appendChild(e);
-    }
 }

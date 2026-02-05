@@ -13,8 +13,8 @@ import it.unibs.ingdsw.model.visite.Visita;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -43,12 +43,7 @@ public class ParsLuoghiXMLFile {
     }
 
     private void parseXML() throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("File luoghi XML non trovato -> " + xmlFile.getAbsolutePath());
@@ -68,13 +63,13 @@ public class ParsLuoghiXMLFile {
             Element eLuogo = (Element) nl.item(i);
 
             String id = eLuogo.getAttribute("id");
-            String nome = getText(eLuogo, "nome", "");
-            String desc = getText(eLuogo, "descrizione", "");
+            String nome = XmlElementReader.getText(eLuogo, "nome", "");
+            String desc = XmlElementReader.getText(eLuogo, "descrizione", "");
 
-            Element ePos = getFirst(eLuogo, "posizione");
+            Element ePos = XmlElementReader.getFirst(eLuogo, "posizione");
             Posizione pos = parsePosizione(ePos);
 
-            ListaVisite lv = parseVisite(getFirst(eLuogo, "visite"), id);
+            ListaVisite lv = parseVisite(XmlElementReader.getFirst(eLuogo, "visite"), id);
 
             listaLuoghi.aggiungiLuogo(new Luogo(id, nome, desc, pos, lv));
         }
@@ -82,11 +77,11 @@ public class ParsLuoghiXMLFile {
 
     private Posizione parsePosizione(Element ePos) {
         if (ePos == null) return new Posizione(null, null, null, 0d, 0d);
-        String paese = getText(ePos, "paese", null);
-        String via = getText(ePos, "via", null);
-        String cap = getText(ePos, "cap", null);
-        double lat = getDouble(ePos, "lat", 0.0);
-        double lon = getDouble(ePos, "lon", 0.0);
+        String paese = XmlElementReader.getText(ePos, "paese", null);
+        String via = XmlElementReader.getText(ePos, "via", null);
+        String cap = XmlElementReader.getText(ePos, "cap", null);
+        double lat = XmlElementReader.getDouble(ePos, "lat", 0.0);
+        double lon = XmlElementReader.getDouble(ePos, "lon", 0.0);
         return new Posizione(paese, via, cap, lat, lon);
     }
 
@@ -98,27 +93,28 @@ public class ParsLuoghiXMLFile {
         for (int i = 0; i < visite.getLength(); i++) {
             Element eV = (Element) visite.item(i);
 
-            String titolo = getText(eV, "titolo", "");
-            String descr = getText(eV, "descrizione", "");
+            String titolo = XmlElementReader.getText(eV, "titolo", "");
+            String descr = XmlElementReader.getText(eV, "descrizione", "");
 
-            Posizione posV = parsePosizione(getFirst(eV, "posizione"));
+            Posizione posV = parsePosizione(XmlElementReader.getFirst(eV, "posizione"));
 
-            Giornate giornate = parseGiornate(getFirst(eV, "giornate"));
+            Giornate giornate = parseGiornate(XmlElementReader.getFirst(eV, "giornate"));
 
-            Element eVal = getFirst(eV, "validita");
-            Data inizio = parseData(getFirst(eVal, "inizio"));
-            Data fine = parseData(getFirst(eVal, "fine"));
+            Element eVal = XmlElementReader.getFirst(eV, "validita");
+            Data inizio = parseData(XmlElementReader.getFirst(eVal, "inizio"));
+            Data fine = parseData(XmlElementReader.getFirst(eVal, "fine"));
 
-            Element eOra = getFirst(eV, "oraInizio");
-            Orario ora = new Orario(getInt(eOra, "ora", 0), getInt(eOra, "minuti", 0));
+            Element eOra = XmlElementReader.getFirst(eV, "oraInizio");
+            Orario ora = new Orario(XmlElementReader.getInt(eOra, "ora", 0),
+                    XmlElementReader.getInt(eOra, "minuti", 0));
 
-            int durata = getInt(eV, "durataMinuti", 0);
-            boolean bigl = getBoolean(eV, "presenzaBiglietto", false);
+            int durata = XmlElementReader.getInt(eV, "durataMinuti", 0);
+            boolean bigl = XmlElementReader.getBoolean(eV, "presenzaBiglietto", false);
 
-            ArrayList<Volontario> vols = parseVolontari(getFirst(eV, "volontari"));
+            ArrayList<Volontario> vols = parseVolontari(XmlElementReader.getFirst(eV, "volontari"));
 
-            int minP = getInt(eV, "numeroMinimoPartecipanti", 0);
-            int maxP = getInt(eV, "numeroMassimoPartecipanti", 0);
+            int minP = XmlElementReader.getInt(eV, "numeroMinimoPartecipanti", 0);
+            int maxP = XmlElementReader.getInt(eV, "numeroMassimoPartecipanti", 0);
 
             Visita visita = new Visita(
                     titolo, descr, luogoId, posV, giornate,
@@ -161,9 +157,9 @@ public class ParsLuoghiXMLFile {
 
     private Data parseData(Element e) {
         if (e == null) return new Data(1,1,1970);
-        int g = getInt(e, "giorno", 1);
-        int m = getInt(e, "mese", 1);
-        int a = getInt(e, "anno", 1970);
+        int g = XmlElementReader.getInt(e, "giorno", 1);
+        int m = XmlElementReader.getInt(e, "mese", 1);
+        int a = XmlElementReader.getInt(e, "anno", 1970);
         Data d = new Data(g, m, a);
         if (!d.dataValida()) System.err.println("Data non valida: " + d);
         return d;
@@ -171,9 +167,7 @@ public class ParsLuoghiXMLFile {
 
     public static void salvaLuoghi(ListaLuoghi lista) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
+            Document doc = XmlDocumentBuilderProvider.newDocument();
 
             Element root = doc.createElement("luoghi");
             doc.appendChild(root);
@@ -183,18 +177,18 @@ public class ParsLuoghiXMLFile {
                 eLuogo.setAttribute("id", l.getLuogoID());
                 root.appendChild(eLuogo);
 
-                appendText(doc, eLuogo, "nome", l.getNome());
-                appendText(doc, eLuogo, "descrizione", l.getDescrizione());
+                XmlElementWriter.appendText(doc, eLuogo, "nome", l.getNome());
+                XmlElementWriter.appendText(doc, eLuogo, "descrizione", l.getDescrizione());
 
                 Element ePos = doc.createElement("posizione");
                 eLuogo.appendChild(ePos);
                 Posizione p = l.getPosizione();
                 if (p != null) {
-                    appendText(doc, ePos, "paese", safe(p.getPaese()));
-                    appendText(doc, ePos, "via",   safe(p.getVia()));
-                    appendText(doc, ePos, "cap",   safe(p.getCap()));
-                    appendText(doc, ePos, "lat",   String.valueOf(p.getLatitudine()));
-                    appendText(doc, ePos, "lon",   String.valueOf(p.getLongitudine()));
+                    XmlElementWriter.appendText(doc, ePos, "paese", XmlElementWriter.safe(p.getPaese()));
+                    XmlElementWriter.appendText(doc, ePos, "via",   XmlElementWriter.safe(p.getVia()));
+                    XmlElementWriter.appendText(doc, ePos, "cap",   XmlElementWriter.safe(p.getCap()));
+                    XmlElementWriter.appendText(doc, ePos, "lat",   String.valueOf(p.getLatitudine()));
+                    XmlElementWriter.appendText(doc, ePos, "lon",   String.valueOf(p.getLongitudine()));
                 }
 
                 Element eVisite = doc.createElement("visite");
@@ -205,18 +199,18 @@ public class ParsLuoghiXMLFile {
                         Element eVisita = doc.createElement("visita");
                         eVisite.appendChild(eVisita);
 
-                        appendText(doc, eVisita, "titolo", v.getTitolo());
-                        appendText(doc, eVisita, "descrizione", v.getDescrizione());
+                        XmlElementWriter.appendText(doc, eVisita, "titolo", v.getTitolo());
+                        XmlElementWriter.appendText(doc, eVisita, "descrizione", v.getDescrizione());
 
                         Element ePosV = doc.createElement("posizione");
                         eVisita.appendChild(ePosV);
                         Posizione pV = v.getLuogoIncontro();
                         if (pV != null) {
-                            appendText(doc, ePosV, "paese", safe(pV.getPaese()));
-                            appendText(doc, ePosV, "via",   safe(pV.getVia()));
-                            appendText(doc, ePosV, "cap",   safe(pV.getCap()));
-                            appendText(doc, ePosV, "lat",   String.valueOf(pV.getLatitudine()));
-                            appendText(doc, ePosV, "lon",   String.valueOf(pV.getLongitudine()));
+                            XmlElementWriter.appendText(doc, ePosV, "paese", XmlElementWriter.safe(pV.getPaese()));
+                            XmlElementWriter.appendText(doc, ePosV, "via",   XmlElementWriter.safe(pV.getVia()));
+                            XmlElementWriter.appendText(doc, ePosV, "cap",   XmlElementWriter.safe(pV.getCap()));
+                            XmlElementWriter.appendText(doc, ePosV, "lat",   String.valueOf(pV.getLatitudine()));
+                            XmlElementWriter.appendText(doc, ePosV, "lon",   String.valueOf(pV.getLongitudine()));
                         }
 
                         Element eGiornate = doc.createElement("giornate");
@@ -225,23 +219,25 @@ public class ParsLuoghiXMLFile {
                         if (g != null) {
                             for (GiornoSettimana gs : g.getGiornate()) {
                                 String giorno = "GIORVEDI".equals(gs.name()) ? "GIOVEDI" : gs.name();
-                                appendText(doc, eGiornate, "giorno", giorno);
+                                XmlElementWriter.appendText(doc, eGiornate, "giorno", giorno);
                             }
                         }
 
                         Element eValidita = doc.createElement("validita");
                         eVisita.appendChild(eValidita);
-                        appendData(doc, eValidita, "inizio", v.getInizioValiditaVisita());
-                        appendData(doc, eValidita, "fine",   v.getFineValiditaVisita());
+                        XmlElementWriter.appendData(doc, eValidita, "inizio", v.getInizioValiditaVisita());
+                        XmlElementWriter.appendData(doc, eValidita, "fine",   v.getFineValiditaVisita());
 
                         Element eOra = doc.createElement("oraInizio");
                         eVisita.appendChild(eOra);
                         Orario or = v.getOraInizioVisita();
-                        appendText(doc, eOra, "ora",    String.valueOf(or != null ? or.getOra()    : 0));
-                        appendText(doc, eOra, "minuti", String.valueOf(or != null ? or.getMinuti() : 0));
+                        XmlElementWriter.appendText(doc, eOra, "ora",    String.valueOf(or != null ? or.getOra()    : 0));
+                        XmlElementWriter.appendText(doc, eOra, "minuti", String.valueOf(or != null ? or.getMinuti() : 0));
 
-                        appendText(doc, eVisita, "durataMinuti", String.valueOf(v.getDurataMinutiVisita()));
-                        appendText(doc, eVisita, "presenzaBiglietto", String.valueOf(v.isPresenzaBiglietto()));
+                        XmlElementWriter.appendText(doc, eVisita, "durataMinuti",
+                                String.valueOf(v.getDurataMinutiVisita()));
+                        XmlElementWriter.appendText(doc, eVisita, "presenzaBiglietto",
+                                String.valueOf(v.isPresenzaBiglietto()));
 
                         Element eVols = doc.createElement("volontari");
                         eVisita.appendChild(eVols);
@@ -249,15 +245,15 @@ public class ParsLuoghiXMLFile {
                         if (vols != null) {
                             for (Volontario vol : vols) {
                                 Element eV = doc.createElement("volontario");
-                                eV.setAttribute("username", safe(vol.getUsername()));
-                                eV.setAttribute("password", safe(vol.getPassword()));
+                                eV.setAttribute("username", XmlElementWriter.safe(vol.getUsername()));
+                                eV.setAttribute("password", XmlElementWriter.safe(vol.getPassword()));
                                 eVols.appendChild(eV);
                             }
                         }
 
-                        appendText(doc, eVisita, "numeroMinimoPartecipanti",
+                        XmlElementWriter.appendText(doc, eVisita, "numeroMinimoPartecipanti",
                                 String.valueOf(v.getNumeroMinimoPartecipanti()));
-                        appendText(doc, eVisita, "numeroMassimoPartecipanti",
+                        XmlElementWriter.appendText(doc, eVisita, "numeroMassimoPartecipanti",
                                 String.valueOf(v.getNumeroMassimoPartecipanti()));
                     }
                 }
@@ -278,51 +274,4 @@ public class ParsLuoghiXMLFile {
     }
 
 
-    private static Element getFirst(Element parent, String tag) {
-        if (parent == null) return null;
-        NodeList nl = parent.getElementsByTagName(tag);
-        return (nl == null || nl.getLength() == 0) ? null : (Element) nl.item(0);
-    }
-
-    private static String getText(Element parent, String tag, String def) {
-        Element e = getFirst(parent, tag);
-        return (e == null) ? def : e.getTextContent().trim();
-    }
-
-    private static int getInt(Element parent, String tag, int def) {
-        try {
-            String t = getText(parent, tag, null);
-            return (t == null || t.isEmpty()) ? def : Integer.parseInt(t);
-        } catch (NumberFormatException ex) { return def; }
-    }
-
-    private static double getDouble(Element parent, String tag, double def) {
-        try {
-            String t = getText(parent, tag, null);
-            if (t == null || t.isEmpty()) return def;
-            return Double.parseDouble(t.replace(',', '.'));
-        } catch (NumberFormatException ex) { return def; }
-    }
-
-    private static boolean getBoolean(Element parent, String tag, boolean def) {
-        String t = getText(parent, tag, null);
-        return (t == null || t.isEmpty()) ? def : Boolean.parseBoolean(t);
-    }
-
-    private static void appendText(Document doc, Element parent, String tag, String text) {
-        Element e = doc.createElement(tag);
-        if (text != null) e.setTextContent(text);
-        parent.appendChild(e);
-    }
-
-    private static void appendData(Document doc, Element parent, String tag, Data d) {
-        Element e = doc.createElement(tag);
-        parent.appendChild(e);
-        if (d == null) d = new Data(1,1,1970);
-        appendText(doc, e, "giorno", String.valueOf(d.getGiorno()));
-        appendText(doc, e, "mese",   String.valueOf(d.getMese()));
-        appendText(doc, e, "anno",   String.valueOf(d.getAnno()));
-    }
-
-    private static String safe(String s) { return s == null ? "" : s; }
 }

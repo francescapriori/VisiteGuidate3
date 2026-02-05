@@ -8,9 +8,7 @@ import it.unibs.ingdsw.model.visite.Visita;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -46,12 +44,7 @@ public class ParsPrenotazioniXMLFile {
     private void parseXML()
             throws ParserConfigurationException, SAXException, IOException {
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        dbf.setIgnoringComments(true);
-        dbf.setIgnoringElementContentWhitespace(true);
-
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = XmlDocumentBuilderProvider.newSecureBuilder();
         File xmlFile = new File(DATA);
         if (!xmlFile.exists()) {
             System.err.println("File prenotazioni XML non trovato -> " + xmlFile.getAbsolutePath());
@@ -70,13 +63,13 @@ public class ParsPrenotazioniXMLFile {
         for (int i = 0; i < nl.getLength(); i++) {
             Element ePren = (Element) nl.item(i);
 
-            String codicePren = getText(ePren, "codicePrenotazione", null);
+            String codicePren = XmlElementReader.getText(ePren, "codicePrenotazione", null);
 
-            Element eVisita = getFirst(ePren, "visita");
-            String luogoID = getText(eVisita, "luogoID", null);
-            String titoloVisita = getText(eVisita, "titolo", null);
+            Element eVisita = XmlElementReader.getFirst(ePren, "visita");
+            String luogoID = XmlElementReader.getText(eVisita, "luogoID", null);
+            String titoloVisita = XmlElementReader.getText(eVisita, "titolo", null);
 
-            Data data = parseData(getFirst(ePren, "data"));
+            Data data = parseData(XmlElementReader.getFirst(ePren, "data"));
 
             Appuntamento appuntamento = resolveAppuntamento(luogoID, titoloVisita, data);
             if (appuntamento == null) {
@@ -85,11 +78,11 @@ public class ParsPrenotazioniXMLFile {
                 continue; // salto questa prenotazione
             }
 
-            Element eFruitore = getFirst(ePren, "fruitore");
+            Element eFruitore = XmlElementReader.getFirst(ePren, "fruitore");
             String usernameFruitore = (eFruitore != null) ? eFruitore.getAttribute("username") : null;
             Fruitore fruitore = new Fruitore(usernameFruitore, null); // oggetto minimale
 
-            int numPersone = getInt(ePren, "numeroPersonePerPrenotazione", 1);
+            int numPersone = XmlElementReader.getInt(ePren, "numeroPersonePerPrenotazione", 1);
 
             Prenotazione p;
             if (codicePren != null && !codicePren.isEmpty()) {
@@ -104,9 +97,9 @@ public class ParsPrenotazioniXMLFile {
 
     private Data parseData(Element e) {
         if (e == null) return new Data(1, 1, 1970);
-        int g = getInt(e, "giorno", 1);
-        int m = getInt(e, "mese", 1);
-        int a = getInt(e, "anno", 1970);
+        int g = XmlElementReader.getInt(e, "giorno", 1);
+        int m = XmlElementReader.getInt(e, "mese", 1);
+        int a = XmlElementReader.getInt(e, "anno", 1970);
         Data d = new Data(g, m, a);
         if (!d.dataValida()) System.err.println("Data non valida in prenotazioni: " + d);
         return d;
@@ -143,13 +136,7 @@ public class ParsPrenotazioniXMLFile {
 
     public static void salvaPrenotazioni(ArrayList<Prenotazione> prenotazioni) {
         try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            dbf.setIgnoringComments(true);
-            dbf.setIgnoringElementContentWhitespace(true);
-
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.newDocument();
+            Document doc = XmlDocumentBuilderProvider.newDocument();
 
             Element root = doc.createElement("prenotazioni");
             doc.appendChild(root);
@@ -179,39 +166,12 @@ public class ParsPrenotazioniXMLFile {
     }
 
 
-    private static Element getFirst(Element parent, String tag) {
-        if (parent == null) return null;
-        NodeList nl = parent.getElementsByTagName(tag);
-        return (nl == null || nl.getLength() == 0) ? null : (Element) nl.item(0);
-    }
-
-    private static String getText(Element parent, String tag, String def) {
-        Element e = getFirst(parent, tag);
-        return (e == null) ? def : e.getTextContent().trim();
-    }
-
-    private static int getInt(Element parent, String tag, int def) {
-        try {
-            String t = getText(parent, tag, null);
-            return (t == null || t.isEmpty()) ? def : Integer.parseInt(t);
-        } catch (NumberFormatException ex) {
-            return def;
-        }
-    }
-
     private static void appendText(Document doc, Element parent, String tag, String text) {
-        Element e = doc.createElement(tag);
-        if (text != null) e.setTextContent(text);
-        parent.appendChild(e);
+        XmlElementWriter.appendText(doc, parent, tag, text);
     }
 
     private static void appendData(Document doc, Element parent, String tag, Data d) {
-        Element e = doc.createElement(tag);
-        parent.appendChild(e);
-        if (d == null) d = new Data(1, 1, 1970);
-        appendText(doc, e, "giorno", String.valueOf(d.getGiorno()));
-        appendText(doc, e, "mese", String.valueOf(d.getMese()));
-        appendText(doc, e, "anno", String.valueOf(d.getAnno()));
+        XmlElementWriter.appendData(doc, parent, tag, d);
     }
 
     private static void appendPrenotazione(Document doc, Element root, Prenotazione p) {
